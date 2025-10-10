@@ -1,0 +1,15 @@
+{
+  "name": "@cjx-low-code/locale",
+  "version": "0.0.1",
+  "description": "Cjx Low Code locale",
+  "license": "MIT",
+  "main": "index.ts",
+  "module": "index.ts",
+  "unpkg": "index.js",
+  "jsdelivr": "index.js",
+  "types": "index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "c69724230befa8fede0e6b9c37fb0b7e39fd7cdd"
+}

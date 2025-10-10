@@ -1,0 +1,62 @@
+:root {
+
+  --text-color: #000;
+  --title-color: #000;
+  /* logo end */
+
+  --el-text-color-placeholder: #D8D8D8;
+  --el-radio-color-placeholder: #cccccc;
+  --el-radio-is-disabled: #c8c8c8;
+  --el-radio-is-disabled-after: #ffffff;
+  
+
+  --drawer-bg-color: #ffffff;
+
+  --cjx-crud-table-head-bg-color: #F2F3F5;
+  --cjx-dialog-title-color: #333;
+  --cjx-dialog-icon-color: #4E5969;
+  --cjx-dialog-border-color: #eeeeee;
+  --cjx-bg-color: transparent;
+}
+
+:root {
+  --el-tag-border-color: var(--el-color-primary);
+  --el-border-color: #EAEFF4;
+  --app-content-bg-color: #F7F8FA;
+  --cjx-crumbs-icon-color: #5A6A85;
+  --el-text-color-secondary: #333333;
+
+ 
+}
+
+html.dark {
+  --el-text-color-primary: #E5EAF3;
+  --app-content-bg-color: var(--el-bg-color);
+  --el-bg-color-overlay: 1d1e1f;
+  --el-bg-color: #141414;
+  --el-border-color-lighter: #363637;
+  --el-fill-color-blank: transparent;
+  --cjx-crumbs-icon-color: #FFFFFF;
+  --cjx-crud-table-head-bg-color: #282828;
+  --el-bg-color: #1F1F1F;
+  --drawer-bg-color: #1F1F1F;
+  --title-color: #fff;
+  --el-box-shadow: -2px 0px 18px 3px rgba(255, 255, 255, 0.36), 0px 0px 1px rgba(255, 255, 255, 0.72);
+  --cjx-dialog-title-color: #fff;
+  --cjx-dialog-icon-color: #fff;
+  --cjx-dialog-border-color: #3D3D3E;
+  --cjx-bg-color: #313030;
+  --el-text-color-primary: #E5EAF3;
+  --el-text-color-regular: #CFD3DC;
+  --el-fill-color-light: #262727;
+}
+
+html,
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html.dark .el-card {
+  --el-card-bg-color: var(--el-bg-color-overlay);
+}

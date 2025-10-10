@@ -1,0 +1,82 @@
+.cjx-dialog {
+  .el-form>.el-row {
+    max-height: calc(90vh - 150px);
+  }
+  .el-form > .el-row.cjx-form-group {
+    max-height: inherit;
+  }
+  &>.el-dialog__header {
+    height: 50px;
+    box-sizing: border-box;
+  }
+  &>.el-dialog__body {
+    height: calc(100% - 50px);
+    box-sizing: border-box;
+    padding-bottom: 6px;
+  }
+
+  .cjx-tab-form {
+    width: calc(100% - 20px);
+  }
+  
+
+  .el-tab-pane {
+    max-height: calc(90vh - 186px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    .cjx-form .cjx-Form-row {
+      max-height: calc(-186px + 90vh);
+      overflow: visible;
+    }
+  }
+
+  .cjx-form {
+    width: calc(100% + 20px);
+    &.Search {
+      width: 100%;
+    }
+
+    .cjx-Form-row {
+      margin-right: -6px;
+      max-height: calc(-150px + 90vh);
+      overflow: auto;
+      box-sizing: border-box;
+      width: 100%;
+      padding-right: 20px;
+      margin: 0px !important;
+    }
+
+
+    .cjx-form-menu {
+      margin-left: -20px;
+      //margin-bottom: -10px;
+      border-top: 1px solid var(--cjx-dialog-border-color);
+      padding: 14px 20px 0px 0px;
+      margin-top: 4px;
+      box-sizing: content-box;
+      background-color: var(--el-bg-color);
+    }
+  }
+}
+
+.cjx-dialog.is-fullscreen {
+
+  .el-form > .el-row {
+    max-height: calc(100vh - 150px);
+  }
+  .el-form > .el-row.cjx-form-group {
+    max-height: inherit;
+  }
+
+
+  .cjx-dialog-content>.el-row>.el-col>.el-form>.el-row.cjx-Form-row {
+    height: calc(100vh - 150px);
+    max-height: calc(100vh - 150px);
+    display: block;
+  }
+
+  .el-tab-pane {
+    max-height: calc(100vh - 250px);
+    overflow: auto;
+  }
+}

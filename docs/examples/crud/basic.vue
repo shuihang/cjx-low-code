@@ -1,0 +1,53 @@
+<template>
+  <div>
+    <XCrud :form="form" :option="option" :data="data" @before-open="beforeOpen" />
+  </div>
+</template>
+
+<script lang="ts" setup>
+import { ref } from 'vue'
+import type { TableOption } from 'cjx-low-code'
+const option = ref<TableOption>({
+  column: [ 
+    {
+      label: '姓名',
+      prop: 'name'
+    },
+    {
+      label: '年龄',
+      prop: 'age'
+    },
+    {
+      label: '地址',
+      prop: 'address'
+    },
+    {
+      label: '性别',
+      prop: 'sex'
+    }
+  ]
+})
+
+const data = [
+  {
+    name: '张三',
+    age: 18,
+    address: '北京市',
+    sex: '男'
+  },
+  {
+    name: '李四',
+    age: 20,
+    address: '上海市',
+    sex: '女'
+  }
+]
+
+const form = ref({})
+
+const beforeOpen: (...args: any[]) => void = (type, row, done) => {
+  console.log(type, row)
+  done()
+
+}
+</script>

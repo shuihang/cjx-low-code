@@ -1,0 +1,58 @@
+.el-checkbox__input.is-checked+.el-checkbox__label {
+    color: #333;
+}
+
+.cjx-crud {
+  .cjx-crud__header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    align-items: center;
+    &__left {
+      font-size: 16px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    &__right {
+      display: flex;
+      &_manipulate {
+        margin-left: 17px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        &_icon {
+          margin-left: 15px;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+  .cjx-table-column-menu {
+    display: flex;
+    align-items: center;
+  }
+  .el-input__validateIcon {
+    display: none !important;
+  }
+
+  
+}
+
+.cjx-crud-form-dialog {
+
+  .el-dialog__body {
+    padding-right: 0px !important;
+  }
+
+  .cjx-form {
+
+    .cjx-form-menu {
+      margin-left: -16px;
+      //margin-bottom: -10px;
+      border-top: 1px solid var(--cjx-dialog-border-color);
+      padding: 14px 15px 0 15px;
+      margin-top: 4px;
+      box-sizing: content-box;
+    }
+  }
+}

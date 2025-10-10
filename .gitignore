@@ -1,0 +1,9 @@
+.idea
+
+node_modules
+
+dist
+
+.pnpm-debug.log*
+
+packages/cjx-low-code/version.ts
