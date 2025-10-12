@@ -27,21 +27,21 @@ const option = ref<EditTableOption>({
       prop: 'age',
       type: 'inputNumber',
     },
-    // {
-    //   label: '性别',
-    //   prop: 'sex',
-    //   type: 'select',
-    //   dicData: [
-    //     {
-    //       label: '男',
-    //       value: '1'
-    //     },
-    //     {
-    //       label: '女',
-    //       value: '2'
-    //     }
-    //   ]
-    // }
+    {
+      label: '性别',
+      prop: 'sex',
+      type: 'select',
+      dicData: [
+        {
+          label: '男',
+          value: '1'
+        },
+        {
+          label: '女',
+          value: '2'
+        }
+      ]
+    }
   ]
 })
 
