@@ -1,5 +1,21 @@
 :root {
   --vp-sidebar-width: 202px;
+  --brand-color: var(--el-color-primary);
+  --code-tooltip-color: #0c61c9;
+  --code-bg-color: var(--el-fill-color-light);
+  --code-tooltip-bg-color: var(--code-bg-color);
+}
+.dark {
+  --bg-color-rgb: 0, 0, 0;
+  --bg-color-soft: #242424;
+  --bg-color-mute: #2c2c2c;
+  --code-tooltip-bg-color: rgba(var(--el-color-primary-rgb), .1);
+  --code-tooltip-color: var(--brand-color);
+  --purple-color: #9065db;
+  --purple-color-light: #6222c2;
+  --el-bg-color-overlay: #1d1e1f;
+  --el-border-color-light: #414243;
+  --code-tooltip-color: var(--brand-color);
 }
 /* @media (min-width: 1440px) {
   .VPSidebar {

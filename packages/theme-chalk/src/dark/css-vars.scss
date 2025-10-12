@@ -32,7 +32,7 @@
 html.dark {
   --el-text-color-primary: #E5EAF3;
   --app-content-bg-color: var(--el-bg-color);
-  --el-bg-color-overlay: 1d1e1f;
+  --el-bg-color-overlay: #1d1e1f;
   --el-bg-color: #141414;
   --el-border-color-lighter: #363637;
   --el-fill-color-blank: transparent;
@@ -49,6 +49,7 @@ html.dark {
   --el-text-color-primary: #E5EAF3;
   --el-text-color-regular: #CFD3DC;
   --el-fill-color-light: #262727;
+  --el-fill-color: #303030;
 }
 
 html,

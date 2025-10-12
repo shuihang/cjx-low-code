@@ -8,18 +8,16 @@ hero:
   tagline: cjx 低代码
   actions:
     - theme: brand
+      text: 指南
+      link: /zh-cn/guide/basic/install.md
+    - theme: alt
       text: 组件
       link: /zh-cn/attribute/crud.md
-    - theme: alt
-      text: 指南
-      link: /zh-cn/guide/basic.md
-
+      
 features:
-  - title: Feature A
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature B
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature C
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+  - title: 正在建设中...
+    details: 这是个低代码框架，正在建设中...
+  - title: 正在建设中...
+    details: 这是个低代码框架，正在建设中...
 ---
 

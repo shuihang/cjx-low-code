@@ -4,6 +4,8 @@ import { createApp, App } from 'vue' // 如果组件库依赖了某些Vue插件�
 import { AntDesignContainer } from '@vitepress-demo-preview/component'
 import '@vitepress-demo-preview/component/dist/style.css'; // 引入预览组件样式
 import ElementPlus from 'element-plus' // 引入 Element Plus
+// import { ElPopover } from 'element-plus'
+import Popover from '../../components/popover.vue'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import 'element-plus/dist/index.css' // 引入 Element Plus 样式
 
@@ -21,6 +23,7 @@ export default {
   enhanceApp({ app }: { app: App }) {
     // 注册整个组件库（如果你的组件库提供了install方法）
     app.use(ElementPlus, { locale: zhCn })
+    app.component('popover', Popover)
 
     app.use(CjxLowCode)
     

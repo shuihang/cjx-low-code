@@ -121,7 +121,7 @@ export type FormSlot = Record<
   CustomStr<'Form'>,
   FormColumnProps & {
     /** 当前的弹窗类型 check/查看 create/新增 update/修改 */
-    _ztBoxType: DialogFormType
+    _XBoxType: DialogFormType
     /** 表单项的值 查看表单才有 */
     $value?: any
     /** 表单项的索引 查看表单才有 */
@@ -134,7 +134,7 @@ export type GroupFormSlot = Record<
   CustomStr<'GroupForm'>,
   {
     /** 当前的弹窗类型 check/查看 create/新增 update/修改 */
-    _ztBoxType: DialogFormType
+    _XBoxType: DialogFormType
   }
 >
 
@@ -148,7 +148,7 @@ export type GroupLabelSlot = Record<
   CustomStr<'GroupLabel'>,
   {
     /** 当前的弹窗类型 check/查看 create/新增 update/修改 */
-    _ztBoxType: DialogFormType
+    _XBoxType: DialogFormType
   }
 >
 
@@ -184,9 +184,9 @@ const XCrud = withInstallVue(defineComponent({
       /** 导入弹窗头部插槽 */
       importHeader?: () => Promise<any>
       /** 表单头部位置插槽 */
-      formHeader?: (props: { _ztBoxType?: DialogFormType }) => any
+      formHeader?: (props: { _XBoxType?: DialogFormType }) => any
       /** 表单弹窗底部位置插槽 */
-      formFooter?: (props: { _ztBoxType?: DialogFormType }) => any
+      formFooter?: (props: { _XBoxType?: DialogFormType }) => any
     } & SearchSlot &
       FormSlot &
       GroupFormSlot &

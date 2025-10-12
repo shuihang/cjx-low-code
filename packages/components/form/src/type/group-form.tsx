@@ -42,7 +42,7 @@ const ZtGroupForm = defineComponent({
             !item.label &&
             ((item.slot &&
               !(slots[groupFormSlotKey as keyof typeof slots] as any)?.({
-                _ztBoxType: props.ztBoxType,
+                _XBoxType: props.ztBoxType,
               })) ||
               (!item.slot && !item.column?.length))
           )
@@ -55,7 +55,7 @@ const ZtGroupForm = defineComponent({
               form: newForm.value,
               column: item.column || [],
               index,
-              _ztBoxType: props.ztBoxType,
+              _XBoxType: props.ztBoxType,
             })
           ) {
             return <></>
@@ -101,7 +101,7 @@ const ZtGroupForm = defineComponent({
                             slots[
                               `${item.prop}GroupLabel` as keyof typeof slots
                             ] as any
-                          )?.({ _ztBoxType: props.ztBoxType })
+                          )?.({ _XBoxType: props.ztBoxType })
                         : item.label}
                     </div>
                   </div>
@@ -120,7 +120,7 @@ const ZtGroupForm = defineComponent({
                 <div class={'w-[calc(100%-10px)] m-r--10px m-b-20px'}>
                   {(
                     slots[`${item.prop}GroupForm` as keyof typeof slots] as any
-                  )?.({ _ztBoxType: props.ztBoxType })}
+                  )?.({ _XBoxType: props.ztBoxType })}
                 </div>
               ) : (
                 <>

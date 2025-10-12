@@ -40,7 +40,7 @@ export interface Scope {
 }
 
 export type Placement =
-  | 'top'
+  'top'
   | 'top-start'
   | 'top-end'
   | 'bottom'
@@ -114,6 +114,7 @@ export type ViewTabs = {
   value: string
 }
 
+type RulesType = Array<Partial<FormItemRule>>
 export interface SpanMethodProps<T> {
   row: T
   column: TableColumnCtx<T>
@@ -125,7 +126,7 @@ export interface SpanMethodProps<T> {
  * @param {any} form 表单绑定的form
  * @param {TableColumnCtx<Column>} column 列数据
  * @param {number} index 行索引 cjx-crud组件才有 cjx-form为undefined
- * @param {DialogFormType} _ZtBoxType 弹窗类型 cjx-crud组件才有 cjx-form为undefined
+ * @param {DialogFormType} _XBoxType 弹窗类型 cjx-crud组件才有 cjx-form为undefined
  * @returns {boolean} 是否显示
  */
 export type DisplayInterface =
@@ -134,7 +135,7 @@ export type DisplayInterface =
       form: any
       column: FormColumnProps[]
       index?: number
-      _ZtBoxType?: DialogFormType
+      _XBoxType?: DialogFormType
     }) => boolean)
 
 export type ColumnProps = Pick<PropsToForm, 'change'> &
@@ -229,7 +230,7 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
     /* 搜索项清除 默认为`true` */
     searchClearable?: boolean
     /** 表单校验条件 */
-    rules?: Array<Partial<FormItemRule>>
+    rules?: RulesType
     /** 控制是否使用表格插槽，目前已废弃 现在只要有对应的插槽就会渲染 */
     slot?: boolean
     /**
@@ -238,7 +239,7 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
      * @param {any} form 表单绑定的form
      * @param {FormColumnProps[]} column 列数据
      * @param {number} index 行索引
-     * @param {DialogFormType} _ztBoxType 弹窗类型
+     * @param {DialogFormType} _XBoxType 弹窗类型
      * @returns {boolean} 是否显示
      */
     display?:
@@ -247,7 +248,7 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
           form: any
           column: FormColumnProps[]
           index: number
-          _ztBoxType?: DialogFormType
+          _XBoxType?: DialogFormType
         }) => boolean)
     /**
      * 表单新增时当前项是否显示。可以是布尔类型或函数表达式。
@@ -255,7 +256,7 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
      * @param {any} form 表单绑定的form
      * @param {FormColumnProps[]} column 列数据
      * @param {number} index 行索引
-     * @param {DialogFormType} _ztBoxType 弹窗类型
+     * @param {DialogFormType} _XBoxType 弹窗类型
      * @returns {boolean} 是否显示
      */
     createDisplay?: DisplayInterface
@@ -265,18 +266,18 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
      * @param {any} form 表单绑定的form
      * @param {FormColumnProps[]} column 列数据
      * @param {number} index 行索引
-     * @param {DialogFormType} _ztBoxType 弹窗类型
+     * @param {DialogFormType} _XBoxType 弹窗类型
      * @returns {boolean} 是否显示
      */
     updateDisplay?: DisplayInterface
     /**
      * 表单查看时当前项是否显示。可以是布尔类型或函数表达式。
      * 如果未使用此参数，则取 `display` 参数的值，默认为 `true`。
-     * @type {DisplayInterface = boolean | ((props: {form: any, column: FormColumnProps[], index: number, _ztBoxType?: DialogFormType }) => boolean)}
+     * @type {DisplayInterface = boolean | ((props: {form: any, column: FormColumnProps[], index: number, _XBoxType?: DialogFormType }) => boolean)}
      * @param {any} form 表单绑定的form
      * @param {FormColumnProps[]} column 列数据
      * @param {number} index 行索引
-     * @param {DialogFormType} _ztBoxType 弹窗类型
+     * @param {DialogFormType} _XBoxType 弹窗类型
      * @returns {boolean} 是否显示
      */
     checkDisplay?: DisplayInterface
@@ -286,7 +287,7 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
      * @param {any} form 表单绑定的form
      * @param {FormColumnProps[]} column 列数据
      * @param {number} index 行索引
-     * @param {DialogFormType} _ztBoxType 弹窗类型
+     * @param {DialogFormType} _XBoxType 弹窗类型
      * @returns {boolean} 是否可以编辑
      * */
     disabled?:
@@ -295,7 +296,7 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
           form: any
           column: FormColumnProps[]
           index: number
-          _ztBoxType?: DialogFormType
+          _XBoxType?: DialogFormType
         }) => boolean)
     /**
      * 表单新增时当前项是否显示。可以是布尔类型或函数表达式。
@@ -303,7 +304,7 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
      * @param {any} form 表单绑定的form
      * @param {FormColumnProps[]} column 列数据
      * @param {number} index 行索引
-     * @param {DialogFormType} _ztBoxType 弹窗类型
+     * @param {DialogFormType} _XBoxType 弹窗类型
      * @returns {boolean} 是否可以编辑
      * */
     createDisabled?:
@@ -312,7 +313,7 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
           form: any
           column: FormColumnProps[]
           index: number
-          _ztBoxType?: DialogFormType
+          _XBoxType?: DialogFormType
         }) => boolean)
     /**
      * 表单编辑时当前项是否显示。可以是布尔类型或函数表达式。
@@ -320,7 +321,7 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
      * @param {any} form 表单绑定的form
      * @param {FormColumnProps[]} column 列数据
      * @param {number} index 行索引
-     * @param {DialogFormType} _ztBoxType 弹窗类型
+     * @param {DialogFormType} _XBoxType 弹窗类型
      * @returns {boolean} 是否可以编辑
      * */
     updateDisabled?:
@@ -329,7 +330,7 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
           form: any
           column: FormColumnProps[]
           index: number
-          _ztBoxType?: DialogFormType
+          _XBoxType?: DialogFormType
         }) => boolean)
     /**
      * 表单查看时当前项是否显示。可以是布尔类型或函数表达式。
@@ -337,7 +338,7 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
      * @param {any} form 表单绑定的form
      * @param {FormColumnProps[]} column 列数据
      * @param {number} index 行索引
-     * @param {DialogFormType} _ztBoxType 弹窗类型
+     * @param {DialogFormType} _XBoxType 弹窗类型
      * @returns {boolean} 是否可以编辑
      * */
     checkDisabled?:
@@ -346,7 +347,7 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
           form: any
           column: FormColumnProps[]
           index: number
-          _ztBoxType?: DialogFormType
+          _XBoxType?: DialogFormType
         }) => boolean)
     /** 表单项标题宽度 默认`90`*/
     labelWidth?: number

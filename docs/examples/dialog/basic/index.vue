@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 import { getCurrentInstance } from 'vue'
-import Dome from './dome.vue';
+import Dome from './demo.vue';
 const proxy = getCurrentInstance()?.appContext.config.globalProperties
 
 const openDialog = () => {

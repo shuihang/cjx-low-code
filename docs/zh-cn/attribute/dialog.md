@@ -1,10 +1,8 @@
-# $ZtDialog属性文档
+# $XDialog属性文档
 
-#### 示例
+## 示例
 
-::: tip 使用$ZtDialog组件的页面
-
-:::
+1. [基础用法](/zh-cn/components/dialog#基础用法)
 
 ## props
 

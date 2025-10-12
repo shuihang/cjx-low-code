@@ -51,9 +51,9 @@ export const XForm = withInstall(defineComponent({
       /** 表单操作栏插槽 */
       formMenu?: void
       /** 表单头部位置插槽 */
-      formHeader?: (props: { _ztBoxType?: DialogFormType }) => any
+      formHeader?: (props: { _XBoxType?: DialogFormType }) => any
       /** 表单底部位置插槽 */
-      formFooter?: (props: { _ztBoxType?: DialogFormType }) => any
+      formFooter?: (props: { _XBoxType?: DialogFormType }) => any
     } & FormSlot
   >,
   emits: formEmits,
@@ -379,7 +379,7 @@ export const XForm = withInstall(defineComponent({
                       <div class="cjx-form-header w-100%">
                         {this.$slots?.formHeader &&
                           this.$slots.formHeader({
-                            _ztBoxType: this.ztBoxType,
+                            _XBoxType: this.ztBoxType,
                           })}
                       </div>
 
@@ -396,7 +396,7 @@ export const XForm = withInstall(defineComponent({
                       <div class="cjx-form-footer w-100%">
                         {this.$slots?.formFooter &&
                           this.$slots?.formFooter({
-                            _ztBoxType: this.ztBoxType,
+                            _XBoxType: this.ztBoxType,
                           })}
                       </div>
                     </>

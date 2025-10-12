@@ -221,7 +221,7 @@ export type FormColumnProps = Pick<ColumnProps, FormStateProps> & {
    * @param {any} form 表单绑定的form
    * @param {FormColumnProps[]} column 列数据
    * @param {number} index 行索引
-   * @param {DialogFormType} _ztBoxType 弹窗类型
+   * @param {DialogFormType} _XBoxType 弹窗类型
    * @returns {boolean} 是否显示
    */
   display?:
@@ -230,14 +230,14 @@ export type FormColumnProps = Pick<ColumnProps, FormStateProps> & {
         form: any
         column: FormColumnProps[]
         index: number
-        _ztBoxType?: DialogFormType
+        _XBoxType?: DialogFormType
       }) => boolean)
   /**
    * 弹出表单当前项是否禁用 支持布尔类型和函数表达式 默认false
    * @param {any} form 表单绑定的form
    * @param {FormColumnProps[]} column 列数据
    * @param {number} index 行索引
-   * @param {DialogFormType} _ztBoxType 弹窗类型
+   * @param {DialogFormType} _XBoxType 弹窗类型
    * @returns {boolean} 是否可以编辑
    **/
   disabled?:
@@ -246,7 +246,7 @@ export type FormColumnProps = Pick<ColumnProps, FormStateProps> & {
         form: any
         column: FormColumnProps[]
         index: number
-        _ztBoxType?: DialogFormType
+        _XBoxType?: DialogFormType
       }) => boolean)
   // /** 组件响应的事件 */
   on?: { [key in `on${Capitalize<string>}`]: (...args: any[]) => void }
@@ -277,7 +277,7 @@ export type GroupInterface = {
     form: any
     column: FormColumnProps[]
     index: number
-    _ztBoxType?: DialogFormType
+    _XBoxType?: DialogFormType
   }) => boolean
   /** 表单的各项 */
   column?: FormColumnProps[]

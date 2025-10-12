@@ -60,9 +60,9 @@ export type EditTableColumn = {
   type: 'input' | 'select' | 'inputNumber',
   /** 字典数据 */
   dicData?: any[],
-  /** 操作栏宽度 默认220 */
+  /** 对应列的宽度 默认为`90`  */
   width?: number,
-  /** 操作栏最小宽度 */
+  /** 对应列的最小宽度， 对应列的最小宽度， 与 width 的区别是 width 是固定的，min-width 会把剩余宽度按比例分配给设置了 min-width 的列 */
   minWidth?: number,
   /** 表单的校验条件 */
   rules?: Array<Partial<FormItemRule>>,
@@ -75,7 +75,7 @@ export type EditTableColumn = {
   /** 插槽 */
   slot?: boolean
   /** 组件响应的事件 */
-  on?: {[key in `on${Capitalize<string>}`]: (...args: any[]) => void},
+  on?: {[key in `on${Capitalize<string>}`]: (...args: any[]) => void },
 } & EditTableComponents
 
 export type EditTableOption = {
@@ -104,7 +104,7 @@ export const editTableProps = () => ({
   modelValue: arrayType<Array<any>>(),
   /** 是否只读 */
   isView: booleanType(false),
-  /** 如果这个组件嵌套在cjx-from组件里 在需要表单校验的情况下 该参数必须配置 配置规则(如果modelValue(表格表单绑定的数据)绑定的是form.arr 那么prop='arr' ) */
+  /** 如果这个组件嵌套在x-from组件里 在需要表单校验的情况下 该参数必须配置 配置规则(如果modelValue(表格表单绑定的数据)绑定的是form.arr 那么prop='arr' ) */
   prop: stringType(),
   label: stringType()
 })

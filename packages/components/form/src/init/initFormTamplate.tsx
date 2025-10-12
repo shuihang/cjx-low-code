@@ -71,7 +71,7 @@ interface RenderInterface {
 }
 
 export interface RenderContext {
-  __ztBoxType: string
+  __XBoxType: string
   fun: () => void
 }
 
@@ -198,7 +198,7 @@ class Common implements TemplateCommonProps {
         form: { ...this.newForm.value },
         column,
         index,
-        _ztBoxType: ztBoxType,
+        _XBoxType: ztBoxType,
       })
     })
   }
@@ -563,7 +563,7 @@ export class RenderFormVNode extends Common implements RenderInterface {
                             form: { ...this.newForm.value },
                             column: this.column,
                             index,
-                            _ztBoxType: this.ztBoxType?.value,
+                            _XBoxType: this.ztBoxType?.value,
                           })
                         : item.disabled,
                   },
@@ -611,7 +611,7 @@ export class RenderFormVNode extends Common implements RenderInterface {
                 <div class="w-100%">
                   {this.slots[item.prop + this.slotSuffix]?.({
                     ...item,
-                    _ztBoxType: this.ztBoxType?.value,
+                    _XBoxType: this.ztBoxType?.value,
                   })}
                 </div>
               )}
@@ -744,7 +744,7 @@ export class RenderViewFormVNode extends Common implements RenderInterface {
                     )
                 : this.slots[item.prop + this.slotSuffix]?.({
                     ...item,
-                    _ztBoxType: 'check',
+                    _XBoxType: 'check',
                     $value: this._getValueByPath(item.prop).value,
                     $index: this.$index,
                   })}

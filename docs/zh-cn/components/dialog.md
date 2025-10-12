@@ -19,10 +19,8 @@ app.config.globalProperties.$XDialog = $XDialog(app._context)
 
 #### demo.vue 代码
 
-```vue
-<template>
-  <div>
-    我是cjx-low-code组件库命令式弹窗示例
-  </div>
-</template>
-```
+:::preview
+
+demo-preview=../../examples/dialog/basic/demo.vue
+
+:::
