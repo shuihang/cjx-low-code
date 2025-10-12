@@ -98,6 +98,7 @@ export default {
     displaySearchBar: '显示搜索栏',
     compact: '紧凑',
     looseAndComfortable: '宽松',
+    add_a_row: '新增一行'
   },
   action: {
     create: '新增',

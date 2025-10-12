@@ -593,7 +593,7 @@ const XCrud = withInstallVue(defineComponent({
               {t('action.edit')}
             </ElButton>
           )}
-          {option?.delBtn && permission?.delBtn && (
+          {option?.delBtn  && (
             <ElButton
               link
               type="danger"

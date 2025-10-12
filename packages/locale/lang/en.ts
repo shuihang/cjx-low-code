@@ -97,7 +97,8 @@ export default {
     hideSearchBar: 'Hide Search Bar',
     displaySearchBar: 'Display Search Bar',
     compact: 'Compact',
-    looseAndComfortable: 'Loose and Comfortable'
+    looseAndComfortable: 'Loose and Comfortable',
+    add_a_row: 'Add a row',
   },
   action: {
     create: 'Create',

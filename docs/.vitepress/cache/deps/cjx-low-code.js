@@ -33,15 +33,18 @@ import {
   ElTooltip,
   ElTreeSelect,
   ElUpload,
-  cloneDeep_default,
-  clone_default,
-  get_default,
   provideGlobalConfig
-} from "./chunk-B4COIUJD.js";
-import "./chunk-NJU3Y4WP.js";
+} from "./chunk-UUTFWVL2.js";
 import {
   zhCn
 } from "./chunk-XEWVCCY3.js";
+import "./chunk-M375YADR.js";
+import {
+  cloneDeep_default,
+  clone_default,
+  get_default
+} from "./chunk-BNPOPI77.js";
+import "./chunk-NJU3Y4WP.js";
 import {
   Fragment,
   computed,
@@ -77,10 +80,10 @@ import {
 } from "./chunk-DGLW74D3.js";
 import "./chunk-5WRI5ZAA.js";
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/cjx-low-code/version.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/cjx-low-code/version.mjs
 var version = "0.0.0-dev.1";
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/cjx-low-code/make-installer.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/cjx-low-code/make-installer.mjs
 var makeInstaller = (components = []) => {
   const install2 = (app, options) => {
     console.log("options", options);
@@ -100,7 +103,7 @@ var makeInstaller = (components = []) => {
   };
 };
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/node_modules/.pnpm/vue-draggable-plus@0.5.3_@types_sortablejs@1.15.8/node_modules/vue-draggable-plus/dist/vue-draggable-plus.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/node_modules/.pnpm/vue-draggable-plus@0.5.3_@types_sortablejs@1.15.8/node_modules/vue-draggable-plus/dist/vue-draggable-plus.mjs
 var rn = Object.defineProperty;
 var Ne = Object.getOwnPropertySymbols;
 var vt = Object.prototype.hasOwnProperty;
@@ -1745,7 +1748,7 @@ var so = {
   }
 };
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/locale/lang/zh-CN.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/locale/lang/zh-CN.mjs
 var Chinese = {
   common: {
     inputText: "请输入",
@@ -1874,7 +1877,7 @@ var Chinese = {
   "OAuth 2.0": "OAuth 2.0"
 };
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/hooks/useLocale/index.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/hooks/useLocale/index.mjs
 var buildTranslator = (locale) => (path, option2) => translate(path, option2, unref(locale));
 var translate = (path, option2, locale) => {
   return get_default(locale, path, path).replace(
@@ -1900,7 +1903,7 @@ var useLocale = (localeOverrides) => {
   return buildLocaleContext(computed(() => (locale == null ? void 0 : locale.value) || Chinese));
 };
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/hooks/useMessage/index.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/hooks/useMessage/index.mjs
 var mainTextStyle = { fontWeight: 700, fontSize: "15px" };
 var subTextStyle = {
   fontWeight: 400,
@@ -2018,7 +2021,7 @@ var useMessage = () => {
   };
 };
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/_util/download.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/_util/download.mjs
 var message = useMessage();
 var SMALL_DATA_SIZE_LIMIT = 150;
 var checkResponseValid = (responseBlob) => {
@@ -2078,7 +2081,7 @@ var download = {
   }
 };
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/_util/type.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/_util/type.mjs
 function objectType(defaultVal) {
   return { type: Object, default: defaultVal };
 }
@@ -2144,7 +2147,7 @@ var withInstallFunction = (fn, name) => {
   return fn;
 };
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/dialog/src/context.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/dialog/src/context.mjs
 var dialogProviderKey = Symbol("dialogProviderKey");
 var useDialogProviderKey = (props) => {
   return provide(dialogProviderKey, props);
@@ -2159,7 +2162,7 @@ var useDialogInjectKey = () => {
   );
 };
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/_util/toReactive.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/_util/toReactive.mjs
 function toReactive(objectRef) {
   if (!isRef(objectRef))
     return reactive(objectRef);
@@ -2194,7 +2197,7 @@ function toReactive(objectRef) {
   return reactive(proxy);
 }
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/interface.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/interface.mjs
 var componentPropsValues = [
   "input",
   "textarea",
@@ -2259,7 +2262,7 @@ var fromProps = () => ({
   disabled: booleanType(false)
 });
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/context.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/context.mjs
 var formProviderKey = Symbol("formProviderKey");
 var useFormProviderKey = (props) => {
   return provide(formProviderKey, props);
@@ -2268,7 +2271,7 @@ var useFormInjectKey = () => {
   return inject(formProviderKey);
 };
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/config.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/config.mjs
 var form_config = {
   span: 12,
   search_span: 12,
@@ -2280,7 +2283,7 @@ var form_config = {
   menu_btn: true
 };
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/dicTag/index.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/dicTag/index.mjs
 var tagColor = {
   primary: "#409eff",
   success: "#67C23A",
@@ -2328,7 +2331,7 @@ var ZtDicTag = defineComponent({
   }
 });
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/_util/tool.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/_util/tool.mjs
 var arraySort = (arr, key, customFunc) => {
   const cloneArr = clone_default(arr);
   return cloneArr.sort((a, b) => {
@@ -2372,7 +2375,7 @@ var translateCheckFormStr = (str, dicData, props) => {
   return strArr.join(",");
 };
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/_util/pick.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/_util/pick.mjs
 function pick(obj, fields) {
   const shallowCopy = {};
   for (const key of fields) {
@@ -2381,7 +2384,7 @@ function pick(obj, fields) {
   return shallowCopy;
 }
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/node_modules/.pnpm/@element-plus_icons-vue@2.1.0_vue@3.5.22/node_modules/@element-plus/icons-vue/dist/index.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/node_modules/.pnpm/@element-plus_icons-vue@2.1.0_vue@3.5.22/node_modules/@element-plus/icons-vue/dist/index.mjs
 var add_location_vue_vue_type_script_lang_default = {
   name: "AddLocation"
 };
@@ -10664,12 +10667,12 @@ function _sfc_render293(_ctx, _cache, $props, $setup, $data, $options) {
 }
 var zoom_out_default = export_helper_default(zoom_out_vue_vue_type_script_lang_default, [["render", _sfc_render293], ["__file", "zoom-out.vue"]]);
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/hooks/useCompRef/index.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/hooks/useCompRef/index.mjs
 function useCompRef(_comp) {
   return ref();
 }
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/editTable/src/interface.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/editTable/src/interface.mjs
 var { t } = useLocale();
 var inputPlaceholder = t("common.inputText");
 var selectPlaceholder = t("common.selectText");
@@ -10705,7 +10708,7 @@ var editTableProps = () => ({
   label: stringType()
 });
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/editTable/src/index.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/editTable/src/index.mjs
 function _isSlot(s) {
   return typeof s === "function" || Object.prototype.toString.call(s) === "[object Object]" && !isVNode(s);
 }
@@ -10934,7 +10937,7 @@ var XEditTable = withInstallVue(defineComponent({
   }
 }));
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/tempform.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/tempform.mjs
 var {
   t: t2
 } = useLocale();
@@ -11017,7 +11020,7 @@ var tempForm = {
   }
 };
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/_util/omit.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/_util/omit.mjs
 function omit(obj, fields) {
   const shallowCopy = Object.assign({}, obj);
   for (const key of fields) {
@@ -11026,7 +11029,7 @@ function omit(obj, fields) {
   return shallowCopy;
 }
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/icon/index.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/icon/index.mjs
 var ShowSearchBarOutlined = (_, {
   attrs
 }) => {
@@ -11277,7 +11280,7 @@ var DownloadOutlined = () => {
   }, null)]);
 };
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/init/initFormTamplate.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/init/initFormTamplate.mjs
 function _isSlot2(s) {
   return typeof s === "function" || Object.prototype.toString.call(s) === "[object Object]" && !isVNode(s);
 }
@@ -11727,7 +11730,7 @@ var RenderViewFormVNode = class extends Common {
   }
 };
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/init/index.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/init/index.mjs
 function InitSearchFormVNode(argv) {
   return new RenderSearchFormVNode(argv).init();
 }
@@ -11743,7 +11746,7 @@ function InitFormTemplate(argv) {
   return isView || (ztBoxType == null ? void 0 : ztBoxType.value) === "check" ? new RenderViewFormVNode(argvWithColumn).init() : new RenderFormVNode(argvWithColumn).init();
 }
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/type/group-form.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/type/group-form.mjs
 var ZtGroupForm = defineComponent({
   name: "ZtGroupForm",
   props: {
@@ -11843,7 +11846,7 @@ var ZtGroupForm = defineComponent({
   }
 });
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/menu.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/menu.mjs
 var XFromMenu = defineComponent({
   name: "XFromMenu",
   props: {
@@ -11921,7 +11924,7 @@ var XFromMenu = defineComponent({
   }
 });
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/utils.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/utils.mjs
 var getValueByPath = (form, path) => {
   return computed({
     get() {
@@ -11959,7 +11962,7 @@ var getValueByPath = (form, path) => {
   });
 };
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/index.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/index.mjs
 function _isSlot3(s) {
   return typeof s === "function" || Object.prototype.toString.call(s) === "[object Object]" && !isVNode(s);
 }
@@ -12258,7 +12261,7 @@ var XForm = withInstall(defineComponent({
   }
 }));
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/icon/index.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/icon/index.mjs
 var More = (_, {
   attrs
 }) => {
@@ -12277,7 +12280,7 @@ var More = (_, {
   }, null)]);
 };
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/interface.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/interface.mjs
 var crudProps = () => ({
   data: arrayType(),
   option: objectType(),
@@ -12293,7 +12296,7 @@ var crudProps = () => ({
   dialogClassName: stringType()
 });
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/context.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/context.mjs
 var crudProviderKey = Symbol("crudProviderKey");
 var useCrudProviderKey = (props) => {
   return provide(crudProviderKey, props);
@@ -12302,7 +12305,7 @@ var useCrudInjectKey = () => {
   return inject(crudProviderKey);
 };
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/search.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/search.mjs
 var {
   search_span,
   label_width: label_width2,
@@ -12568,7 +12571,7 @@ var XFormSearch = defineComponent({
   }
 });
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/menu/headerSearch.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/menu/headerSearch.mjs
 var XHeaderSearch = defineComponent({
   name: "XHeaderSearch",
   setup(_, {
@@ -12620,7 +12623,7 @@ var XHeaderSearch = defineComponent({
   }
 });
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/config.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/config.mjs
 var { t: t3 } = useLocale();
 var crudConfig = {
   row_key: "id",
@@ -12637,7 +12640,7 @@ var crudConfig = {
   dropRowClass: ".el-table__body-wrapper table tbody"
 };
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/column/column-menu.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/column/column-menu.mjs
 var {
   menu_fixed,
   menu_width,
@@ -12669,7 +12672,7 @@ var XColumnMenu = defineComponent({
   }
 });
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/column/column.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/column/column.mjs
 var {
   row_key,
   index_width,
@@ -12790,7 +12793,7 @@ var XTableColumn = defineComponent({
   }
 });
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/node_modules/.pnpm/sortablejs@1.15.0/node_modules/sortablejs/modular/sortable.esm.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/node_modules/.pnpm/sortablejs@1.15.0/node_modules/sortablejs/modular/sortable.esm.mjs
 function ownKeys(object, enumerableOnly) {
   var keys = Object.keys(object);
   if (Object.getOwnPropertySymbols) {
@@ -14959,7 +14962,7 @@ _extends(Remove, {
 Sortable.mount(new AutoScrollPlugin());
 Sortable.mount(Remove, Revert);
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/menu/headerMenu.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/menu/headerMenu.mjs
 function _isSlot4(s) {
   return typeof s === "function" || Object.prototype.toString.call(s) === "[object Object]" && !isVNode(s);
 }
@@ -15311,7 +15314,7 @@ var XHeaderMenu = defineComponent({
   }
 });
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/menu/tablePage.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/menu/tablePage.mjs
 var ZtTablePage = defineComponent({
   name: "ZtTablePage",
   slots: Object,
@@ -15377,7 +15380,7 @@ var ZtTablePage = defineComponent({
   }
 });
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/dialog/dialog-form.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/dialog/dialog-form.mjs
 var {
   dialog_width
 } = crudConfig;
@@ -15571,7 +15574,7 @@ var XDiaLogForm = defineComponent({
   }
 });
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/dialog/src/index.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/dialog/src/index.mjs
 var ZtDialog = defineComponent({
   name: "ZtDialog",
   props: {
@@ -15745,7 +15748,7 @@ var ZtDialog = defineComponent({
   }
 });
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/dialog/dialog-import.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/dialog/dialog-import.mjs
 function _isSlot5(s) {
   return typeof s === "function" || Object.prototype.toString.call(s) === "[object Object]" && !isVNode(s);
 }
@@ -15865,12 +15868,12 @@ var XDialogImport = (props, slots) => {
   });
 };
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/_util/canUseDom.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/_util/canUseDom.mjs
 function canUseDom() {
   return !!(typeof window !== "undefined" && window.document && window.document.createElement);
 }
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/useId.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/useId.mjs
 var uuid = 0;
 var isBrowserClient = canUseDom();
 function getUUID() {
@@ -15888,7 +15891,7 @@ function useId(id = ref("")) {
   return id.value || innerId;
 }
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/crud.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/crud.mjs
 function _isSlot6(s) {
   return typeof s === "function" || Object.prototype.toString.call(s) === "[object Object]" && !isVNode(s);
 }
@@ -16346,7 +16349,7 @@ var XCrud = withInstallVue(defineComponent({
   }
 }));
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/dialog/src/dialogDirective.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/dialog/src/dialogDirective.mjs
 var dialogDirectiveProps = {
   option: objectType(),
   contentStyle: objectType()
@@ -16406,7 +16409,7 @@ var XDialogDirective = defineComponent({
   }
 });
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/dialog/src/dialog.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/dialog/src/dialog.mjs
 var $XDialog = withInstallFunction((_context) => {
   const defaultContext = _context;
   return (component, props) => {
@@ -16439,19 +16442,19 @@ var $XDialog = withInstallFunction((_context) => {
   };
 }, "$XDialog");
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/dialog/index.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/dialog/index.mjs
 var XDialog = withInstall(ZtDialog);
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/cjx-low-code/component.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/cjx-low-code/component.mjs
 var Components = [XCrud, XForm, XEditTable, XDialog];
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/cjx-low-code/plugin.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/cjx-low-code/plugin.mjs
 var Plugins = [$XDialog];
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/cjx-low-code/defaults.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/cjx-low-code/defaults.mjs
 var installer = makeInstaller([...Components, ...Plugins]);
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.26_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/cjx-low-code/index.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.27_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/cjx-low-code/index.mjs
 var install = installer.install;
 var version3 = installer.version;
 export {

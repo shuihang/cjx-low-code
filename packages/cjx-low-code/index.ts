@@ -6,6 +6,7 @@ export type {
   CrudPageProps,
   BeforeOpen,
   CrudPermission,
+  FormOption,
   EditTableProps,
   EditTableOption,
   DialogProps,

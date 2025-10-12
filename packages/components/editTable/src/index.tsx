@@ -279,7 +279,7 @@ export const XEditTable = withInstallVue(defineComponent({
                 <ElIcon>
                   <Plus />
                 </ElIcon>
-                {t('editTable.add_a_row')}
+                {t('table.add_a_row')}
               </ElButton>
             </div>
           )}
