@@ -182,7 +182,7 @@ const XHeaderMenu = defineComponent({
       !(excelBtn && permission?.exportBtn) &&
       !menuHeaderRight &&
       !slots.default ? (
-        <></>
+        <template></template>
       ) : (
         <div
           class={[

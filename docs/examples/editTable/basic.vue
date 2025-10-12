@@ -12,6 +12,7 @@ import type { EditTableOption } from 'cjx-low-code'
 const data = ref([])
 
 const option = ref<EditTableOption>({
+  sortable: false,
   addBtn: true,
   delBtn: true,
   copyBtn: true,
@@ -26,21 +27,21 @@ const option = ref<EditTableOption>({
       prop: 'age',
       type: 'inputNumber',
     },
-    {
-      label: '性别',
-      prop: 'sex',
-      type: 'select',
-      dicData: [
-        {
-          label: '男',
-          value: '1'
-        },
-        {
-          label: '女',
-          value: '2'
-        }
-      ]
-    }
+    // {
+    //   label: '性别',
+    //   prop: 'sex',
+    //   type: 'select',
+    //   dicData: [
+    //     {
+    //       label: '男',
+    //       value: '1'
+    //     },
+    //     {
+    //       label: '女',
+    //       value: '2'
+    //     }
+    //   ]
+    // }
   ]
 })
 
