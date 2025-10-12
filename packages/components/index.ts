@@ -7,7 +7,7 @@ export { XForm } from './form'
 // types
 export type { TableOption, CrudPageProps, CrudPermission, BeforeOpen, ColumnProps } from './crud'
 export type { DialogProps, DialogDirectiveInterface } from './dialog'
-export type { EditTableProps } from './editTable'
+export type { EditTableProps, EditTableOption } from './editTable'
 export type { FormOption } from './form'
 
 

@@ -35,6 +35,8 @@ const getSidebar = () => {
         collapsed: true,
         items: [
           { text: 'Crud', link: '/zh-cn/components/crud.md' },
+          { text: 'Form', link: '/zh-cn/components/form.md' },
+          { text: 'EditTable', link: '/zh-cn/components/editTable.md' },
           { text: '$XDialog', link: '/zh-cn/components/dialog.md' },
         ]
       },

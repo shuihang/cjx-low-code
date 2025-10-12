@@ -51,7 +51,6 @@
 | copyChange | 复制按钮点击事件 | <popover content="(row: any, index: number) => void">`Function`</popover> | - |
 | sortableChange | 拖动排序响应的事件 | <popover content="(sortable: SortableEvent) => void">`Function`</popover> | - |
 
-
 ## Slot
 
 | 插槽名  | 说明 | 作用域参数 |
