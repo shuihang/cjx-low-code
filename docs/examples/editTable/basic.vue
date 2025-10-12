@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { XEditTable } from '@cjx-low-code/components'
+import { XEditTable } from 'cjx-low-code'
 import type { EditTableOption } from 'cjx-low-code'
 
 const data = ref([])
