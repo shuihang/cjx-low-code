@@ -51,9 +51,12 @@ export default defineConfig({
   title: "cjx-low-code",
   description: "低代码",
   
-  
+  head: [
+    ['link', { rel: 'icon', href: '/logo.png' }]
+  ],
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
+    logo: '/logo.png',
     nav: [
       { text: '首页', link: '/' },
       { text: '指南', link: '/zh-cn/guide/basic/install.md' },
