@@ -1,4 +1,4 @@
-// ../node_modules/.pnpm/vue-demi@0.14.10_vue@3.5.22/node_modules/vue-demi/lib/index.mjs
+// ../node_modules/.pnpm/vitepress@1.1.0_@algolia+client-search@5.40.0_@types+node@20.19.21_postcss@8.5.6_react-dom@18_qu7wkbtfbwrmso2v3homhcf5mm/node_modules/vitepress/lib/vue-demi.mjs
 var isVue2 = false;
 var isVue3 = true;
 function set(target, key, val) {
@@ -24,4 +24,13 @@ export {
   set,
   del
 };
-//# sourceMappingURL=chunk-NJU3Y4WP.js.map
+/*! Bundled license information:
+
+vitepress/lib/vue-demi.mjs:
+  (**
+   * vue-demi v0.14.7
+   * Copyright (c) 2020-present, Anthony Fu
+   * @license MIT
+   *)
+*/
+//# sourceMappingURL=chunk-TDJFVP5C.js.map

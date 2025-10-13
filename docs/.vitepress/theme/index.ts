@@ -1,6 +1,7 @@
 // docs/.vitepress/theme/index.ts
 import DefaultTheme from 'vitepress/theme'
-import { createApp, App } from 'vue' // 如果组件库依赖了某些Vue插件，可能需要createApp
+import { createApp, App, watch, ref } from 'vue' // 如果组件库依赖了某些Vue插件，可能需要createApp
+import { useData, inBrowser, useRoute } from 'vitepress'
 import { AntDesignContainer } from '@vitepress-demo-preview/component'
 import '@vitepress-demo-preview/component/dist/style.css'; // 引入预览组件样式
 import ElementPlus from 'element-plus' // 引入 Element Plus
@@ -19,11 +20,24 @@ import { XCrud, XForm, XEditTable , $XDialog } from '@cjx-low-code/components'
 import 'cjx-low-code/dist/index.css'
 import './style.css'
 
+const lang = ref('zh-CN')
+
 
 export default {
   ...DefaultTheme,
+  setup() {
+    const { lang, theme } = useData()
+    // 监听语言变化
+    watch(lang, (newLang) => {
+      if (!inBrowser) return
+      
+      lang.value = newLang
+      console.log(`🌐 语言已切换至: ${newLang}`)
+    })
+  },
   // 在enhanceApp中注册组件
   enhanceApp({ app }: { app: App }) {
+    
     // 注册整个组件库（如果你的组件库提供了install方法）
     app.use(ElementPlus, { locale: zhCn })
     app.component('popover', Popover)
@@ -39,5 +53,6 @@ export default {
 
     // 注册Demo预览插件提供的容器组件
     app.component('demo-preview', AntDesignContainer)
+
   }
 }

@@ -1,109 +1,97 @@
 {
-  "hash": "69b042b7",
-  "configHash": "001ff639",
-  "lockfileHash": "1ac9a8ec",
-  "browserHash": "ed2a2721",
+  "hash": "59fd59fe",
+  "configHash": "266a43bd",
+  "lockfileHash": "85679c35",
+  "browserHash": "ec5b395f",
   "optimized": {
     "vue": {
       "src": "../../../../node_modules/.pnpm/vue@3.5.22_typescript@5.0.4/node_modules/vue/dist/vue.runtime.esm-bundler.js",
       "file": "vue.js",
-      "fileHash": "dbabfc7f",
+      "fileHash": "f89d984e",
       "needsInterop": false
     },
     "vitepress > @vue/devtools-api": {
       "src": "../../../../node_modules/.pnpm/@vue+devtools-api@7.7.7/node_modules/@vue/devtools-api/dist/index.js",
       "file": "vitepress___@vue_devtools-api.js",
-      "fileHash": "b816953a",
+      "fileHash": "6c8d9fbb",
       "needsInterop": false
     },
     "vitepress > @vueuse/core": {
       "src": "../../../../node_modules/.pnpm/@vueuse+core@10.11.1_vue@3.5.22/node_modules/@vueuse/core/index.mjs",
       "file": "vitepress___@vueuse_core.js",
-      "fileHash": "2984e760",
+      "fileHash": "11bff0be",
       "needsInterop": false
     },
     "@vitepress-demo-preview/component": {
-      "src": "../../../../node_modules/.pnpm/@vitepress-demo-preview+component@2.5.2_vitepress@1.0.0_vue@3.5.22/node_modules/@vitepress-demo-preview/component/dist/preview-component.js",
+      "src": "../../../../node_modules/.pnpm/@vitepress-demo-preview+component@2.5.2_vitepress@1.1.0_vue@3.5.22/node_modules/@vitepress-demo-preview/component/dist/preview-component.js",
       "file": "@vitepress-demo-preview_component.js",
-      "fileHash": "5dff151e",
+      "fileHash": "34c524dc",
       "needsInterop": false
     },
     "element-plus": {
       "src": "../../../../node_modules/.pnpm/element-plus@2.8.4_vue@3.5.22/node_modules/element-plus/es/index.mjs",
       "file": "element-plus.js",
-      "fileHash": "a278213e",
+      "fileHash": "871aa145",
       "needsInterop": false
     },
     "element-plus/es/locale/lang/zh-cn": {
       "src": "../../../../node_modules/.pnpm/element-plus@2.8.4_vue@3.5.22/node_modules/element-plus/es/locale/lang/zh-cn.mjs",
       "file": "element-plus_es_locale_lang_zh-cn.js",
-      "fileHash": "732e3cc8",
-      "needsInterop": false
-    },
-    "@element-plus/icons-vue": {
-      "src": "../../../../node_modules/.pnpm/@element-plus+icons-vue@2.1.0_vue@3.5.22/node_modules/@element-plus/icons-vue/dist/index.js",
-      "file": "@element-plus_icons-vue.js",
-      "fileHash": "0dd3b665",
-      "needsInterop": false
-    },
-    "vue-draggable-plus": {
-      "src": "../../../../node_modules/.pnpm/vue-draggable-plus@0.5.3_@types+sortablejs@1.15.8/node_modules/vue-draggable-plus/dist/vue-draggable-plus.js",
-      "file": "vue-draggable-plus.js",
-      "fileHash": "5a60bb80",
-      "needsInterop": false
-    },
-    "lodash-unified": {
-      "src": "../../../../node_modules/.pnpm/lodash-unified@1.0.3_@types+lodash-es@4.17.11_lodash-es@4.17.21_lodash@4.17.21/node_modules/lodash-unified/import.js",
-      "file": "lodash-unified.js",
-      "fileHash": "c3dbeadc",
-      "needsInterop": false
-    },
-    "sortablejs": {
-      "src": "../../../../node_modules/.pnpm/sortablejs@1.15.0/node_modules/sortablejs/modular/sortable.esm.js",
-      "file": "sortablejs.js",
-      "fileHash": "4ea3af91",
-      "needsInterop": false
-    },
-    "lodash-es": {
-      "src": "../../../../node_modules/.pnpm/lodash-es@4.17.21/node_modules/lodash-es/lodash.js",
-      "file": "lodash-es.js",
-      "fileHash": "c827a60b",
+      "fileHash": "b2cdcc17",
       "needsInterop": false
     },
     "element-plus/es/locale/lang/en": {
       "src": "../../../../node_modules/.pnpm/element-plus@2.8.4_vue@3.5.22/node_modules/element-plus/es/locale/lang/en.mjs",
       "file": "element-plus_es_locale_lang_en.js",
-      "fileHash": "1883ebba",
+      "fileHash": "04072f3c",
       "needsInterop": false
     },
-    "cjx-low-code": {
-      "src": "../../../../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/cjx-low-code/index.mjs",
-      "file": "cjx-low-code.js",
-      "fileHash": "e3654899",
+    "@element-plus/icons-vue": {
+      "src": "../../../../node_modules/.pnpm/@element-plus+icons-vue@2.1.0_vue@3.5.22/node_modules/@element-plus/icons-vue/dist/index.js",
+      "file": "@element-plus_icons-vue.js",
+      "fileHash": "e517b333",
+      "needsInterop": false
+    },
+    "vue-draggable-plus": {
+      "src": "../../../../node_modules/.pnpm/vue-draggable-plus@0.5.3_@types+sortablejs@1.15.8/node_modules/vue-draggable-plus/dist/vue-draggable-plus.js",
+      "file": "vue-draggable-plus.js",
+      "fileHash": "bdc7e015",
+      "needsInterop": false
+    },
+    "lodash-unified": {
+      "src": "../../../../node_modules/.pnpm/lodash-unified@1.0.3_@types+lodash-es@4.17.11_lodash-es@4.17.21_lodash@4.17.21/node_modules/lodash-unified/import.js",
+      "file": "lodash-unified.js",
+      "fileHash": "ebc9d7a2",
+      "needsInterop": false
+    },
+    "sortablejs": {
+      "src": "../../../../node_modules/.pnpm/sortablejs@1.15.0/node_modules/sortablejs/modular/sortable.esm.js",
+      "file": "sortablejs.js",
+      "fileHash": "4ccce7f4",
+      "needsInterop": false
+    },
+    "lodash-es": {
+      "src": "../../../../node_modules/.pnpm/lodash-es@4.17.21/node_modules/lodash-es/lodash.js",
+      "file": "lodash-es.js",
+      "fileHash": "42262365",
       "needsInterop": false
     }
   },
   "chunks": {
-    "chunk-C2WN3DPW": {
-      "file": "chunk-C2WN3DPW.js"
-    },
-    "chunk-BMZXNES3": {
-      "file": "chunk-BMZXNES3.js"
-    },
-    "chunk-NJU3Y4WP": {
-      "file": "chunk-NJU3Y4WP.js"
-    },
-    "chunk-DGLW74D3": {
-      "file": "chunk-DGLW74D3.js"
-    },
-    "chunk-XEWVCCY3": {
-      "file": "chunk-XEWVCCY3.js"
-    },
     "chunk-M375YADR": {
       "file": "chunk-M375YADR.js"
     },
     "chunk-BNPOPI77": {
       "file": "chunk-BNPOPI77.js"
+    },
+    "chunk-TDJFVP5C": {
+      "file": "chunk-TDJFVP5C.js"
+    },
+    "chunk-BMZXNES3": {
+      "file": "chunk-BMZXNES3.js"
+    },
+    "chunk-DGLW74D3": {
+      "file": "chunk-DGLW74D3.js"
     },
     "chunk-5WRI5ZAA": {
       "file": "chunk-5WRI5ZAA.js"
