@@ -1,7 +1,4 @@
 import {
-  zhCn
-} from "./chunk-XEWVCCY3.js";
-import {
   ElButton,
   ElCard,
   ElCascader,
@@ -37,13 +34,8 @@ import {
   ElTreeSelect,
   ElUpload,
   provideGlobalConfig
-} from "./chunk-UUTFWVL2.js";
-import "./chunk-M375YADR.js";
-import {
-  cloneDeep_default,
-  clone_default,
-  get_default
-} from "./chunk-BNPOPI77.js";
+} from "./chunk-C2WN3DPW.js";
+import "./chunk-BMZXNES3.js";
 import "./chunk-NJU3Y4WP.js";
 import {
   Fragment,
@@ -69,6 +61,7 @@ import {
   reactive,
   ref,
   render,
+  renderSlot,
   resolveComponent,
   resolveDirective,
   toRefs,
@@ -78,32 +71,21 @@ import {
   watchEffect,
   withDirectives
 } from "./chunk-DGLW74D3.js";
+import {
+  zhCn
+} from "./chunk-XEWVCCY3.js";
+import "./chunk-M375YADR.js";
+import {
+  cloneDeep_default,
+  clone_default,
+  get_default
+} from "./chunk-BNPOPI77.js";
 import "./chunk-5WRI5ZAA.js";
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/cjx-low-code/version.mjs
-var version = "0.0.0-dev.1";
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/cjx-low-code/version.mjs
+var version = "0.0.1.dev";
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/cjx-low-code/make-installer.mjs
-var makeInstaller = (components = []) => {
-  const install2 = (app, options) => {
-    console.log("options", options);
-    components.forEach((component) => {
-      app.use(component);
-    });
-    if (options) {
-      provideGlobalConfig(options, app, true);
-    } else {
-      console.log("provideGlobalConfig", options);
-      provideGlobalConfig({ locale: zhCn }, app, true);
-    }
-  };
-  return {
-    version,
-    install: install2
-  };
-};
-
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/node_modules/.pnpm/vue-draggable-plus@0.5.3_@types_sortablejs@1.15.8/node_modules/vue-draggable-plus/dist/vue-draggable-plus.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/node_modules/.pnpm/vue-draggable-plus@0.5.3_@types_sortablejs@1.15.8/node_modules/vue-draggable-plus/dist/vue-draggable-plus.mjs
 var rn = Object.defineProperty;
 var Ne = Object.getOwnPropertySymbols;
 var vt = Object.prototype.hasOwnProperty;
@@ -1748,140 +1730,143 @@ var so = {
   }
 };
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/locale/lang/zh-CN.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/locale/lang/zh-CN.mjs
 var Chinese = {
-  common: {
-    inputText: "请输入",
-    selectText: "请选择",
-    startTimeText: "开始时间",
-    endTimeText: "结束时间",
-    back: "返回",
-    ok: "确定",
-    save: "保存",
-    cancel: "取消",
-    close: "关闭",
-    reload: "重新加载",
-    success: "成功",
-    query: "查询",
-    reset: "重置",
-    shrink: "收起",
-    expand: "展开",
-    index: "序号",
-    copy: "复制",
-    copySuccess: "复制成功",
-    copyError: "复制失败"
-  },
-  permission: {},
-  size: {
-    default: "默认",
-    large: "大",
-    small: "小"
-  },
-  form: {
-    input: "输入框",
-    inputNumber: "数字输入框",
-    default: "默认",
-    icon: "图标",
-    mixed: "复合型",
-    textarea: "多行文本",
-    slot: "插槽",
-    position: "位置",
-    autocomplete: "自动补全",
-    select: "选择器",
-    selectGroup: "选项分组",
-    selectV2: "虚拟列表选择器",
-    cascader: "级联选择器",
-    switch: "开关",
-    rate: "评分",
-    colorPicker: "颜色选择器",
-    transfer: "穿梭框",
-    render: "渲染器",
-    radio: "单选框",
-    button: "按钮",
-    checkbox: "多选框",
-    slider: "滑块",
-    datePicker: "日期选择器",
-    shortcuts: "快捷选项",
-    today: "今天",
-    yesterday: "昨天",
-    aWeekAgo: "一周前",
-    week: "周",
-    year: "年",
-    month: "月",
-    dates: "日期",
-    daterange: "日期范围",
-    monthrange: "月份范围",
-    dateTimePicker: "日期时间选择器",
-    dateTimerange: "日期时间范围",
-    timePicker: "时间选择器",
-    timeSelect: "时间选择",
-    inputPassword: "密码输入框",
-    passwordStrength: "密码强度",
-    operate: "操作",
-    change: "更改",
-    restore: "还原",
-    disabled: "禁用",
-    disablement: "解除禁用",
-    delete: "删除",
-    add: "添加",
-    setValue: "设置值",
-    resetValue: "重置值",
-    set: "设置",
-    subitem: "子项",
-    formValidation: "表单验证",
-    verifyReset: "验证重置",
-    remark: "备注"
-  },
-  table: {
-    table: "表格",
-    index: "序号",
-    title: "标题",
-    action: "操作",
-    columnDisplay: "列展示",
-    numberColumn: "序号列",
-    checkColumn: "勾选列",
-    refresh: "刷新",
-    density: "密度",
-    columnSettings: "列设置",
-    hideSearchBar: "隐藏搜索栏",
-    displaySearchBar: "显示搜索栏",
-    compact: "紧凑",
-    looseAndComfortable: "宽松",
-    add_a_row: "新增一行"
-  },
-  action: {
-    create: "新增",
-    add: "新增",
-    del: "删除",
-    delete: "删除",
-    edit: "编辑",
-    update: "编辑",
-    preview: "预览",
-    more: "更多",
-    export: "导出",
-    import: "导入"
-  },
-  cropper: {
-    selectImage: "选择图片",
-    uploadSuccess: "上传成功",
-    modalTitle: "头像上传",
-    okText: "确认并上传",
-    btn_reset: "重置",
-    btn_rotate_left: "逆时针旋转",
-    btn_rotate_right: "顺时针旋转",
-    btn_scale_x: "水平翻转",
-    btn_scale_y: "垂直翻转",
-    btn_zoom_in: "放大",
-    btn_zoom_out: "缩小",
-    preview: "预览"
-  },
-  "OAuth 2.0": "OAuth 2.0"
+  name: "zh-cn",
+  cjx: {
+    common: {
+      inputText: "请输入",
+      selectText: "请选择",
+      startTimeText: "开始时间",
+      endTimeText: "结束时间",
+      back: "返回",
+      ok: "确定",
+      save: "保存",
+      cancel: "取消",
+      close: "关闭",
+      reload: "重新加载",
+      success: "成功",
+      query: "查询",
+      reset: "重置",
+      shrink: "收起",
+      expand: "展开",
+      index: "序号",
+      copy: "复制",
+      copySuccess: "复制成功",
+      copyError: "复制失败"
+    },
+    permission: {},
+    size: {
+      default: "默认",
+      large: "大",
+      small: "小"
+    },
+    form: {
+      input: "输入框",
+      inputNumber: "数字输入框",
+      default: "默认",
+      icon: "图标",
+      mixed: "复合型",
+      textarea: "多行文本",
+      slot: "插槽",
+      position: "位置",
+      autocomplete: "自动补全",
+      select: "选择器",
+      selectGroup: "选项分组",
+      selectV2: "虚拟列表选择器",
+      cascader: "级联选择器",
+      switch: "开关",
+      rate: "评分",
+      colorPicker: "颜色选择器",
+      transfer: "穿梭框",
+      render: "渲染器",
+      radio: "单选框",
+      button: "按钮",
+      checkbox: "多选框",
+      slider: "滑块",
+      datePicker: "日期选择器",
+      shortcuts: "快捷选项",
+      today: "今天",
+      yesterday: "昨天",
+      aWeekAgo: "一周前",
+      week: "周",
+      year: "年",
+      month: "月",
+      dates: "日期",
+      daterange: "日期范围",
+      monthrange: "月份范围",
+      dateTimePicker: "日期时间选择器",
+      dateTimerange: "日期时间范围",
+      timePicker: "时间选择器",
+      timeSelect: "时间选择",
+      inputPassword: "密码输入框",
+      passwordStrength: "密码强度",
+      operate: "操作",
+      change: "更改",
+      restore: "还原",
+      disabled: "禁用",
+      disablement: "解除禁用",
+      delete: "删除",
+      add: "添加",
+      setValue: "设置值",
+      resetValue: "重置值",
+      set: "设置",
+      subitem: "子项",
+      formValidation: "表单验证",
+      verifyReset: "验证重置",
+      remark: "备注"
+    },
+    table: {
+      table: "表格",
+      index: "序号",
+      title: "标题",
+      action: "操作",
+      columnDisplay: "列展示",
+      numberColumn: "序号列",
+      checkColumn: "勾选列",
+      refresh: "刷新",
+      density: "密度",
+      columnSettings: "列设置",
+      hideSearchBar: "隐藏搜索栏",
+      displaySearchBar: "显示搜索栏",
+      compact: "紧凑",
+      looseAndComfortable: "宽松",
+      add_a_row: "新增一行"
+    },
+    action: {
+      create: "新增",
+      add: "新增",
+      del: "删除",
+      delete: "删除",
+      edit: "编辑",
+      update: "编辑",
+      preview: "预览",
+      more: "更多",
+      export: "导出",
+      import: "导入",
+      check: "查看"
+    },
+    cropper: {
+      selectImage: "选择图片",
+      uploadSuccess: "上传成功",
+      modalTitle: "头像上传",
+      okText: "确认并上传",
+      btn_reset: "重置",
+      btn_rotate_left: "逆时针旋转",
+      btn_rotate_right: "顺时针旋转",
+      btn_scale_x: "水平翻转",
+      btn_scale_y: "垂直翻转",
+      btn_zoom_in: "放大",
+      btn_zoom_out: "缩小",
+      preview: "预览"
+    }
+  }
 };
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/hooks/useLocale/index.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/hooks/useLocale/index.mjs
 var buildTranslator = (locale) => (path, option2) => translate(path, option2, unref(locale));
 var translate = (path, option2, locale) => {
-  return get_default(locale, path, path).replace(
+  return get_default(locale, `cjx.${path}`, `cjx.${path}`).replace(
     /\{(\w+)\}/g,
     (_, key) => {
       var _a;
@@ -1898,13 +1883,15 @@ var buildLocaleContext = (locale) => {
     t: buildTranslator(locale)
   };
 };
-var localeContextKey = Symbol("localeContextKey");
+var localeContextKey = Symbol("cjxLocaleContextKey");
 var useLocale = (localeOverrides) => {
+  var _a;
   const locale = localeOverrides || inject(localeContextKey, ref());
+  console.log("useLocale", (_a = inject(localeContextKey)) == null ? void 0 : _a.value);
   return buildLocaleContext(computed(() => (locale == null ? void 0 : locale.value) || Chinese));
 };
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/hooks/useMessage/index.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/hooks/useMessage/index.mjs
 var mainTextStyle = { fontWeight: 700, fontSize: "15px" };
 var subTextStyle = {
   fontWeight: 400,
@@ -2022,7 +2009,7 @@ var useMessage = () => {
   };
 };
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/_util/download.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/_util/download.mjs
 var message = useMessage();
 var SMALL_DATA_SIZE_LIMIT = 150;
 var checkResponseValid = (responseBlob) => {
@@ -2082,7 +2069,7 @@ var download = {
   }
 };
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/_util/type.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/_util/type.mjs
 function objectType(defaultVal) {
   return { type: Object, default: defaultVal };
 }
@@ -2148,7 +2135,7 @@ var withInstallFunction = (fn, name) => {
   return fn;
 };
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/dialog/src/context.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/dialog/src/context.mjs
 var dialogProviderKey = Symbol("dialogProviderKey");
 var useDialogProviderKey = (props) => {
   return provide(dialogProviderKey, props);
@@ -2163,7 +2150,7 @@ var useDialogInjectKey = () => {
   );
 };
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/_util/toReactive.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/_util/toReactive.mjs
 function toReactive(objectRef) {
   if (!isRef(objectRef))
     return reactive(objectRef);
@@ -2198,7 +2185,7 @@ function toReactive(objectRef) {
   return reactive(proxy);
 }
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/interface.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/interface.mjs
 var componentPropsValues = [
   "input",
   "textarea",
@@ -2263,7 +2250,7 @@ var fromProps = () => ({
   disabled: booleanType(false)
 });
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/context.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/context.mjs
 var formProviderKey = Symbol("formProviderKey");
 var useFormProviderKey = (props) => {
   return provide(formProviderKey, props);
@@ -2272,7 +2259,7 @@ var useFormInjectKey = () => {
   return inject(formProviderKey);
 };
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/config.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/config.mjs
 var form_config = {
   span: 12,
   search_span: 12,
@@ -2284,7 +2271,7 @@ var form_config = {
   menu_btn: true
 };
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/dicTag/index.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/dicTag/index.mjs
 var tagColor = {
   primary: "#409eff",
   success: "#67C23A",
@@ -2332,7 +2319,7 @@ var ZtDicTag = defineComponent({
   }
 });
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/_util/tool.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/_util/tool.mjs
 var arraySort = (arr, key, customFunc) => {
   const cloneArr = clone_default(arr);
   return cloneArr.sort((a, b) => {
@@ -2376,7 +2363,7 @@ var translateCheckFormStr = (str, dicData, props) => {
   return strArr.join(",");
 };
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/_util/pick.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/_util/pick.mjs
 function pick(obj, fields) {
   const shallowCopy = {};
   for (const key of fields) {
@@ -2385,7 +2372,7 @@ function pick(obj, fields) {
   return shallowCopy;
 }
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/node_modules/.pnpm/@element-plus_icons-vue@2.1.0_vue@3.5.22/node_modules/@element-plus/icons-vue/dist/index.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/node_modules/.pnpm/@element-plus_icons-vue@2.1.0_vue@3.5.22/node_modules/@element-plus/icons-vue/dist/index.mjs
 var add_location_vue_vue_type_script_lang_default = {
   name: "AddLocation"
 };
@@ -10668,12 +10655,12 @@ function _sfc_render293(_ctx, _cache, $props, $setup, $data, $options) {
 }
 var zoom_out_default = export_helper_default(zoom_out_vue_vue_type_script_lang_default, [["render", _sfc_render293], ["__file", "zoom-out.vue"]]);
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/hooks/useCompRef/index.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/hooks/useCompRef/index.mjs
 function useCompRef(_comp) {
   return ref();
 }
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/editTable/src/interface.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/editTable/src/interface.mjs
 var { t } = useLocale();
 var inputPlaceholder = t("common.inputText");
 var selectPlaceholder = t("common.selectText");
@@ -10709,7 +10696,7 @@ var editTableProps = () => ({
   label: stringType()
 });
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/editTable/src/index.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/editTable/src/index.mjs
 function _isSlot(s) {
   return typeof s === "function" || Object.prototype.toString.call(s) === "[object Object]" && !isVNode(s);
 }
@@ -10938,7 +10925,7 @@ var XEditTable = withInstallVue(defineComponent({
   }
 }));
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/tempform.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/tempform.mjs
 var {
   t: t2
 } = useLocale();
@@ -11021,7 +11008,7 @@ var tempForm = {
   }
 };
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/_util/omit.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/_util/omit.mjs
 function omit(obj, fields) {
   const shallowCopy = Object.assign({}, obj);
   for (const key of fields) {
@@ -11030,7 +11017,7 @@ function omit(obj, fields) {
   return shallowCopy;
 }
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/icon/index.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/icon/index.mjs
 var ShowSearchBarOutlined = (_, {
   attrs
 }) => {
@@ -11281,7 +11268,7 @@ var DownloadOutlined = () => {
   }, null)]);
 };
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/init/initFormTamplate.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/init/initFormTamplate.mjs
 function _isSlot2(s) {
   return typeof s === "function" || Object.prototype.toString.call(s) === "[object Object]" && !isVNode(s);
 }
@@ -11731,7 +11718,7 @@ var RenderViewFormVNode = class extends Common {
   }
 };
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/init/index.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/init/index.mjs
 function InitSearchFormVNode(argv) {
   return new RenderSearchFormVNode(argv).init();
 }
@@ -11747,7 +11734,7 @@ function InitFormTemplate(argv) {
   return isView || (ztBoxType == null ? void 0 : ztBoxType.value) === "check" ? new RenderViewFormVNode(argvWithColumn).init() : new RenderFormVNode(argvWithColumn).init();
 }
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/type/group-form.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/type/group-form.mjs
 var ZtGroupForm = defineComponent({
   name: "ZtGroupForm",
   props: {
@@ -11847,7 +11834,7 @@ var ZtGroupForm = defineComponent({
   }
 });
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/menu.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/menu.mjs
 var XFromMenu = defineComponent({
   name: "XFromMenu",
   props: {
@@ -11925,7 +11912,7 @@ var XFromMenu = defineComponent({
   }
 });
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/utils.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/utils.mjs
 var getValueByPath = (form, path) => {
   return computed({
     get() {
@@ -11963,7 +11950,7 @@ var getValueByPath = (form, path) => {
   });
 };
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/index.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/index.mjs
 function _isSlot3(s) {
   return typeof s === "function" || Object.prototype.toString.call(s) === "[object Object]" && !isVNode(s);
 }
@@ -12262,7 +12249,7 @@ var XForm = withInstall(defineComponent({
   }
 }));
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/icon/index.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/icon/index.mjs
 var More = (_, {
   attrs
 }) => {
@@ -12281,7 +12268,7 @@ var More = (_, {
   }, null)]);
 };
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/interface.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/interface.mjs
 var crudProps = () => ({
   data: arrayType(),
   option: objectType(),
@@ -12297,7 +12284,7 @@ var crudProps = () => ({
   dialogClassName: stringType()
 });
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/context.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/context.mjs
 var crudProviderKey = Symbol("crudProviderKey");
 var useCrudProviderKey = (props) => {
   return provide(crudProviderKey, props);
@@ -12306,7 +12293,7 @@ var useCrudInjectKey = () => {
   return inject(crudProviderKey);
 };
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/search.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/form/src/search.mjs
 var {
   search_span,
   label_width: label_width2,
@@ -12572,7 +12559,7 @@ var XFormSearch = defineComponent({
   }
 });
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/menu/headerSearch.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/menu/headerSearch.mjs
 var XHeaderSearch = defineComponent({
   name: "XHeaderSearch",
   setup(_, {
@@ -12624,7 +12611,7 @@ var XHeaderSearch = defineComponent({
   }
 });
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/config.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/config.mjs
 var { t: t3 } = useLocale();
 var crudConfig = {
   row_key: "id",
@@ -12641,7 +12628,7 @@ var crudConfig = {
   dropRowClass: ".el-table__body-wrapper table tbody"
 };
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/column/column-menu.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/column/column-menu.mjs
 var {
   menu_fixed,
   menu_width,
@@ -12673,7 +12660,7 @@ var XColumnMenu = defineComponent({
   }
 });
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/column/column.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/column/column.mjs
 var {
   row_key,
   index_width,
@@ -12794,7 +12781,7 @@ var XTableColumn = defineComponent({
   }
 });
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/node_modules/.pnpm/sortablejs@1.15.0/node_modules/sortablejs/modular/sortable.esm.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/node_modules/.pnpm/sortablejs@1.15.0/node_modules/sortablejs/modular/sortable.esm.mjs
 function ownKeys(object, enumerableOnly) {
   var keys = Object.keys(object);
   if (Object.getOwnPropertySymbols) {
@@ -14963,7 +14950,7 @@ _extends(Remove, {
 Sortable.mount(new AutoScrollPlugin());
 Sortable.mount(Remove, Revert);
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/menu/headerMenu.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/menu/headerMenu.mjs
 function _isSlot4(s) {
   return typeof s === "function" || Object.prototype.toString.call(s) === "[object Object]" && !isVNode(s);
 }
@@ -15315,7 +15302,7 @@ var XHeaderMenu = defineComponent({
   }
 });
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/menu/tablePage.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/menu/tablePage.mjs
 var ZtTablePage = defineComponent({
   name: "ZtTablePage",
   slots: Object,
@@ -15381,7 +15368,7 @@ var ZtTablePage = defineComponent({
   }
 });
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/dialog/dialog-form.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/dialog/dialog-form.mjs
 var {
   dialog_width
 } = crudConfig;
@@ -15575,7 +15562,7 @@ var XDiaLogForm = defineComponent({
   }
 });
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/dialog/src/index.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/dialog/src/index.mjs
 var ZtDialog = defineComponent({
   name: "ZtDialog",
   props: {
@@ -15749,7 +15736,7 @@ var ZtDialog = defineComponent({
   }
 });
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/dialog/dialog-import.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/dialog/dialog-import.mjs
 function _isSlot5(s) {
   return typeof s === "function" || Object.prototype.toString.call(s) === "[object Object]" && !isVNode(s);
 }
@@ -15869,12 +15856,12 @@ var XDialogImport = (props, slots) => {
   });
 };
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/_util/canUseDom.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/_util/canUseDom.mjs
 function canUseDom() {
   return !!(typeof window !== "undefined" && window.document && window.document.createElement);
 }
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/useId.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/useId.mjs
 var uuid = 0;
 var isBrowserClient = canUseDom();
 function getUUID() {
@@ -15892,7 +15879,23 @@ function useId(id = ref("")) {
   return id.value || innerId;
 }
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/crud.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/_util/shared.mjs
+var objectToString = Object.prototype.toString;
+var toTypeString = (value) => objectToString.call(value);
+var isArray = Array.isArray || ((value) => toTypeString(value) === "[object Array]");
+var isFunction = (val) => typeof val === "function";
+
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/hasPermi.mjs
+function hasPermi(permission, scope) {
+  if (isFunction(permission)) {
+    return permission(scope);
+  }
+  if (!permission)
+    return true;
+  return permission.value || true;
+}
+
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/crud/src/crud.mjs
 function _isSlot6(s) {
   return typeof s === "function" || Object.prototype.toString.call(s) === "[object Object]" && !isVNode(s);
 }
@@ -16182,19 +16185,19 @@ var XCrud = withInstallVue(defineComponent({
     expose(exposeFn);
     const menuBtnVNode = (scope) => {
       let _slot, _slot2, _slot3;
-      return createVNode(Fragment, null, [(option2 == null ? void 0 : option2.viewBtn) && (permission == null ? void 0 : permission.viewBtn) && createVNode(ElButton, {
+      return createVNode(Fragment, null, [(option2 == null ? void 0 : option2.viewBtn) && hasPermi(permission == null ? void 0 : permission.viewBtn, scope) && createVNode(ElButton, {
         "link": true,
         "type": "primary",
         "onClick": () => handleShowDialogForm("check", scope.row, scope.$index)
       }, _isSlot6(_slot = t5("action.check")) ? _slot : {
         default: () => [_slot]
-      }), (option2 == null ? void 0 : option2.updateBtn) && (permission == null ? void 0 : permission.editBtn) && createVNode(ElButton, {
+      }), (option2 == null ? void 0 : option2.updateBtn) && hasPermi(permission == null ? void 0 : permission.editBtn, scope) && createVNode(ElButton, {
         "link": true,
         "type": "primary",
         "onClick": () => handleShowDialogForm("update", scope.row, scope.$index)
       }, _isSlot6(_slot2 = t5("action.edit")) ? _slot2 : {
         default: () => [_slot2]
-      }), (option2 == null ? void 0 : option2.delBtn) && createVNode(ElButton, {
+      }), (option2 == null ? void 0 : option2.delBtn) && hasPermi(permission == null ? void 0 : permission.delBtn, scope) && createVNode(ElButton, {
         "link": true,
         "type": "danger",
         "onClick": () => rowDel(scope.row, scope.$index)
@@ -16350,7 +16353,7 @@ var XCrud = withInstallVue(defineComponent({
   }
 }));
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/dialog/src/dialogDirective.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/dialog/src/dialogDirective.mjs
 var dialogDirectiveProps = {
   option: objectType(),
   contentStyle: objectType()
@@ -16410,7 +16413,7 @@ var XDialogDirective = defineComponent({
   }
 });
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/dialog/src/dialog.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/dialog/src/dialog.mjs
 var $XDialog = withInstallFunction((_context) => {
   const defaultContext = _context;
   return (component, props) => {
@@ -16443,23 +16446,86 @@ var $XDialog = withInstallFunction((_context) => {
   };
 }, "$XDialog");
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/dialog/index.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/dialog/index.mjs
 var XDialog = withInstall(ZtDialog);
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/cjx-low-code/component.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/config-provider/src/interface.mjs
+var configProviderProps = () => ({
+  locale: objectType()
+});
+var configProviderContextKey = Symbol();
+
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/config-provider/src/hooks/use-global-config.mjs
+var provideGlobalConfig2 = (config, app, global = false) => {
+  var _a;
+  const inSetup = !!getCurrentInstance();
+  const provideFn = (_a = app == null ? void 0 : app.provide) != null ? _a : inSetup ? provide : void 0;
+  if (!provideFn) {
+    console.warn(
+      "provideGlobalConfig",
+      "You are using provideGlobalConfig() without a valid app instance. Use it inside setup() or pass an app instance."
+    );
+    return;
+  }
+  const context = computed(() => {
+    const cfg = unref(config);
+    return cfg;
+  });
+  provideFn(
+    localeContextKey,
+    ref(context.value.locale)
+  );
+  return context;
+};
+
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/config-provider/src/config-provider.mjs
+var ConfigProvider = defineComponent({
+  name: "XConfigProvider",
+  props: configProviderProps(),
+  setup(props, { slots }) {
+    const config = provideGlobalConfig2(props);
+    return () => renderSlot(slots, "default", { config: config == null ? void 0 : config.value });
+  }
+});
+
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/components/config-provider/index.mjs
+var XConfigProvider = withInstall(ConfigProvider);
+
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/cjx-low-code/make-installer.mjs
+var makeInstaller = (components = []) => {
+  const install2 = (app, options) => {
+    components.forEach((component) => {
+      app.use(component);
+    });
+    if (options) {
+      const elOptions = { ...options, locale: options.locale || zhCn };
+      provideGlobalConfig(elOptions, app, true);
+      provideGlobalConfig2({ locale: options.cjxLocale }, app, true);
+    } else {
+      provideGlobalConfig({ locale: zhCn }, app, true);
+    }
+  };
+  return {
+    version,
+    install: install2
+  };
+};
+
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/cjx-low-code/component.mjs
 var Components = [XCrud, XForm, XEditTable, XDialog];
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/cjx-low-code/plugin.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/cjx-low-code/plugin.mjs
 var Plugins = [$XDialog];
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/cjx-low-code/defaults.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/cjx-low-code/defaults.mjs
 var installer = makeInstaller([...Components, ...Plugins]);
 
-// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.29_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/cjx-low-code/index.mjs
+// ../node_modules/.pnpm/cjx-low-code@0.0.0-dev.30_element-plus@2.8.4_vue@3.5.22/node_modules/cjx-low-code/es/cjx-low-code/index.mjs
 var install = installer.install;
 var version3 = installer.version;
 export {
   $XDialog,
+  XConfigProvider,
   XCrud,
   XDialog,
   XEditTable,

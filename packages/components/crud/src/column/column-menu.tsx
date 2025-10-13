@@ -3,11 +3,9 @@ import { ElTableColumn } from 'element-plus'
 import { useCrudInjectKey } from '../context'
 import crudConfig from '../config'
 import type { CustomSlotsType } from '../../../_util/type'
-// import { useLocale } from '@cjx-low-code/hooks';
+import { useLocale } from '@cjx-low-code/hooks';
 
-const { menu_fixed, menu_width, menu_header_align, menu_title } = crudConfig
-
-// const { t } = useLocale();
+const { menu_fixed, menu_width, menu_header_align } = crudConfig
 
 const XColumnMenu = defineComponent({
   name: 'XColumnMenu',
@@ -15,6 +13,8 @@ const XColumnMenu = defineComponent({
     default?: any
   }>,
   setup(_, { slots }) {
+    const { t } = useLocale();
+
     const {
       menuTitle,
       menuFixed = menu_fixed,
@@ -27,7 +27,7 @@ const XColumnMenu = defineComponent({
         <ElTableColumn
           class-name={'font-size-14px'}
           fixed={menuFixed}
-          label={menuTitle || menu_title}
+          label={menuTitle || t('table.action')}
           minWidth={menuMinWidth}
           width={menuWidth}
           align={menuHeaderAlign}

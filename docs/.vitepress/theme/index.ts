@@ -7,6 +7,7 @@ import ElementPlus from 'element-plus' // 引入 Element Plus
 // import { ElPopover } from 'element-plus'
 import Popover from '../../components/popover.vue'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
+import elEn from 'element-plus/es/locale/lang/en'
 import 'element-plus/dist/index.css' // 引入 Element Plus 样式
 
 
@@ -27,11 +28,11 @@ export default {
     app.use(ElementPlus, { locale: zhCn })
     app.component('popover', Popover)
 
-    //app.use(CjxLowCode, { cjxLocale: en })
+    app.use(CjxLowCode, { cjxLocale: en, locale: elEn })
     
-    app.component('XCrud', XCrud)
-    app.component('XForm', XForm)
-    app.component('XEditTable', XEditTable)
+    // app.component('XCrud', XCrud)
+    // app.component('XForm', XForm)
+    // app.component('XEditTable', XEditTable)
 
 
     app.config.globalProperties.$XDialog = $XDialog(app._context)

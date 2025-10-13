@@ -69,7 +69,6 @@
     "@cjx-low-code/hooks": "workspace:*",
     "@cjx-low-code/locale": "workspace:*",
     "@cjx-low-code/theme-chalk": "workspace:*",
-    "'@cjx-low-code/locale": "workspace:*",
     "@pnpm/types": "8.4.0",
     "@types/gulp": "4.0.9",
     "@vue/runtime-core": "^3.5.4",

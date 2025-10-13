@@ -20,7 +20,7 @@ import type { DialogFormType, TableGroupInterface } from '../interface'
 import type { CSSProperties } from 'vue'
 
 const { dialog_width } = crudConfig
-const { t } = useLocale() // 国际化
+
 
 type TitleType = {
   [K in DialogFormType]: string
@@ -43,6 +43,8 @@ const XDiaLogForm = defineComponent({
     form?: any
   }>,
   setup(props, { slots, attrs }) {
+    const { t } = useLocale() // 国际化
+    
     const {
       option,
       boxType,
