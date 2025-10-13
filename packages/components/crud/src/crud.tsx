@@ -48,6 +48,7 @@ import type {
   TreeNode,
 } from 'element-plus'
 import type { CSSProperties, Ref, VNode, VNodeArrayChildren } from 'vue'
+import { hasPermi } from './hasPermi'
 
 const { row_key, dropRowClass } = crudConfig
 const message = useMessage() // 消息弹窗
@@ -571,7 +572,7 @@ const XCrud = withInstallVue(defineComponent({
       // v-hasPermi={[permission?.viewBtn || ['']]}
       return (
         <>
-          {option?.viewBtn && permission?.viewBtn && (
+          {option?.viewBtn &&  hasPermi(permission?.viewBtn, scope) && (
             <ElButton
               link
               type="primary"
@@ -582,7 +583,7 @@ const XCrud = withInstallVue(defineComponent({
               {t('action.check')}
             </ElButton>
           )}
-          {option?.updateBtn && permission?.editBtn && (
+          {option?.updateBtn && hasPermi(permission?.editBtn, scope) && (
             <ElButton
               link
               type="primary"
@@ -593,7 +594,7 @@ const XCrud = withInstallVue(defineComponent({
               {t('action.edit')}
             </ElButton>
           )}
-          {option?.delBtn  && (
+          {option?.delBtn && hasPermi(permission?.delBtn, scope) && (
             <ElButton
               link
               type="danger"

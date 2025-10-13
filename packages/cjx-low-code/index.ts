@@ -1,5 +1,5 @@
 import installer from './defaults'
-export { XCrud, XDialog, XForm, XEditTable, $XDialog } from '@cjx-low-code/components';
+export { XConfigProvider, XCrud, XDialog, XForm, XEditTable, $XDialog } from '@cjx-low-code/components';
 export type {
   TableOption,
   ColumnProps,

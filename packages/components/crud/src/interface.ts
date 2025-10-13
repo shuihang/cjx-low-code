@@ -555,16 +555,18 @@ export interface EmitFn {
   onDialogTabChange: (index: number) => void
 }
 
+export type PermissionMenBtnType = ComputedRef<boolean> | ((porps: Scope) => boolean) 
+
 /* 权限配置 */
 export interface CrudPermission {
   /** 新增按钮权限 */
   addBtn?: ComputedRef<boolean>
   /** 编辑按钮权限 */
-  editBtn?: ComputedRef<boolean>
+  editBtn?: PermissionMenBtnType
   /** 删除按钮权限 */
-  delBtn?: ComputedRef<boolean>
+  delBtn?: PermissionMenBtnType
   /** 查看按钮权限 */
-  viewBtn?: ComputedRef<boolean>
+  viewBtn?: PermissionMenBtnType
   /** 导出按钮权限 */
   exportBtn?: ComputedRef<boolean>
   /** 导入按钮权限 */

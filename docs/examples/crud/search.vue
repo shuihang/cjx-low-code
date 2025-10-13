@@ -1,16 +1,18 @@
 <template>
   <div>
-    <XCrud :form="form" :option="option" :data="data" @before-open="beforeOpen" />
+    <XCrud v-model:form="form" :option="option" :data="data" @before-open="beforeOpen" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue'
+// import { XCrud } from 'cjx-low-code'
 import type { TableOption } from 'cjx-low-code'
 const option: TableOption = {
   addBtn: true,
   menu: true,
   viewBtn: true,
+  updateBtn: true,
   column: [ 
     {
       label: '姓名',
@@ -41,7 +43,7 @@ const data = [
     sex: '男'
   },
   {
-    name: '李四',
+    name: '小红',
     age: 20,
     address: '上海市',
     sex: '女'

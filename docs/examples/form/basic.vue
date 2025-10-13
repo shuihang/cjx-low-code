@@ -6,7 +6,6 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { XForm } from 'cjx-low-code'
 import type { FormOption } from 'cjx-low-code'
 import { ElMessage } from 'element-plus'
 
@@ -49,12 +48,10 @@ const option = ref<FormOption>({
 const formRef = ref<InstanceType<typeof XForm>>()
 
 const save = async (data: any, done) => {
-  console.log(data)
   const valid = await formRef.value?.validate()
   if (!valid) return
-  // 提交数据
-  ElMessage.success(`提交成功#${JSON.stringify(data)}`)
   setTimeout(() => {
+    ElMessage.success(`提交成功${JSON.stringify(data)}`)
     done()
   }, 500)
 }

@@ -36,7 +36,7 @@ const data = [
     sex: '男'
   },
   {
-    name: '李四',
+    name: '小红',
     age: 20,
     address: '上海市',
     sex: '女'
