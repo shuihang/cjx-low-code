@@ -12,9 +12,9 @@ import elEn from 'element-plus/es/locale/lang/en'
 import 'element-plus/dist/index.css' // 引入 Element Plus 样式
 
 
-import CjxLowCode from '../../../dist/cjx-low-code/dist/index.full.mjs'
+// import CjxLowCode from '../../../dist/cjx-low-code/dist/index.full.mjs'
 import en from '../../../dist/cjx-low-code/dist/locale/en'
-// import CjxLowCode from 'cjx-low-code'
+import CjxLowCode from 'cjx-low-code'
 // import CjxLowCode from '@cjx-low-code/components'
 import { XCrud, XForm, XEditTable , $XDialog } from '@cjx-low-code/components'
 import 'cjx-low-code/dist/index.css'
@@ -42,7 +42,7 @@ export default {
     app.use(ElementPlus, { locale: zhCn })
     app.component('popover', Popover)
 
-    app.use(CjxLowCode, { cjxLocale: en, locale: elEn })
+    app.use(CjxLowCode)
     
     // app.component('XCrud', XCrud)
     // app.component('XForm', XForm)
