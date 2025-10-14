@@ -9,3 +9,5 @@ dist
 pnpm-lock.yaml
 
 packages/cjx-low-code/version.ts
+
+docs/.vitepress/cache

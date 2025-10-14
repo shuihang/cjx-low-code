@@ -21,7 +21,15 @@ export default defineConfig({
     ['link', { rel: 'icon', href: '/logo.png' }]
   ],
   locales: {
-    root: { label: '中文', lang: 'zh', link: '/zh-cn/', },
+    root: { label: '中文', lang: 'zh', link: '/zh-cn/',
+      themeConfig: {
+        nav: [
+          { text: '首页', link: '/zh-cn/' },
+          { text: '指南', link: '/zh-cn/guide/basic/install.md' },
+          { text: '组件', link: '/zh-cn/attribute/crud.md' }
+        ],
+      }
+     },
     en: {
       label: 'English',
       lang: 'en',
