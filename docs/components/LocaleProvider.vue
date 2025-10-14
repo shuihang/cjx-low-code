@@ -6,8 +6,8 @@ import { XConfigProvider } from 'cjx-low-code'
 // 1. 导入所需的 Element Plus 语言包
 // import zhCn from 'element-plus/lib/locale/lang/zh-cn'
 // import en from 'element-plus/lib/locale/lang/en'
-import zhCn from '../../dist/cjx-low-code/es/locale/lang/zh-cn.mjs'
-import en from '../../dist/cjx-low-code/es/locale/lang/en.mjs'
+import zhCn from 'cjx-low-code/dist/locale/zh-CN.js'
+import en from 'cjx-low-code/dist/locale/en.js'
 
 // ... 导入其他支持的语言包
 

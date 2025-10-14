@@ -137,14 +137,14 @@ export default defineConfig({
   markdown: {
     config(md) {
       // 使用 demo 预览插件
-      md.use(containerPreview, { alias })
-      md.use(componentPreview, { alias })
+      md.use(containerPreview)
+      md.use(componentPreview)
     }
   },
   vite: {
-    resolve: {
-      alias,
-    },
+    // resolve: {
+    //   alias,
+    // },
     plugins: [
       VueJsx({
         babelPlugins: [
