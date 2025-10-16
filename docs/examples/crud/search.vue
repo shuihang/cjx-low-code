@@ -15,7 +15,6 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-// import { XCrud } from 'cjx-low-code'
 import type { TableOption } from 'cjx-low-code'
 import { ElMessage } from 'element-plus'
 

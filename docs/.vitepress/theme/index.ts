@@ -16,8 +16,8 @@ import 'element-plus/dist/index.css' // 引入 Element Plus 样式
 
 // import CjxLowCode from '../../../dist/cjx-low-code/dist/index.full.mjs'
 import en from '../../../dist/cjx-low-code/dist/locale/en'
-// import CjxLowCode from 'cjx-low-code'
-import { XCrud } from '@cjx-low-code/components'
+import CjxLowCode from 'cjx-low-code'
+// import { XCrud } from '@cjx-low-code/components'
 import { XForm, XEditTable , $XDialog } from 'cjx-low-code'
 import 'cjx-low-code/dist/index.css'
 import './style.css'
@@ -43,11 +43,11 @@ export default {
     app.use(ElementPlus, { locale: zhCn })
     app.component('popover', Popover)
 
-    // app.use(CjxLowCode)
+    app.use(CjxLowCode)
     
-    app.component('XCrud', XCrud)
-    app.component('XForm', XForm)
-    app.component('XEditTable', XEditTable)
+    // app.component('XCrud', XCrud)
+    // app.component('XForm', XForm)
+    // app.component('XEditTable', XEditTable)
 
 
     app.config.globalProperties.$XDialog = $XDialog(app._context)
