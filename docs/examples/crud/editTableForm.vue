@@ -5,9 +5,7 @@
       v-model:search="search"
       :option="option"
       :data="data"
-      :page="page"
       @before-open="beforeOpen"
-      @row-del="rowDel"
       @row-save="addSave"
       @row-update="rowUpdate"
       :on-load="onLoad"
@@ -17,7 +15,8 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import type { TableOption, CrudPageProps } from 'cjx-low-code'
+// import { XCrud } from 'cjx-low-code'
+import type { TableOption } from 'cjx-low-code'
 import { ElMessage } from 'element-plus'
 
 const option = ref<TableOption>({
@@ -25,27 +24,21 @@ const option = ref<TableOption>({
   menu: true,
   viewBtn: true,
   updateBtn: true,
-  delBtn: true,
   column: [ 
     {
       label: '姓名',
       prop: 'name',
-      search: true,
-      rules:[
-        { required: true, message: '请输入姓名', trigger: 'blur' }
-      ]
+      search: true
     },
     {
       label: '年龄',
       prop: 'age',
       search: true,
+      searchType: 'input',
       type: 'inputNumber',
       inputNumber: {
-        min: 1,
-      },
-      rules:[
-        { required: true, message: '请输入年龄', trigger: 'blur' }
-      ]
+        min: 0
+      }
     },
     {
       label: '地址',
@@ -66,32 +59,76 @@ const option = ref<TableOption>({
           value: '2'
         }
       ]
+    },
+    {
+      label: '',
+      prop: 'editTable',
+      type: 'editTable',
+      hide: true,
+      span: 24,
+      editTable: {
+        option: {
+          addBtn: true,
+          delBtn: true,
+          copyBtn: true,
+          sortable: true,
+          column: [
+            {
+              label: '姓名',
+              prop: 'name',
+              type: 'input',
+              rules: [
+                { required: true, message: '请输入姓名', trigger: 'blur' }
+              ]
+            },
+            {
+              label: '年龄',
+              prop: 'age',
+              type: 'inputNumber',
+              inputNumber: {
+                min: 1
+              },
+              rules: [
+                { required: true, message: '请输入年龄', trigger: 'blur' }
+              ]
+
+            }
+          ]
+        }
+      }
     }
-  ]
+  ],
 })
 
 const data = [
   {
     name: '张三',
-    age: 18,
+    age: 28,
     address: '北京市',
-    sex: '1'
+    sex: '1',
+    editTable: [
+      {
+        name: '张三的儿子',
+        age: 6
+      }
+    ]
   },
   {
     name: '小红',
     age: 20,
     address: '上海市',
-    sex: '2'
+    sex: '2',
+    editTable: [
+      {
+        name: '小红的女儿',
+        age: 6
+      },
+    ]
   }
 ]
 
-const form = ref({})
-
-
-const page = ref<CrudPageProps>({
-  total: 20,
-  pageSize: 10,
-  currentPage: 1
+const form = ref({
+ 
 })
 
 const search = ref({})
@@ -118,9 +155,5 @@ const addSave = (row: any, done: Function) => {
 const rowUpdate = (row: any, done: Function) => {
   ElMessage.success(JSON.stringify(row))
   done()
-}
-
-const rowDel = (row: any, index: number) => {
-  ElMessage.success(JSON.stringify(row))
 }
 </script>

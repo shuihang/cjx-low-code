@@ -84,7 +84,7 @@ export const XEditTable = withInstallVue(defineComponent({
         emit('update:modelValue', [{ ...keys }])
       }
 
-      emit('addChange', { ...keys }, props.modelValue.length)
+      emit('addChange', { ...keys }, props.modelValue?.length || 1)
     }
 
     const rowDel = (row: typeof keys, index: number) => {
@@ -173,7 +173,7 @@ export const XEditTable = withInstallVue(defineComponent({
           !hideFn.value &&
             tableOption.value.column?.push({
               prop,
-              label: (() => {
+              label: isView ? label : (() => {
                 let newLabel: VNode = getLabelNode(
                   tip,
                   <>
@@ -214,43 +214,45 @@ export const XEditTable = withInstallVue(defineComponent({
               slot: !isView,
             })
 
-          const Component = editTableMapProps[type].components as any
-          const SubComponents = editTableMapProps[type]?.subComponents as any
+          if (!isView) {
+            const Component = editTableMapProps[type].components as any
+            const SubComponents = editTableMapProps[type]?.subComponents as any
 
-          vNode[prop] = ({ $index, row }) => {
-            // console.log('editTable', $index, data.value, props.modelValue)
-            return (
-              <div>
-                {!slots[prop] ? (
-                  <ElFormItem
-                    prop={`${props.prop}${$index}.${prop}`}
-                    rules={rules}
-                    class={'p-t-13px p-b-13px'}
-                  >
-                    <Component
-                      v-model={props.modelValue![$index]![prop]}
-                      onUpdate:modelValue={onUpdateModelValue}
-                      placeholder={editTableMapProps[type].placeholder + label}
-                      type={editTableMapProps[type].type}
-                      {...item[type]}
-                      {...item?.on}
+            vNode[prop] = ({ $index, row }) => {
+              // console.log('editTable', $index, data.value, props.modelValue)
+              return (
+                <div>
+                  {!slots[prop] ? (
+                    <ElFormItem
+                      prop={`${props.prop}[${$index}].${prop}`}
+                      rules={rules}
+                      class={'p-t-13px p-b-13px'}
                     >
-                      {dicData &&
-                        SubComponents &&
-                        dicData.map((item) => (
-                          <SubComponents
-                            key={item.value}
-                            label={item.label}
-                            value={item.value}
-                          />
-                        ))}
-                    </Component>
-                  </ElFormItem>
-                ) : (
-                  slots[prop]?.({ $index, row })
-                )}
-              </div>
-            )
+                      <Component
+                        v-model={props.modelValue![$index]![prop]}
+                        onUpdate:modelValue={onUpdateModelValue}
+                        placeholder={editTableMapProps[type].placeholder + label}
+                        type={editTableMapProps[type].type}
+                        {...item[type]}
+                        {...item?.on}
+                      >
+                        {dicData &&
+                          SubComponents &&
+                          dicData.map((item) => (
+                            <SubComponents
+                              key={item.value}
+                              label={item.label}
+                              value={item.value}
+                            />
+                          ))}
+                      </Component>
+                    </ElFormItem>
+                  ) : (
+                    slots[prop]?.({ $index, row })
+                  )}
+                </div>
+              )
+            }
           }
         })
         return vNode

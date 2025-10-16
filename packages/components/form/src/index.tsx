@@ -123,6 +123,7 @@ export const XForm = withInstall(defineComponent({
       }
 
       ruleFormRef.value?.validate((valid, fields) => {
+        console.log('submit', newForm.value)
         if (valid) {
           disabledForm.value = true
 

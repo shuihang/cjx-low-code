@@ -26,6 +26,7 @@ import useId from './useId'
 import type { SetUpInterface } from './context'
 import type { CustomSlotsType } from '../../_util/type'
 import { withInstallVue } from '../../_util/type'
+import { isPromise } from '../../_util/shared'
 import type { TableColumRef } from './column/column'
 import type { SortableEvent } from 'vue-draggable-plus'
 import type {
@@ -101,7 +102,7 @@ const crudEmits = {
   'radio-change': (row: any) => true,
   'sortable-change': (sortable: SortableEvent) => true,
   'dialog-tab-change': (index: number | string) => true,
-  'on-load': () => true,
+  // 'on-load': () => Promise<any>,
 }
 
 /** 测试 */
@@ -197,7 +198,7 @@ const XCrud = withInstallVue(defineComponent({
   >,
   // emits: Array as EmitsToProps<>,
   emits: crudEmits,
-  setup(props, { slots, emit, expose }) {
+  setup(props, { slots, emit, expose, attrs }) {
     const { t } = useLocale() // 国际化
     const reload = ref<number>(Math.random())
     const mergedId = useId()
@@ -224,18 +225,16 @@ const XCrud = withInstallVue(defineComponent({
 
     // 页码切换
     const onCurrentChange = (pageSize: number) => {
-      // console.log('current-change', pageSize)
       emit('update:page', props.page)
       emit('current-change', pageSize)
-      emit('on-load')
+      //emit('on-load')
     }
 
     // 切换每页显示条目个数
     const onSizeChange = (pageSize: number) => {
-      // console.log('size-change', props.page)
       emit('update:page', props.page)
       emit('size-change', pageSize)
-      emit('on-load')
+      //emit('on-load')
     }
 
     // 表格搜索栏清空事件
@@ -244,8 +243,11 @@ const XCrud = withInstallVue(defineComponent({
     }
 
     // 表格搜索栏提交事件
-    const onSearchChange = (form: object, done: () => void) => {
+    const onSearchChange = async (form: object, done: () => void) => {
+      emit('update:search', form)
       emit('search-change', { query: form }, done)
+      // console.log(props.onLoad,)
+      props.onLoad.constructor.name === 'AsyncFunction' && await props.onLoad().then(() => done())
     }
 
     let $index: number | undefined = 0
