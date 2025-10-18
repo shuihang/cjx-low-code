@@ -7,10 +7,13 @@ export type {
   BeforeOpen,
   CrudPermission,
   FormOption,
+  FormColumnProps,
+  FormItemType,
+  FormTypeProps,
   EditTableProps,
   EditTableOption,
   DialogProps,
-  DialogDirectiveInterface
+  DialogDirectiveInterface,
 } from '@cjx-low-code/components';
 export * from './make-installer'
 

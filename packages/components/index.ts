@@ -9,7 +9,7 @@ export { XConfigProvider, provideGlobalConfig } from './config-provider'
 export type { TableOption, CrudPageProps, CrudPermission, BeforeOpen, ColumnProps } from './crud'
 export type { DialogProps, DialogDirectiveInterface } from './dialog'
 export type { EditTableProps, EditTableOption } from './editTable'
-export type { FormOption } from './form'
+export type { FormOption, FormColumnProps, FormItemType, FormTypeProps } from './form'
 export type { ConfigProviderContext } from './config-provider'
 
 

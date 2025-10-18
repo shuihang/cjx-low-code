@@ -305,7 +305,7 @@ export interface FormOption {
   /** 当前tab */
   viewTabsCurrent?: string | number
   /** 表单的各项 */
-  column?: FormColumnProps[]
+  column: FormColumnProps[]
   /** 分组 */
   group?: GroupInterface[]
 }
