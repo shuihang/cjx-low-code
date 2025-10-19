@@ -190,7 +190,8 @@ export default defineComponent({
                   ? 'calc(100vh - 150px)'
                   : 'calc(90vh - 150px)'
                 : '',
-          }}
+            overflowY: 'auto',
+          } as CSSProperties}
           class={[
             'cjx-dialog-content flex flex-col',
             isFullscreen.value && '!h-100%',
