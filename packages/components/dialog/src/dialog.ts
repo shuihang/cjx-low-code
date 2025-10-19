@@ -1,6 +1,6 @@
 import { createVNode, render } from 'vue'
 import XDialogDirective, { type DialogDirectiveOption } from './dialogDirective'
-import { withInstallFunction } from '../../_util/type'
+import type { SFCInstallWithContext } from '../../_util/type'
 import type {
   AllowedComponentProps,
   AppContext,
@@ -164,6 +164,6 @@ export const $XDialog = (_context: AppContext) => {
   }
 }
 
-export default $XDialog
+export default $XDialog as unknown as SFCInstallWithContext<DialogDirectiveInterface>
 
 export type DialogDirectiveInterface = ReturnType<typeof $XDialog>

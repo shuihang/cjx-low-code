@@ -15,8 +15,9 @@ hero:
       link: /en/attribute/crud.md
       
 features:
-  - title: Under construction ..
-    details: This is a low code framework that is currently under construction ..
+  - title: Form Designer ..
+    details: Form Designer, capable of quickly generating forms and supporting custom components ..
+    link: http://39.100.76.235/login
   - title: Under construction ..
     details: This is a low code framework that is currently under construction ..
 ---
