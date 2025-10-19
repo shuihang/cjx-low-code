@@ -1,6 +1,5 @@
 import { createVNode, render } from 'vue'
 import XDialogDirective, { type DialogDirectiveOption } from './dialogDirective'
-import type { SFCInstallWithContext } from '../../_util/type'
 import type {
   AllowedComponentProps,
   AppContext,
@@ -8,6 +7,7 @@ import type {
   ComponentCustomProps,
   VNode,
   VNodeProps,
+  ExtractPropTypes
 } from 'vue'
 
 export type IsEmptyToNeverObj<T> = T extends object
@@ -60,11 +60,11 @@ export const $XDialog = (_context: AppContext) => {
    *
    * @example
    *
-   * ### `props.option`配置项 详情请前往[$ZtDialog属性文档](http://www.aqqxl.top/ZtDialogVc/)查看
+   * ### `props.option`配置项 详情请前往[$XDialog属性文档](https://aqqxl.top/zh-cn/attribute/dialog.html)查看
    *
-   * 这是一个例子，如何在组件里面使用$ZtDialog命令式弹窗组件:
+   * 这是一个例子，如何在组件里面使用$XDialog命令式弹窗组件:
    *
-   * #### AComponents.vue 嵌套在$ZtDialog中的组件可以是任何组件，这里以AComponents为例
+   * #### AComponents.vue 嵌套在$XDialog中的组件可以是任何组件，这里以AComponents为例
    * ```vue
    * <script setup lang="ts">
    * const emit = defineEmits<{
@@ -85,7 +85,7 @@ export const $XDialog = (_context: AppContext) => {
    * <script/>
    * ```
    *
-   * #### 在组件里面使用$ZtDialog命令式弹窗组件
+   * #### 在组件里面使用$XDialog命令式弹窗组件
    * ```ts
    * <script setup lang="ts">
    * // 引入需要嵌套在$XDialog中的组件
@@ -93,10 +93,10 @@ export const $XDialog = (_context: AppContext) => {
    * // Vue 3 提供的一个函数，用于在组件中获取当前实例的代理对象（proxy）。该对象提供了对组件数据和方法的响应式访问，避免了直接使用 this 关键字  通过proxy可以使用$ZtDialog组件
    * const proxy = getCurrentInstance()?.proxy
    *
-   * const openZtDialog = () => {
+   * const openXDialog = () => {
    *   proxy?.$XDialog(AComponents, {
    *     option: {
-   *       title: '测试$ZtDialog弹窗',
+   *       title: '测试$XDialog弹窗',
    *       menu: false,
    *       props: {
    *         id: '1234567890',
@@ -164,6 +164,6 @@ export const $XDialog = (_context: AppContext) => {
   }
 }
 
-export default $XDialog as unknown as SFCInstallWithContext<DialogDirectiveInterface>
+export default $XDialog
 
 export type DialogDirectiveInterface = ReturnType<typeof $XDialog>

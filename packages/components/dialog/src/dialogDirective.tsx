@@ -1,7 +1,7 @@
 import { defineComponent, ref, watchEffect } from 'vue'
 import omit from '../../_util/omit'
 import { objectType } from '../../_util/type'
-import ZtDialog from './index'
+import XDialog from './index'
 import type { CSSProperties, Component } from 'vue'
 import type { DialogProps } from './index'
 
@@ -96,7 +96,7 @@ const XDialogDirective = defineComponent({
     })
 
     return () => (
-      <ZtDialog
+      <XDialog
         option={option.value}
         onClose={() => {
           option.value.visible = false
@@ -104,7 +104,7 @@ const XDialogDirective = defineComponent({
         contentStyle={props.contentStyle}
       >
         {<Component {...componentProps} {...handleEmitMethods} />}
-      </ZtDialog>
+      </XDialog>
     )
   },
 })

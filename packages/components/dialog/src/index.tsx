@@ -35,6 +35,11 @@ export interface DialogProps {
   onFullscreen?: (v: boolean) => void
 }
 
+const contentDefaultStyle: CSSProperties = {
+  maxHeight: 'calc(-150px + 90vh)',
+  overflowY: 'auto',
+}
+
 export default defineComponent({
   name: 'ZtDialog',
   props: {
@@ -53,7 +58,7 @@ export default defineComponent({
         marginLeft: '-20px',
         marginRight: '-16px',
         maxHeight: 'calc(-150px + 90vh)',
-        // overflowY: 'auto',
+        overflowY: 'auto',
         // overflowX: 'hidden',
         overflow: 'hidden',
         boxSizing: 'border-box',
@@ -178,7 +183,7 @@ export default defineComponent({
       >
         <div
           style={{
-            ...props.contentStyle,
+            ...({...props.contentStyle, ...contentDefaultStyle}),
             maxHeight:
               menu || menu == undefined
                 ? isFullscreen.value
