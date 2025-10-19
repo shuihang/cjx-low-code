@@ -197,7 +197,7 @@ export default defineComponent({
         {menu && (
           <div
             class={`w-[calc(100%+40px)] m-l--20px p-r-20px p-t-15px m-t-4px
-            box-border b-t-solid b-t-1px b-t-[var(--cjx-dialog-border-color)] flex justify-end`}
+            box-border b-t-solid b-t-1px b-t-cjx-dialog-border-color flex justify-end`}
           >
             {showCloseBtn && (
               <ElButton

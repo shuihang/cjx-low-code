@@ -57,6 +57,10 @@
       background-color: var(--el-bg-color);
     }
   }
+
+  .b-t-cjx-dialog-border-color {
+    border-top: 1px solid var(--cjx-dialog-border-color);
+  }
 }
 
 .cjx-dialog.is-fullscreen {

@@ -49,7 +49,7 @@ type DialogDirectiveProps<T extends object, K extends object = object> = {
   contentStyle?: CSSProperties
 }
 
-export const $XDialog = withInstallFunction((_context: AppContext) => {
+export const $XDialog = (_context: AppContext) => {
   const defaultContext = _context
 
   /**
@@ -162,8 +162,8 @@ export const $XDialog = withInstallFunction((_context: AppContext) => {
     document.body.appendChild(parent)
     return instance
   }
-}, '$XDialog')
+}
 
 export default $XDialog
 
-export type DialogDirectiveInterface = typeof $XDialog
+export type DialogDirectiveInterface = ReturnType<typeof $XDialog>
