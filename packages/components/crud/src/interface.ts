@@ -576,6 +576,7 @@ export interface CrudPermission {
 }
 
 export const crudProps = () => ({
+  onLoad: functionType<() => Promise<any>>(),
   /** 表格数据 */
   data: arrayType<any[]>(),
   /** 表格配置 */

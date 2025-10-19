@@ -29,13 +29,12 @@ import type {
   FormColumnProps,
   FormItemType,
   FormTypeProps,
-} from '../interface'
-import type {
   ColumnProps,
   DialogFormType,
 } from '../interface'
 import type { CSSProperties, Component, Ref, VNode } from 'vue'
 import type { SlotsValue } from '../tempform'
+import XEditTable from '../../../editTable'
 
 const { check_column_span } = form_config
 
@@ -659,6 +658,12 @@ export class RenderViewFormVNode extends Common implements RenderInterface {
   }
 
   public valueMap: Record<string, any> = {
+    editTable: (column: ColumnProps) => {
+      const value = this.newForm.value[column.prop] || []
+      const option = column.editTable?.option || {}
+      console.log('editTable', value, option)
+      return <XEditTable modelValue={value} option={option} isView />
+    }
     // upload: (column: ColumnProps) => {
     //   const value = this.newForm.value[column.prop]
     //   const props = column.upload?.isFiles

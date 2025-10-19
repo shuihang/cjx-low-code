@@ -5,9 +5,7 @@
       v-model:search="search"
       :option="option"
       :data="data"
-      :page="page"
       @before-open="beforeOpen"
-      @row-del="rowDel"
       @row-save="addSave"
       @row-update="rowUpdate"
       :on-load="onLoad"
@@ -17,13 +15,14 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import type { TableOption, CrudPageProps } from 'cjx-low-code'
+import type { TableOption } from 'cjx-low-code'
 import { ElMessage } from 'element-plus'
 
 const option = ref<TableOption>({
   addBtn: true,
   menu: true,
   viewBtn: true,
+  updateBtn: true,
   column: [ 
     {
       label: 'Name',
@@ -47,8 +46,8 @@ const option = ref<TableOption>({
     {
       label: 'Sex',
       prop: 'sex',
-      search: true,
       type: 'select',
+      search: true,
       dicData: [
         {
           label: 'boy',
@@ -59,33 +58,77 @@ const option = ref<TableOption>({
           value: '2'
         }
       ]
+    },
+    {
+      label: '',
+      prop: 'editTable',
+      type: 'editTable',
+      hide: true,
+      span: 24,
+      editTable: {
+        option: {
+          addBtn: true,
+          delBtn: true,
+          copyBtn: true,
+          sortable: true,
+          column: [
+            {
+              label: 'Name',
+              prop: 'name',
+              type: 'input',
+              rules: [
+                { required: true, message: 'Please enter name', trigger: 'blur' }
+              ]
+            },
+            {
+              label: 'Age',
+              prop: 'age',
+              type: 'inputNumber',
+              inputNumber: {
+                min: 1
+              },
+              rules: [
+                { required: true, message: 'Please enter age', trigger: 'blur' }
+              ]
+
+            }
+          ]
+        }
+      }
     }
-  ]
+  ],
 })
 
 const data = [
   {
     name: 'Zhang San',
-    age: 18,
+    age: 28,
     address: 'Beijing',
-    sex: '1'
+    sex: '1',
+    editTable: [
+      {
+        name: "Zhang San's son",
+        age: 6
+      }
+    ]
   },
   {
     name: 'Xiao Hong',
-    age: 20,
+    age: 27,
     address: 'Shanghai',
-    sex: '2'
+    sex: '2',
+    editTable: [
+      {
+        name: "Xiaohong's daughter",
+        age: 6
+      },
+    ]
   }
 ]
 
-const page = ref<CrudPageProps>({
-  total: 20,
-  pageSize: 10,
-  currentPage: 1
+const form = ref({
+ 
 })
-
-
-const form = ref({})
 
 const search = ref({})
 
@@ -111,9 +154,5 @@ const addSave = (row: any, done: Function) => {
 const rowUpdate = (row: any, done: Function) => {
   ElMessage.success(JSON.stringify(row))
   done()
-}
-
-const rowDel = (row: any, index: number) => {
-  ElMessage.success(JSON.stringify(row))
 }
 </script>

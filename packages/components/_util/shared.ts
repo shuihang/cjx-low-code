@@ -13,6 +13,7 @@ export const isObject = (val: unknown): val is Record<any, any> => val !== null 
 export const isPlainObject = (val: unknown): val is object => toTypeString(val) === '[object Object]'
 export const isNumber = (val: any): val is number => typeof val === 'number'
 
+
 export const isPromise = <T = any>(val: unknown): val is Promise<T> => {
   return (
     (isObject(val) || isFunction(val)) &&

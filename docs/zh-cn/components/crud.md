@@ -15,5 +15,5 @@
 ## 有搜索栏和操作栏和分页
 <preview path="../../examples/crud/pagination.vue" class="vp-raw" :source="false" />
 
-<!-- ### 有搜索栏和操作栏和分页和表格
-<preview path="../../examples/crud/search-action-pagination-table.vue" class="vp-raw" :source="false" /> -->
+## 有编辑表格表单的Crud
+<preview path="../../examples/crud/editTableForm.vue" class="vp-raw" :source="false" />

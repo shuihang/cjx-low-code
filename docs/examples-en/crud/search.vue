@@ -1,13 +1,24 @@
 <template>
   <div>
-    <XCrud :form="form" :option="option" :data="data" @before-open="beforeOpen" />
+    <XCrud
+      v-model:form="form"
+      v-model:search="search"
+      :option="option"
+      :data="data"
+      @before-open="beforeOpen"
+      @row-save="addSave"
+      @row-update="rowUpdate"
+      :on-load="onLoad"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue'
 import type { TableOption } from 'cjx-low-code'
-const option: TableOption = {
+import { ElMessage } from 'element-plus'
+
+const option = ref<TableOption>({
   addBtn: true,
   menu: true,
   viewBtn: true,
@@ -18,7 +29,12 @@ const option: TableOption = {
     },
     {
       label: 'Age',
-      prop: 'age'
+      prop: 'age',
+      searchType: 'input',
+      type: 'inputNumber',
+      inputNumber: {
+        min: 0
+      }
     },
     {
       label: 'Address',
@@ -26,31 +42,64 @@ const option: TableOption = {
     },
     {
       label: 'Sex',
-      prop: 'sex'
+      prop: 'sex',
+      search: true,
+      type: 'select',
+      dicData: [
+        {
+          label: 'boy',
+          value: '1'
+        },
+        {
+          label: 'girl',
+          value: '2'
+        }
+      ]
     }
   ]
-}
+})
 
 const data = [
   {
     name: 'Zhang San',
     age: 18,
     address: 'Beijing',
-    sex: 'boy'
+    sex: '1'
   },
   {
     name: 'Xiao Hong',
     age: 20,
     address: 'Shanghai',
-    sex: 'girl'
+    sex: '2'
   }
 ]
 
 const form = ref({})
 
-const beforeOpen: (...args: any[]) => void = (type, row, done) => {
-  console.log(type, row)
-  done()
+const search = ref({})
 
+const beforeOpen: (...args: any[]) => void = (type, row, done) => {
+ ElMessage.success(type)
+  done()
 }
+
+const onLoad = async () => {
+  // 模拟异步请求
+  await new Promise<void>(resolve => {
+    ElMessage.success(JSON.stringify(search.value))
+    setTimeout(() => resolve(), 500)
+  })
+}
+
+const addSave = (row: any, done: Function) => {
+  ElMessage.success(JSON.stringify(row))
+  done()
+}
+
+
+const rowUpdate = (row: any, done: Function) => {
+  ElMessage.success(JSON.stringify(row))
+  done()
+}
+
 </script>
