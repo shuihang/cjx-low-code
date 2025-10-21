@@ -141,12 +141,12 @@ export const formColumnValues = [
   'span',
   'checkSpan',
   'labelWidth',
-  'slot',
   'formSlotNodes',
   'type',
   'labelTip',
   'labelTipPlacement',
   'style',
+  'labelStyle',
   'on',
   'dicAjaxResolve',
 ] as const

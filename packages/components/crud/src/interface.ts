@@ -231,8 +231,6 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
     searchClearable?: boolean
     /** 表单校验条件 */
     rules?: RulesType
-    /** 控制是否使用表格插槽，目前已废弃 现在只要有对应的插槽就会渲染 */
-    slot?: boolean
     /**
      * 表单当前项是否显示。可以是布尔类型或函数表达式。
      * 如果未使用此参数，则取 `display` 参数的值，默认为 `true`。
@@ -371,6 +369,8 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
     labelTipPlacement?: Placement
     /** 表单项的样式  */
     style?: CSSProperties
+    /** 标题的样式 */
+    labelStyle?: CSSProperties
     /** 实现以该列为基准的排序 默认为`false`*/
     sortable?: boolean
     /** 组件响应的事件 */

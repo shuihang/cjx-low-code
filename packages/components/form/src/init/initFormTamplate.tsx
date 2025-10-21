@@ -501,7 +501,7 @@ export class RenderFormVNode extends Common implements RenderInterface {
               class={[tempForm[itemType]?.formItemClass, `_${item.prop}`]}
               v-slots={{
                 label: () => (
-                  <div class={'flex flex-items-center'}>
+                  <div class={'flex flex-items-center'} style={item.labelStyle}>
                     {item.label}
                     {item.labelTip && (
                       <ElTooltip
