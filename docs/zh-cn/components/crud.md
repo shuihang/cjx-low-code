@@ -23,3 +23,6 @@
 
 ## 可以多选的Crud
 <preview path="../../examples/crud/selection.vue" class="vp-raw" :source="false" />
+
+## 插槽
+<preview path="../../examples/crud/slot.vue" class="vp-raw" :source="false" />
