@@ -11,37 +11,45 @@ import type { FormOption } from 'cjx-low-code'
 import { ElMessage } from 'element-plus'
 
 const form = ref({
-  name: '',
-  age: '',
-  sex: '1'
+  dict: '',
+  result: '1'
 })
 
-const option = ref<FormOption>({
-  column: [
-    {
-      label: '姓名',
-      prop: 'name',
-      rules: [{ required: true, message: '请输入姓名' }]
-    },
-    {
-      label: '年龄',
-      prop: 'age',
-      type: 'inputNumber',
-    },
-    {
-      label: '性别',
-      prop: 'sex',
-      type: 'select',
-      dicData: [
+const getResultData = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve([
         {
-          label: '男',
+          label: '选项1',
           value: '1'
         },
         {
-          label: '女',
+          label: '选项2',
           value: '2'
         }
-      ]
+      ])
+    }, 200)
+  })
+
+}
+
+const option = ref<FormOption>({
+  labelWidth: 120,
+  column: [
+    {
+      label: '字典',
+      prop: 'dict',
+      type: 'radio',
+      dicAjaxResolve: getResultData(),
+      rules: [{ required: true, message: '请选择字典' }],
+      span: 24,
+    },
+    
+    {
+      label: '审核意见',
+      prop: 'reviewComments',
+      type: 'textarea',
+      span: 24,
     }
   ]
 })

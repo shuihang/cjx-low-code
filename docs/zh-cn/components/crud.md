@@ -17,3 +17,9 @@
 
 ## 有编辑表格表单的Crud
 <preview path="../../examples/crud/editTableForm.vue" class="vp-raw" :source="false" />
+
+## 可以单选的Crud
+<preview path="../../examples/crud/radio.vue" class="vp-raw" :source="false" />
+
+## 可以多选的Crud
+<preview path="../../examples/crud/selection.vue" class="vp-raw" :source="false" />

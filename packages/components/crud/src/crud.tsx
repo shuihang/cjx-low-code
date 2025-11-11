@@ -534,8 +534,10 @@ const XCrud = withInstallVue(defineComponent({
        * @param row 表格对应的行数据
        * @param selected 是否选中
        */
-      toggleRowSelection: (row: any, selected: boolean) =>
-        refTable.value!.toggleRowSelection(row, selected),
+      toggleRowSelection: (row: any, selected: boolean) => {
+        console.log('toggleRowSelection', row, selected)
+        refTable.value!.toggleRowSelection(row, selected)
+      },
       /** 用于多选表格，清空用户的选择  */
       clearSelection: () => refTable.value!.clearSelection(),
       /**

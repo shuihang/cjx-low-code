@@ -8,9 +8,31 @@
 import { ref } from 'vue'
 import type { EditTableOption } from 'cjx-low-code'
 
-const data = ref([])
+const data = ref([
+  {
+    name: '张三',
+    age: 18,
+    sex: '1'
+  },
+  {
+    name: '李四',
+    age: 20,
+    sex: '2'
+  },
+  {
+    name: '王五',
+    age: 22,
+    sex: '1'
+  },
+  {
+    name: '赵六',
+    age: 24,
+    sex: '2'
+  },
+])
 
 const option = ref<EditTableOption>({
+  sortable: true,
   addBtn: true,
   delBtn: true,
   copyBtn: true,
