@@ -7,8 +7,25 @@ import type {
   ComponentCustomProps,
   VNode,
   VNodeProps,
+  Component,
   ExtractPropTypes
 } from 'vue'
+import type { DialogPropsVc } from './vc-dialog'
+import { defaultOnError as onError, createError, ErrorCodes } from '../../_util/errors'
+
+export type EmitsAddArgs<
+  T extends object,
+  ArgsGroups extends readonly unknown[][] = [],
+  Position extends 'start' | 'end' = 'start'
+> = {
+  [K in keyof T]-?: T[K] extends ((...args: infer Args) => infer Return) | undefined
+    ? Args extends []
+      ? ((...args: [...ArgsGroups[number]]) => Return)
+      : Position extends 'start'
+        ? ((...args: [...ArgsGroups[number], ...Args]) => Return)
+        : ((...args: [...Args, ...ArgsGroups[number]]) => Return)
+    : T[K];
+}
 
 export type IsEmptyToNeverObj<T> = T extends object
   ? keyof T extends never
@@ -16,38 +33,29 @@ export type IsEmptyToNeverObj<T> = T extends object
     : T
   : never
 
-type EmitsAddArgsClose<T extends object> = {
-  [K in keyof T]-?: T[K] extends
-    | ((...args: infer Args) => infer Return)
-    | undefined
-    ? (close: () => void, ...args: Args) => Return
-    : T[K]
-}
 
-type RemoveFunctions<T> = {
-  [K in keyof T as T[K] extends Function | undefined ? never : K]-?: T[K]
-}
 
-type PropsOrEmits<T> = Omit<
-  T,
-  keyof (VNodeProps & AllowedComponentProps & ComponentCustomProps)
->
+type RemoveFunctions<T> = { [K in keyof T as T[K] extends Function | undefined ? never : K]-?: T[K] };
 
-type ComponentsPropsType<T> = RemoveFunctions<PropsOrEmits<T>>
+type PropsAndEmits<T> = Omit<T, keyof(VNodeProps & AllowedComponentProps & ComponentCustomProps)>
 
-type ComponentsEmitsType<T> = IsEmptyToNeverObj<
-  EmitsAddArgsClose<Omit<PropsOrEmits<T>, keyof ComponentsPropsType<T>>>
->
+type ExtractComponentProps<T> = RemoveFunctions<PropsAndEmits<T>>
+
+export type ExtractComponentsEmits<
+    T, ArgsGroups extends readonly unknown[][] = [], Position extends 'start' | 'end' = 'start'> =
+    IsEmptyToNeverObj<EmitsAddArgs<Omit<PropsAndEmits<T>, keyof ExtractComponentProps<T>>, ArgsGroups, Position>
+  >
 
 type DialogDirectiveProps<T extends object, K extends object = object> = {
   /** 弹窗的配置项以及嵌入在弹窗里面组件的props传参和$emit通信事件（emitMethods） */
-  option: Omit<
-    DialogDirectiveOption<T, K>,
-    'dialogCloseRemoveVNode' | 'component'
-  >
+  option: Omit<DialogDirectiveOption<T, K>, 'dialogCloseRemoveVNode' | 'component'>
   /** 弹窗内容区域样式 */
   contentStyle?: CSSProperties
 }
+
+type AsyncDialogDirectiveProps<T extends object | (abstract new (...args: any[]) => any), E extends object> =
+  DialogDirectiveProps<T extends Promise<Component> ? Record<string, any> : T, EmitsAddArgs<E, [[close: () => void]]>>
+           
 
 export const $XDialog = (_context: AppContext) => {
   const defaultContext = _context
@@ -124,43 +132,61 @@ export const $XDialog = (_context: AppContext) => {
    * <script/>
    * ```
    */
-  return <T extends abstract new (...args: any[]) => any>(
-    component: T,
-    props?: DialogDirectiveProps<
-      ComponentsPropsType<InstanceType<T>['$props']>,
-      ComponentsEmitsType<InstanceType<T>['$props']>
-    >
+  return async <T extends object | (abstract new (...args: any[]) => any), K extends object = Required<DialogPropsVc>['emitMethods']>(
+    component: T extends (abstract new (...args: any[]) => any) ? T : Promise<Component>,
+    props?: T extends abstract new (...args: any[]) => any
+      ? DialogDirectiveProps<
+          ExtractComponentProps<InstanceType<T>['$props']>,
+          ExtractComponentsEmits<InstanceType<T>['$props'], [[close: () => void]]>>
+      : AsyncDialogDirectiveProps<T, K>,
   ) => {
+    if (!component) {
+      onError(createError(ErrorCodes.COMPONENT_IS_REQUIRED))
+    }
+
+    try {
+      // 使用者传入的组件可能是异步组件，需要判断传入的异步组件是否为成功的Promise
+      await component
+    } catch (error) {
+      onError(createError(ErrorCodes.ASYNCHRONOUS_COMPONENT_LOADING_FAILED, String(error)))
+    }
+    
     const parent = document.createElement('div')
     let instance: VNode | null = null
 
     if (props) {
       const { option = {}, contentStyle = {} } = props
-
-      instance = createVNode(XDialogDirective, {
-        option: {
+      
+      instance = createVNode(XDialogDirective, { option: {
           ...option,
           component,
           dialogCloseRemoveVNode: () => {
-            render(null, parent)
-            parent.remove()
+            render(null, parent);
+            parent.remove();
           },
         },
-        contentStyle,
+        contentStyle
       })
+      
     } else {
       instance = createVNode(XDialogDirective, {
         option: {
-          component,
-        },
+          component
+        }
       })
+
     }
 
-    instance.appContext = defaultContext
+    defaultContext && (instance.appContext = defaultContext);
 
-    render(instance, parent)
-    document.body.appendChild(parent)
-    return instance
+    try {
+      render(instance, parent)
+      document.body.appendChild(parent)
+    } catch (error) {
+      parent.remove()
+      onError(createError(ErrorCodes.FAILED_TO_RENDER_DIALOG, String(error)))
+    }
+    return instance;
   }
 }
 

@@ -1,15 +1,14 @@
-import { computed, defineComponent, ref, watchEffect } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 import { ElCol, ElForm, ElRow, ElTabs } from 'element-plus'
-// import RenderVNode from "./RenderVNode";
 import { withInstall } from '../../_util/type'
 import { useDialogInjectKey } from '../../dialog/src/context'
 import { toReactive } from '../../_util/toReactive'
 import { fromProps } from './interface'
 import { useFormProviderKey } from './context'
 import form_config from './config'
+import ZtFormColumn from './type/column-form';
 import ZtGroupForm from './type/group-form'
 import ZtFromMenu from './menu'
-import { InitFormTemplate } from './init'
 import { getValueByPath } from './utils'
 import type { CustomSlotsType } from '../../_util/type'
 import type {
@@ -28,8 +27,6 @@ import type {
 import type { CSSProperties } from 'vue'
 
 const { span, label_width, menu_btn } = form_config
-
-// (callback?: (FormValidateCallback | undefined)) => FormValidationResult
 
 const formEmits = {
   reset: (done: () => void) => true,
@@ -58,7 +55,7 @@ export const XForm = withInstall(defineComponent({
   >,
   emits: formEmits,
   setup(props, { slots, emit, expose }) {
-    const { form = {}, option, ztBoxType } = props as FromProps
+    const { form = {}, option, xBoxType, _slotSuffix: slotSuffix = '' } = props as FromProps
 
     const disabledForm = ref<boolean>(props.disabled || false)
     const {
@@ -67,17 +64,13 @@ export const XForm = withInstall(defineComponent({
       checkColumnSpan = 2,
     } = option as FormOption
 
-    // console.log(11, formSpan)
-
     let column: FormColumnProps[] = toReactive(
       props.option?.column as FormColumnProps[]
     )
     // 双向绑定数据 回调函数
-    const newForm = ref<object>(props.form)
+    const newForm = computed(() => props.form);
 
-    // console.log(111, checkColumnSpan)
-
-    const { isFullscreen = ref<boolean>(false), slotSuffix = '' } =
+    const { isFullscreen = ref<boolean>(false) } =
       useDialogInjectKey().value || {}
 
     useFormProviderKey(
@@ -85,8 +78,8 @@ export const XForm = withInstall(defineComponent({
         newForm,
         formSpan,
         labelWidth,
-        ztBoxType,
-        isView: props.isView,
+        xBoxType,
+        isView: computed(() => props.isView),
         isFullscreen,
         slotSuffix,
         onUpdateModelValue,
@@ -95,12 +88,21 @@ export const XForm = withInstall(defineComponent({
 
     const ruleFormRef = ref<FormInstance>()
 
+    const tabsValue = ref<number | string>(
+      props.option?.viewTabsCurrent
+        ? props.option.viewTabsCurrent
+        : props.option?.viewTabs && props.option.viewTabs?.length > 0
+        ? props.option.viewTabs[0].value
+        : '0'
+    )
+
     const onUpdateModelValue = (prop: string, value: string) => {
       // form && newForm.value && (newForm.value[prop] = value)
       form && newForm.value && (getValueByPath(newForm, prop).value = value)
     }
 
     const formTabChange = (v: number | string) => {
+      tabsValue.value = v
       emit('formTabChange', v)
     }
 
@@ -127,15 +129,17 @@ export const XForm = withInstall(defineComponent({
         if (valid) {
           disabledForm.value = true
 
-          window.addEventListener('unhandledrejection', (e) => {
-            // console.log('unhandledrejection', e)
+          const unhandledrejectionHandler = () => {
             disabledForm.value = false
-            window.removeEventListener('unhandledrejection', () => {})
-          })
+            window.removeEventListener('unhandledrejection', unhandledrejectionHandler)
+          }
+
+          window.addEventListener('unhandledrejection', unhandledrejectionHandler)
 
           emit('submit', newForm.value, (isClear = true) => {
             isClear && ruleFormRef.value?.resetFields()
             disabledForm.value = false
+            window.removeEventListener('unhandledrejection', unhandledrejectionHandler)
           })
         } else {
           fields && ruleFormRef.value?.scrollToField(Object.keys(fields)[0])
@@ -163,19 +167,6 @@ export const XForm = withInstall(defineComponent({
         ruleFormRef.value?.validate(callback),
       /** 提交表单2.0 */
       validateV2: (disableForm: boolean | undefined = true) => {
-        // callback?: ValidateV2Callback
-        // return ruleFormRef.value?.validate((valid, fields) => {
-        //   if (valid && callback) {
-        //     disabledForm.value = true
-        //     const form = afterTransform(newForm.value, newColumn)
-        //     callback(form, () => {
-        //       ruleFormRef.value?.resetFields()
-        //       disabledForm.value = false
-        //     })
-        //   } else {
-        //     fields && ruleFormRef.value?.scrollToField(Object.keys(fields)[0])
-        //   }
-        // })
         return new Promise((resolve, reject) => {
           ruleFormRef.value?.validate((valid, fields) => {
             if (valid) {
@@ -209,50 +200,9 @@ export const XForm = withInstall(defineComponent({
 
     expose(exposeFn)
 
-    const FormVNode = ref(
-      InitFormTemplate({
-        column,
-        formSpan,
-        labelWidth,
-        newForm,
-        slots,
-        slotSuffix,
-        onUpdateModelValue,
-        ztBoxType,
-        isView: props.isView,
-        isFullscreen,
-        checkColumnSpan,
-        onSubmit,
-      })
-    )
-    watchEffect(() => {
-      newForm.value = props.form
-      column = toReactive(props.option?.column as FormColumnProps[])
-      // initRulesOrColumn()
-      // initForm()
-      column != undefined &&
-        (FormVNode.value = InitFormTemplate({
-          column,
-          checkColumnSpan,
-          formSpan,
-          labelWidth: props.option.labelWidth || label_width,
-          newForm,
-          slots,
-          slotSuffix,
-          onUpdateModelValue,
-          ztBoxType,
-          isView: props.isView,
-          isFullscreen,
-          onSubmit,
-        }))
-      // console.log('newForm.value', props.form)
-
-      // console.log('column', column)
-    })
-
     return {
       ...exposeFn,
-      ztBoxType,
+      xBoxType,
       isFullscreen,
       newForm,
       ruleFormRef,
@@ -260,8 +210,8 @@ export const XForm = withInstall(defineComponent({
       disabledForm,
       onReset,
       onSubmit,
-      FormVNode,
       formTabChange,
+      tabsValue,
     }
   },
   render() {
@@ -275,28 +225,29 @@ export const XForm = withInstall(defineComponent({
       viewTabsCurrent,
     } = this.$props.option
     const { class: $class } = this.$attrs
-    //console.log(111, viewTabs)
     const Component = viewTabs ? ElTabs : ''
 
-    const tabsValue = ref(
-      viewTabsCurrent
-        ? viewTabsCurrent
-        : viewTabs && viewTabs?.length > 0
-        ? viewTabs![0].value
-        : '0'
-    )
+    // 更新 tabsValue 如果 viewTabsCurrent 变化
+    if (viewTabsCurrent !== undefined && this.tabsValue !== viewTabsCurrent) {
+      this.tabsValue = viewTabsCurrent
+    } else if (
+      !viewTabsCurrent &&
+      viewTabs &&
+      viewTabs.length > 0 &&
+      this.tabsValue !== viewTabs[0].value
+    ) {
+      this.tabsValue = viewTabs[0].value
+    }
 
     return (
-      <ElRow class={['!position-initial cjx-form', $class]}>
-        <ElCol lg={24} md={24} xs={24}>
+      <ElRow class={['!position-initial cjx-form h-100%', $class]}>
+        <ElCol lg={24} md={24} xs={24} class='h-[calc(100%-50px)]'>
           {
-            // viewTabs && (this.isView || this.ztBoxType === 'check') ? <Component
-            // viewTabs ? <Component
             viewTabs &&
             viewTabs.length > 0 &&
             (this.$props.isView ||
-              this.ztBoxType === 'check' ||
-              this.ztBoxType == undefined) ? (
+              this.xBoxType === 'check' ||
+              this.xBoxType == undefined) ? (
               <Component
                 type="card"
                 class={'w-100% cjx-tab-form'}
@@ -307,7 +258,7 @@ export const XForm = withInstall(defineComponent({
                   } as CSSProperties
                 }
                 onTabChange={this.formTabChange}
-                v-model:modelValue={tabsValue.value}
+                v-model:modelValue={this.tabsValue}
               >
                 {viewTabs.map((item, index) => {
                   return (
@@ -336,7 +287,10 @@ export const XForm = withInstall(defineComponent({
                                       'h-[calc(100vh-180px)]',
                                   ]}
                                 >
-                                  {this.FormVNode}
+                                <ZtFormColumn
+                                  column={this.$props.option?.column as FormColumnProps[]}
+                                  v-slots={this.$slots}
+                                ></ZtFormColumn>
 
                                   {/*分组*/}
                                   <ZtGroupForm
@@ -380,24 +334,27 @@ export const XForm = withInstall(defineComponent({
                       <div class="cjx-form-header w-100%">
                         {this.$slots?.formHeader &&
                           this.$slots.formHeader({
-                            _XBoxType: this.ztBoxType,
+                            _XBoxType: this.xBoxType,
                           })}
                       </div>
 
-                      {this.FormVNode}
+                      <ZtFormColumn
+                        column={this.$props.option?.column as FormColumnProps[]}
+                        v-slots={this.$slots}
+                      ></ZtFormColumn>
 
                       {/*分组*/}
                       <ZtGroupForm
                         ref="groupFormRef"
                         group={this.$props.option?.group}
-                        ztBoxType={this.ztBoxType}
+                        xBoxType={this.xBoxType}
                         v-slots={this.$slots}
                       />
 
                       <div class="cjx-form-footer w-100%">
                         {this.$slots?.formFooter &&
                           this.$slots?.formFooter({
-                            _XBoxType: this.ztBoxType,
+                            _XBoxType: this.xBoxType,
                           })}
                       </div>
                     </>

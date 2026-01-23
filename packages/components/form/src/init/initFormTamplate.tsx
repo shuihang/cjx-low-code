@@ -1,4 +1,5 @@
 import { computed, createVNode, ref } from 'vue'
+import { clone, cloneDeep } from 'lodash-es'
 import {
   componentPropsValues,
   formColumnValues,
@@ -21,7 +22,6 @@ import { QuestionFilled } from '@element-plus/icons-vue'
 import omit from '../../../_util/omit'
 import { TipOutlined } from '../../../crud/src/icon'
 // import ZtPreviewOffice from '@cjx-low-code/components/cjx-previewOffice/index.vue'
-import { cloneDeep } from 'lodash-es'
 import { useLocale } from '@cjx-low-code/hooks'
 import form_config from '../config'
 import type { Column, TableColumnCtx } from 'element-plus'
@@ -32,11 +32,14 @@ import type {
   ColumnProps,
   DialogFormType,
 } from '../interface'
-import type { CSSProperties, Component, Ref, VNode } from 'vue'
+import type { CSSProperties, Ref, VNode } from 'vue'
 import type { SlotsValue } from '../tempform'
 import XEditTable from '../../../editTable'
+import { FORM_ON_EVENT_SUFFIX } from '../../../_util/env'
+import { isFunction, isString } from '../../../_util/shared'
+import helpers from '../helpers'
 
-const { check_column_span } = form_config
+const { check_column_span, span, label_width } = form_config
 
 export interface TemplateProps {
   column?: FormColumnProps[]
@@ -47,7 +50,7 @@ export interface TemplateProps {
   readonly slots: any
   onUpdateModelValue: (prop: string, value: string) => void
   onSubmit?: () => void
-  ztBoxType?: Ref<DialogFormType>
+  xBoxType?: Ref<DialogFormType>
   isView: boolean
   isFullscreen: Ref<boolean>
   collapseStatus?: Ref<boolean>
@@ -62,15 +65,15 @@ export interface TemplateCommonProps {
   labelWidth: number
   newForm: Ref<object>
   readonly slots: any
-  onUpdateModelValue: (prop: string, value: string) => void
+  onUpdateModelValue: (prop: string, value: any) => void
 }
 
 interface RenderInterface {
-  init(ctx?: any): VNode[] | VNode | undefined
+  init(ctx?: any): (VNode | undefined)[] | VNode | undefined
 }
 
 export interface RenderContext {
-  __XBoxType: string
+  __xBoxType: string
   fun: () => void
 }
 
@@ -86,8 +89,8 @@ class Common implements TemplateCommonProps {
 
   constructor(data: TemplateCommonProps) {
     this.column = data.column || []
-    this.formSpan = data.formSpan || 12
-    this.labelWidth = data.labelWidth || 90
+    this.formSpan = data.formSpan || span
+    this.labelWidth = data.labelWidth || label_width
     this.newForm = data.newForm
     this.slots = data.slots
     this.onUpdateModelValue = data.onUpdateModelValue
@@ -184,22 +187,31 @@ class Common implements TemplateCommonProps {
   }
 
   /**
-   * 表单排序并过滤不显示的表单项
-   * @returns
+   * 判断表单项是否显示
+   * @param col 表单项的配置
+   * @param index 表单项的索引
+   * @param xBoxType 弹窗类型
+   * @returns Boolean
    */
-  public _arraySortFilterDisPlay(ztBoxType?: DialogFormType) {
-    return this._arraySort()?.filter((item, index) => {
-      const column = cloneDeep(this.column) as FormColumnProps[]
-
-      if (typeof item.display !== 'function') return item.display !== false
-
-      return item?.display({
+  public _handelColumnDisPlay(data: {
+    col: FormColumnProps,
+    index: number,
+    form: object,
+    column: FormColumnProps[],
+    xBoxType?: DialogFormType
+  }) {
+    const { col, index, column, xBoxType } = data
+    
+     const display = col.display as ColumnProps['display']
+      
+    if (typeof display !== 'function') return display !== false
+   
+    return display && display({
         form: { ...this.newForm.value },
         column,
         index,
-        _XBoxType: ztBoxType,
+        _xBoxType: xBoxType,
       })
-    })
   }
 
   /**
@@ -226,6 +238,7 @@ class Common implements TemplateCommonProps {
       treeSelect: selectPlaceholder,
       // upload: uploadPlaceholder,
       editTable: designPlaceholder,
+      colorPicker: selectPlaceholder,
     }
     return formTypeI18nMap[type] || ''
   }
@@ -264,10 +277,12 @@ export class RenderSearchFormVNode extends Common implements SearchFormProps {
 
       const isDesign = tempForm[itemType]?.isDesign || false
 
-      const { otherPropsFunc } = tempForm[itemType]
-      if (otherPropsFunc) {
-        componentProps = { ...componentProps, ...otherPropsFunc(item) }
+      const { otherPropsFn } = tempForm[itemType]
+      if (otherPropsFn) {
+        componentProps = { ...componentProps, ...otherPropsFn(item) }
       }
+
+      const subComponent = tempForm[itemType]?.subComponent
       return (
         <ElCol
           class={'p-b-5px'}
@@ -325,39 +340,29 @@ export class RenderSearchFormVNode extends Common implements SearchFormProps {
                               super._getI18nPlaceholder(itemType) + item.label,
                           }
                         : componentProps)(),
-                    modelValue: this._getValueByPath(item.prop).value, // this.newForm.value[item.prop],
-                    // onChange: (val: any) => {
-                    //   const { change: tempFormChange } = tempForm[itemType]
-                    //   item?.change
-                    //     ? item.change(val, this.column)
-                    //     : tempFormChange &&
-                    //       tempFormChange(val, this.column)
-                    // },
+                    modelValue: this._getValueByPath(item.prop).value,
                     onKeyup: (e: KeyboardEvent) => {
                       // 执行需要的操作
-                      e.keyCode === 13 && this.onSubmit()
+                      e.key === 'Enter' && this.onSubmit()
                     },
                     'onUpdate:modelValue': (value: string) =>
                       this.onUpdateModelValue(item.prop, value),
                     ...this._getBindValue(item, itemType),
                   },
                   {
-                    default: tempForm[itemType]?.subComponent
+                    default: subComponent
                       ? () => {
                           return (
                             item.dicData &&
                             item.dicData.map((temp) => {
                               // element-plus 组件库得select组件的label属性 不支持VNode节点 得特殊处理
-                              const label =
-                                typeof temp[item.props?.label || 'label'] ===
-                                'string'
-                                  ? temp[item.props?.label || 'label']
-                                  : temp[item.props?.label || 'label']?.el
-                                      ?.parentNode.innerText
+                              const labelKey = item.props?.label || 'label'
+                              const label = isString(temp[labelKey]) ? temp[labelKey]
+                                  : temp[labelKey]?.el?.parentNode.innerText
                               const value = temp[item.props?.value || 'value']
 
                               return createVNode(
-                                tempForm[itemType]?.subComponent as Component,
+                                subComponent,
                                 {
                                   ...temp,
                                   value,
@@ -367,11 +372,10 @@ export class RenderSearchFormVNode extends Common implements SearchFormProps {
                                     item.type === 'radio'
                                       ? value
                                       : label,
-                                  key: value,
+                                  key: value
                                 },
                                 {
-                                  default: () =>
-                                    temp[item.props?.label || 'label'],
+                                  default: () => temp[labelKey]
                                 }
                               )
                             })
@@ -401,7 +405,7 @@ export class RenderSearchFormVNode extends Common implements SearchFormProps {
 
 interface RenderFormVNodeProps {
   slotSuffix: string
-  ztBoxType?: Ref<DialogFormType>
+  xBoxType?: Ref<DialogFormType>
   isFullscreen: Ref<boolean>
 }
 
@@ -410,13 +414,13 @@ interface RenderFormVNodeProps {
  */
 export class RenderFormVNode extends Common implements RenderInterface {
   slotSuffix: string
-  ztBoxType?: Ref<DialogFormType>
+  xBoxType?: Ref<DialogFormType>
   isFullscreen: Ref<boolean>
 
   constructor(data: TemplateCommonProps & RenderFormVNodeProps) {
     super(data)
     this.slotSuffix = data.slotSuffix
-    this.ztBoxType = data.ztBoxType
+    this.xBoxType = data.xBoxType
     this.isFullscreen = data.isFullscreen || ref(false)
   }
 
@@ -441,32 +445,64 @@ export class RenderFormVNode extends Common implements RenderInterface {
   /**
    * 格式化输入框和文本域组件 空字符校验通过的问题
    * @param col 表单列配置
-   * @returns
+   * @returns 
    */
   public _formatRules(col: FormColumnProps) {
     if (!col?.rules) return []
-
+    const rules = JSON.parse(JSON.stringify(col.rules))
     if (
       !this.slots[col.prop + this.slotSuffix] &&
       ['input', 'textarea'].includes(col.type || 'input')
     ) {
-      col.rules.map((item) => {
-        if ((item as any).required) {
+      rules.map((item) => {
+        if (item.required) {
           // 解决空字符串校验通过
-          ;(item as any).pattern = '[^ \u0020]+'
+          item.pattern = '[^ \x20]+'
         }
       })
     }
 
-    return [...col.rules]
+    return rules
+  }
+
+  public _handleOnEvent(row: FormColumnProps, type: FormItemType) {
+    const { on } = row
+    const onType = type + FORM_ON_EVENT_SUFFIX
+    if (!on || !on![onType]) {
+      return {}
+    }
+    const onObj: FormColumnProps['on'] = {}
+    Object.keys(on[onType]).forEach((key) => {
+      if (isFunction(on[onType][key])) {
+        onObj[key] = (...args: any[]) => {
+          on[onType][key](...args, helpers({
+            columns: this.column,
+            onUpdateModelValue: this.onUpdateModelValue,
+            currentColumn:{...row}}
+          ))
+        }
+      }
+    })
+    return onObj
   }
 
   init() {
     if (!this.column || this.column?.length === 0) return
+    const columns = clone(super._arraySort())
+    const form = clone(this.newForm.value)
 
-    return super
-      ._arraySortFilterDisPlay(this.ztBoxType?.value)
-      .map((item, index): VNode => {
+    return columns.map((item, index): VNode | undefined => {
+         if (
+          !this._handelColumnDisPlay({ 
+            col: item,
+            index,
+            column: columns,
+            form,
+            xBoxType: this.xBoxType?.value
+          })) return
+
+        const disabled = item.disabled as ColumnProps['disabled']
+        
         const itemType = item.type || ('input' as FormItemType)
 
         let componentProps: any = {}
@@ -481,11 +517,12 @@ export class RenderFormVNode extends Common implements RenderInterface {
 
         const isDesign = tempForm[itemType]?.isDesign || false
 
-        const { otherPropsFunc } = tempForm[itemType]
-        if (otherPropsFunc) {
-          componentProps = { ...componentProps, ...otherPropsFunc(item) }
+        const { otherPropsFn } = tempForm[itemType]
+        if (otherPropsFn) {
+          componentProps = { ...componentProps, ...otherPropsFn(item) }
         }
 
+        const subComponent = tempForm[itemType]?.subComponent
         return (
           <ElCol
             class={'p-b-5px'}
@@ -543,46 +580,33 @@ export class RenderFormVNode extends Common implements RenderInterface {
                               super._getI18nPlaceholder(itemType) + item.label,
                           }
                         : componentProps)(),
-                    modelValue: this._getValueByPath(item.prop).value, // this.newForm.value[item.prop],
-
-                    ...item?.on,
-                    onChange: (val: any) => {
-                      const { change: tempFormChange } = tempForm[itemType]
-                      item?.change
-                        ? item.change(val, this.column as FormColumnProps[])
-                        : tempFormChange &&
-                          tempFormChange(val, this.column as FormColumnProps[])
-                    },
+                    modelValue: this._getValueByPath(item.prop).value,
+                    ...this._handleOnEvent(item, itemType),
                     'onUpdate:modelValue': (value: string) =>
                       this.onUpdateModelValue(item.prop, value),
                     ...this._getBindValue(item, itemType),
-                    disabled:
-                      typeof item.disabled === 'function'
-                        ? item.disabled({
-                            form: { ...this.newForm.value },
-                            column: this.column,
-                            index,
-                            _XBoxType: this.ztBoxType?.value,
-                          })
-                        : item.disabled,
+                    disabled: isFunction(disabled) ? disabled({
+                      form: { ...this.newForm.value },
+                      column: this.column,
+                      index,
+                      _xBoxType: this.xBoxType?.value,
+                    }) as ColumnProps['disabled'] : item.disabled,
                   },
                   {
-                    default: tempForm[itemType]?.subComponent
+                    default: subComponent
                       ? () => {
                           return (
                             item.dicData &&
                             item.dicData.map((temp) => {
                               // element-plus 组件库得select组件的label属性 不支持VNode节点 得特殊处理
-                              const label =
-                                typeof temp[item.props?.label || 'label'] ===
-                                'string'
-                                  ? temp[item.props?.label || 'label']
-                                  : temp[item.props?.label || 'label']?.el
-                                      ?.parentNode.innerText
-                              const value = temp[item.props?.value || 'value']
+                              const labelKey = item.props?.label || 'label'
+                              const vlaueKey = item.props?.value || 'value'
+                              const label = isString(temp[labelKey]) ? temp[labelKey]
+                                  : temp[labelKey]?.el?.parentNode.innerText
+                              const value = temp[vlaueKey]
 
                               return createVNode(
-                                tempForm[itemType]?.subComponent as Component,
+                                subComponent,
                                 {
                                   ...temp,
                                   value,
@@ -592,11 +616,10 @@ export class RenderFormVNode extends Common implements RenderInterface {
                                     item.type === 'radio'
                                       ? value
                                       : label,
-                                  key: value,
+                                  key: value
                                 },
                                 {
-                                  default: () =>
-                                    temp[item.props?.label || 'label'],
+                                  default: () => temp[labelKey]                   
                                 }
                               )
                             })
@@ -610,7 +633,7 @@ export class RenderFormVNode extends Common implements RenderInterface {
                 <div class="w-100%">
                   {this.slots[item.prop + this.slotSuffix]?.({
                     ...item,
-                    _XBoxType: this.ztBoxType?.value,
+                    _xBoxType: this.xBoxType?.value,
                   })}
                 </div>
               )}
@@ -636,7 +659,7 @@ interface RenderViewFormVNodeProps {
   /** 折叠状态 */
   collapseStatus: Ref<boolean>
   /** 表单查看模式的 一行 Descriptions Item 的数量 */
-  checkColumnSpan: number
+  checkColumnSpan?: number
   /** 数据为数组时才有 */
   $index?: number
 }
@@ -647,7 +670,8 @@ interface RenderViewFormVNodeProps {
 export class RenderViewFormVNode extends Common implements RenderInterface {
   slotSuffix: string
   collapseStatus: Ref<boolean>
-  checkColumnSpan: number
+  checkColumnSpan?: number
+  xBoxType?: Ref<DialogFormType>
   $index?: number
   constructor(data: TemplateCommonProps & RenderViewFormVNodeProps) {
     super(data)
@@ -660,8 +684,8 @@ export class RenderViewFormVNode extends Common implements RenderInterface {
   public valueMap: Record<string, any> = {
     editTable: (column: ColumnProps) => {
       const value = this.newForm.value[column.prop] || []
+      // @ts-ignore
       const option = column.editTable?.option || {}
-      console.log('editTable', value, option)
       return <XEditTable modelValue={value} option={option} isView />
     }
     // upload: (column: ColumnProps) => {
@@ -679,7 +703,7 @@ export class RenderViewFormVNode extends Common implements RenderInterface {
    * ts 装饰器写法 注入ztBoxType参数
    */
   // @SETParameter({
-  //   ztBoxType: 'check'
+  //   xBoxType: 'check'
   // })
   // 处理
   public _handleCheckValue(
@@ -705,8 +729,10 @@ export class RenderViewFormVNode extends Common implements RenderInterface {
   }
 
   init() {
-    const columns = super._arraySortFilterDisPlay('check')
-    if (!columns || columns?.length === 0) return
+    if (!this.column || this.column?.length === 0) return
+   const columns = clone(super._arraySort())
+    const form = clone(this.newForm.value)
+
     return (
       <ElDescriptions
         class={'w-100% p-l-10px p-t-15px m-b-20px'}
@@ -714,13 +740,17 @@ export class RenderViewFormVNode extends Common implements RenderInterface {
         column={this.checkColumnSpan}
       >
         {columns.map((item, index) => {
+          if (!this._handelColumnDisPlay({ col: item, index, column: columns, form, xBoxType: this.xBoxType?.value })) {
+            return <></>
+          }
+          
           const descriptionsItemName =
             !this.collapseStatus.value ||
             item?.collapseShow === true ||
             (typeof item?.collapseShow == 'function' &&
               item?.collapseShow!({
                 form: { ...this._getValueByPath(item.prop).value },
-                column: cloneDeep(this.column) as FormColumnProps[],
+                column: columns,
               }))
               ? 'cjx-view-descriptions-item'
               : 'cjx-view-descriptions-item-none'
@@ -740,7 +770,7 @@ export class RenderViewFormVNode extends Common implements RenderInterface {
                   ? item.formatter(
                       this.newForm.value,
                       item as unknown as TableColumnCtx<Column>,
-                      this._getValueByPath(item.prop).value, // this.newForm.value[item.prop],
+                      this._getValueByPath(item.prop).value,
                       index
                     )
                   : this._handleCheckValue(
@@ -749,7 +779,7 @@ export class RenderViewFormVNode extends Common implements RenderInterface {
                     )
                 : this.slots[item.prop + this.slotSuffix]?.({
                     ...item,
-                    _XBoxType: 'check',
+                    _xBoxType: 'check',
                     $value: this._getValueByPath(item.prop).value,
                     $index: this.$index,
                   })}

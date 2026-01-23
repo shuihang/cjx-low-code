@@ -8,8 +8,8 @@ interface FormProvide {
   labelWidth: number
   // type: string,
   slotSuffix: string
-  ztBoxType?: Ref<DialogFormType>
-  isView: boolean
+  xBoxType?: Ref<DialogFormType>
+   isView: ComputedRef<boolean>,
   isFullscreen: Ref<boolean>
   onUpdateModelValue: (prop: string, value: string) => void
 }

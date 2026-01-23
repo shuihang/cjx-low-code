@@ -1,4 +1,4 @@
-import { computed, defineComponent, nextTick, onMounted, ref, watch } from 'vue'
+import { computed, defineComponent, nextTick, onMounted, ref, watch, Comment } from 'vue'
 import { ElButton, ElCard, ElIcon, ElPopover, ElTable } from 'element-plus'
 import { useDraggable } from 'vue-draggable-plus'
 import download from '@cjx-low-code/components/_util/download'
@@ -26,7 +26,7 @@ import useId from './useId'
 import type { SetUpInterface } from './context'
 import type { CustomSlotsType } from '../../_util/type'
 import { withInstallVue } from '../../_util/type'
-import { isPromise } from '../../_util/shared'
+import { isObject } from '../../_util/shared'
 import type { TableColumRef } from './column/column'
 import type { SortableEvent } from 'vue-draggable-plus'
 import type {
@@ -50,12 +50,13 @@ import type {
 } from 'element-plus'
 import type { CSSProperties, Ref, VNode, VNodeArrayChildren } from 'vue'
 import { hasPermi } from './hasPermi'
+import { ErrorCodes, defaultOnError, createError } from '../../_util/errors'
 
-const { row_key, dropRowClass } = crudConfig
+const onError = defaultOnError
+
+const { row_key, dropRowClass, MAX_MENU_BTN_COUNT, export_file_suffix, draggable_class } = crudConfig;
 const message = useMessage() // 消息弹窗
 
-// 最大菜单按钮数量 超出后显示更多按钮，默认为3个按钮
-const MAX_MENU_BTN_COUNT = 3
 
 const crudEmits = {
   'current-change': (currentPage: number) => true,
@@ -102,7 +103,7 @@ const crudEmits = {
   'radio-change': (row: any) => true,
   'sortable-change': (sortable: SortableEvent) => true,
   'dialog-tab-change': (index: number | string) => true,
-  // 'on-load': () => Promise<any>,
+  'on-load': () => Promise<any>,
 }
 
 /** 测试 */
@@ -252,34 +253,28 @@ const XCrud = withInstallVue(defineComponent({
 
     let $index: number | undefined = 0
     // 显示弹窗
-    const showDialogForm = ref<boolean>(false)
-    const boxType = ref<DialogFormType>('check')
-    let oldForm: any
-    // console.log('oldForm', oldForm)
+    const showDialogForm = ref<boolean>(false);
+    const boxType = ref<DialogFormType>('check');
+   const cacheForm = cloneDeep(props.form)
+    const currentForm = ref<any>({})
+    const handleShowDialogForm = (type: DialogFormType, row?: Row<any>, index?: number) => {
+      if (!isObject(props.form) && type !== 'check') onError(createError(ErrorCodes.WHEN_USING_THE_CRUD_COMPONENT_TO_ADD_AND_EDITING_FUNCTIONS_THE_FORM_PARAMETER_IS_REQUIRED_TO_BE_PASSED))
 
-    const handleShowDialogForm = (
-      type: DialogFormType,
-      row?: Row<any>,
-      index?: number
-    ) => {
       if (type === 'create') {
-        oldForm = cloneDeep(props.form)
         // formRef.value?.resetFields()
+        currentForm.value = cloneDeep(cacheForm)
+      } else {
+        currentForm.value = cloneDeep(row)
       }
-      // console.log(type, props.form)
+
       $index = index
-      boxType.value = type
-      if (row) {
-        emit('update:form', { ...row })
-      }
+      boxType.value = type;
+
+      props.form && emit('update:form', currentForm.value);
+
       // 打开前的回调，会暂停Dialog的打开，tableRow 该项的值，done用于打开Dialog,type为当前窗口的类型
-      emit(
-        'before-open',
-        boxType.value,
-        { ...row } || {},
-        () => (showDialogForm.value = true)
-      )
-    }
+      emit('before-open', boxType.value, currentForm.value, () => showDialogForm.value = true);
+    };
 
     const formRef = useCompRef(XForm)
     // 弹窗表单 确认事件
@@ -288,8 +283,8 @@ const XCrud = withInstallVue(defineComponent({
       done: (isClear?: boolean) => void
     ) => {
       const emitStr = boxType.value === 'create' ? 'save' : 'update'
-      // @ts-ignore
       emit(
+        // @ts-ignore
         `row-${emitStr}`,
         form,
         (isClear = true) => {
@@ -314,14 +309,13 @@ const XCrud = withInstallVue(defineComponent({
     // 弹窗表单 关闭事件
     const onCloseChange = () => {
       // console.log(form)
-      emit('update:form', oldForm || cloneDeep(form))
+       emit('update:form', cacheForm || cloneDeep(props.form));
       showDialogForm.value = false
       emit('dialog-close', boxType.value)
     }
 
     // 导出
     const onHandleExport = () => {
-      //
       const ids: any[] = []
       selectionList.forEach((item) => {
         ids.push(item[rowKey])
@@ -342,7 +336,7 @@ const XCrud = withInstallVue(defineComponent({
             ...params,
             ids: ids.join(','),
           })
-          download.excel(data, `${name}.xlsx`)
+          download.excel(data,  `${name}${export_file_suffix}`);
         }
       )
     }
@@ -445,7 +439,7 @@ const XCrud = withInstallVue(defineComponent({
           props.data
         )
         useDraggable(elTagWrappingRef.value, ref(props.data), {
-          handle: '.handle',
+          handle: `.${draggable_class}`,
           customUpdate: (event) => {
             // console.log(111, event)
             // const newData = JSON.parse(JSON.stringify(props.data || []))
@@ -612,12 +606,8 @@ const XCrud = withInstallVue(defineComponent({
     }
 
     const getMenuVNode = (menuBtnVNode: VNode, slots: VNode[]) => {
-      const defMenuNode = menuBtnVNode.children
-        ? (menuBtnVNode.children as VNodeArrayChildren).filter((item) => item)
-        : []
-      const slotNode = slots.filter(
-        (item) => item.type.toString() !== 'Symbol(v-cmt)'
-      )
+      const defMenuNode = menuBtnVNode.children ? (menuBtnVNode.children as VNodeArrayChildren).filter(item => item) : []
+      const slotNode = slots.filter(item => item.type !== Comment)
 
       if (defMenuNode.length + slotNode.length <= MAX_MENU_BTN_COUNT)
         return (
@@ -668,7 +658,7 @@ const XCrud = withInstallVue(defineComponent({
             }}
           >
             <div class={'flex flex-col cjx-crud-popover-btn-group'}>
-              {slotNode.slice(3 - defMenuNode.length, slotNode.length)}
+              {slotNode.slice(MAX_MENU_BTN_COUNT - defMenuNode.length, slotNode.length)}
             </div>
           </ElPopover>
         </>
@@ -700,9 +690,17 @@ const XCrud = withInstallVue(defineComponent({
       showDialogForm,
       importDialogNode,
       isCard,
+      boxType,
+      currentForm
     }
   },
   render() {
+    if (!this.$props.option) {
+      return <span class={'text-red-500'}>
+        {createError(ErrorCodes.THE_OPTION_PARAMETER_OF_CRUD_COMPONENTS_IS_MANDATORY)}
+      </span>
+    }
+
     const CardComponent = this.isCard ? ElCard : 'div'
     const { class: $class } = this.$attrs
 
@@ -785,11 +783,7 @@ const XCrud = withInstallVue(defineComponent({
               onSortChange={this.sortChange}
               onRowClick={this.rowClick}
               row-class-name={this.$props.rowClassName}
-              cell-class-name={(data) =>
-                this.$props.cellClassName
-                  ? this.$props.cellClassName(data)
-                  : 'handle'
-              }
+              cell-class-name={(data) => this.$props.cellClassName ? (this.$props.cellClassName(data)) : (draggable_class)}
               load={this.onTreeLoad}
               size={this.tableSize}
               header-cell-style={() =>
@@ -831,7 +825,7 @@ const XCrud = withInstallVue(defineComponent({
         {/*表单弹窗*/}
         <XDiaLogForm
           showDialogForm={this.showDialogForm}
-          form={this.$props.form}
+          form={this.$props.form || this.currentForm}
           v-slots={this.$slots}
           class={this.$props.dialogClassName}
         />

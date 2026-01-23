@@ -6,6 +6,10 @@ import type { PropType } from 'vue'
 // import pick from "@cjx-low-code/components/_util/pick";
 import type { CrudPageProps } from '../interface'
 
+import crudConfig from '../config'
+
+const { page_layout, pager_count, page_sizes, page_background } = crudConfig
+
 const ZtTablePage = defineComponent({
   name: 'ZtTablePage',
   slots: Object as CustomSlotsType<{
@@ -70,14 +74,11 @@ const ZtTablePage = defineComponent({
               class={'justify-end p-t-50px m-t-a'}
               v-model:currentPage={newCurrentPage.value}
               v-model:pageSize={newPageSize.value}
-              layout={
-                props.page?.layout?.join(',') ||
-                'total, sizes, prev, pager, next, jumper'
-              }
-              background={props.page.background || true}
-              pageSizes={props.page.pageSizes || [10, 20, 30, 50, 100]}
+              layout={props.page?.layout?.join(',') || page_layout.join(',')}
+              background={props.page.background || page_background}
+              pageSizes={props.page.pageSizes || page_sizes}
               total={props.page.total}
-              pagerCount={props.page.pagerCount || 7}
+              pagerCount={props.page?.pagerCount || pager_count}
               onCurrentChange={handleCurrentChange}
               onSizeChange={handleSizeChange}
             />

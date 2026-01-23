@@ -12,15 +12,15 @@ export function InitSearchFormVNode(argv: SearchFormProps) {
 }
 
 export function InitFormTemplate(argv: TemplateProps) {
-  const { isView, ztBoxType } = argv
+  const { isView, xBoxType } = argv
   const argvWithColumn = {
     ...argv,
     column: argv.column || [],
-    formSpan: argv.formSpan || 24,
+    formSpan: argv.formSpan as number,
     collapseStatus: argv.collapseStatus || ref(false),
-    checkColumnSpan: argv.checkColumnSpan || 24,
+    // checkColumnSpan: argv.checkColumnSpan || 24,
   }
-  return isView || ztBoxType?.value === 'check'
+  return isView || xBoxType?.value === 'check'
     ? new RenderViewFormVNode(argvWithColumn).init()
     : new RenderFormVNode(argvWithColumn).init()
 }

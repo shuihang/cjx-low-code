@@ -1,4 +1,31 @@
 .cjx-dialog {
+  &.cjx-dialog-drawer {
+    .el-drawer__body {
+      overflow: initial;
+      height: calc(100% - 114px);
+    }
+    .cjx-form-content {
+      height: 100%;
+    }
+    .cjx-dialog-content {
+      & > * {
+        height: 100%;
+      }
+    }
+
+    .cjx-Form-row {
+      height: auto !important;
+    }
+    .cjx-Form-row, .el-tab-pane {
+      max-height: 100% !important;
+    }
+   
+    .cjx-form {
+      .cjx-form-menu {
+        margin-left: -20px;
+      }
+    }
+  }
   .el-form>.el-row {
     max-height: calc(90vh - 150px);
   }
@@ -19,7 +46,6 @@
     width: calc(100% - 20px);
   }
   
-
   .el-tab-pane {
     max-height: calc(90vh - 186px);
     overflow-y: auto;
@@ -31,7 +57,7 @@
   }
 
   .cjx-form {
-    width: calc(100% + 20px);
+    width: calc(100% + 18px);
     &.Search {
       width: 100%;
     }
@@ -46,41 +72,44 @@
       margin: 0px !important;
     }
 
-
     .cjx-form-menu {
-      margin-left: -20px;
+      margin-left: -16px;
       //margin-bottom: -10px;
       border-top: 1px solid var(--cjx-dialog-border-color);
-      padding: 14px 20px 0px 0px;
-      margin-top: 4px;
-      box-sizing: content-box;
+      padding: 14px 15px 20px 15px;
+      // margin-top: 4px;
+      // box-sizing: content-box;
       background-color: var(--el-bg-color);
     }
-  }
-
-  .b-t-cjx-dialog-border-color {
-    border-top: 1px solid var(--cjx-dialog-border-color);
   }
 }
 
 .cjx-dialog.is-fullscreen {
+  .cjx-dialog-content {
+    & > * {
+      height: 100%;
+    }
+    & > .cjx-form {
+      height: 100% !important;
+    }
+  }
 
   .el-form > .el-row {
-    max-height: calc(100vh - 150px);
+    max-height: 100%;
   }
   .el-form > .el-row.cjx-form-group {
     max-height: inherit;
   }
 
-
-  .cjx-dialog-content>.el-row>.el-col>.el-form>.el-row.cjx-Form-row {
-    height: calc(100vh - 150px);
-    max-height: calc(100vh - 150px);
-    display: block;
+  .cjx-Form-row {
+    height: auto !important;
   }
 
   .el-tab-pane {
-    max-height: calc(100vh - 250px);
+    max-height: 100%;
     overflow: auto;
+  }
+  .cjx-crud {
+    height: 100%;
   }
 }

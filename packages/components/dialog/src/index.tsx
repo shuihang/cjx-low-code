@@ -1,5 +1,5 @@
 import { computed, defineComponent, ref, watchEffect } from 'vue'
-import { ElButton, ElCol, ElDialog, ElIcon, ElRow } from 'element-plus'
+import { ElButton, ElCol, ElDialog, ElDrawer, ElIcon, ElRow } from 'element-plus'
 import { CircleCheck, CircleClose, CloseBold } from '@element-plus/icons-vue'
 import { useLocale } from '@cjx-low-code/hooks'
 import { useDialogProviderKey } from '../../dialog/src/context'
@@ -12,6 +12,8 @@ export interface DialogProps {
   title: string
   /** 弹窗是否显示 */
   visible: boolean
+  /** 弹窗类型 默认为`Dialog` */
+  type?: 'Dialog' | 'Drawer'
   /** 弹窗宽度 默认为`80%` */
   width?: number | string
   /** 是否显示弹窗操作区域 默认为`true`*/
@@ -93,6 +95,9 @@ export default defineComponent({
       loading = true,
     } = props.option
 
+    const isDrawer = computed(() => props.option.type === 'Drawer')
+    const Component = computed(() => isDrawer.value ? ElDrawer : ElDialog)
+
     const data = ref<any>()
 
     const close = () => {
@@ -107,29 +112,31 @@ export default defineComponent({
 
     watchEffect(() => {
       visible.value = props.option.visible
-      isFullscreen.value = false
       data.value = props.option?.data
+      setTimeout(() => {
+        isFullscreen.value = false
+      }, 200)
     })
 
     return () => (
-      <ElDialog
-        class="cjx-dialog"
+      <Component.value
+       class={['cjx-dialog', isDrawer.value && 'cjx-dialog-drawer', isDrawer.value || isFullscreen.value ? 'max-h-100vh' : 'max-h-90vh', ]}
         {...attrs}
         show-close={false}
         modelValue={visible.value}
         fullscreen={isFullscreen.value}
         width={width || '80%'}
+        size={isFullscreen.value ? '100%' : width || '80%'}
         align-center
         onClose={close}
-        style={
-          {
-            overflow: 'hidden',
-            maxHeight: isFullscreen.value ? '100vh' : '90vh',
-          } as CSSProperties
-        }
+        style={{
+          overflow: 'hidden',
+        } as CSSProperties}
         draggable
         append-to-body
         close-on-click-modal={false}
+        modal={!isDrawer.value}
+        resizable
         v-slots={{
           header: () => (
             <ElRow>
@@ -183,19 +190,10 @@ export default defineComponent({
       >
         <div
           style={{
-            ...({...props.contentStyle, ...contentDefaultStyle}),
-            maxHeight:
-              menu || menu == undefined
-                ? isFullscreen.value
-                  ? 'calc(100vh - 150px)'
-                  : 'calc(90vh - 150px)'
-                : '',
-            overflowY: 'auto',
-          } as CSSProperties}
-          class={[
-            'cjx-dialog-content flex flex-col',
-            isFullscreen.value && '!h-100%',
-          ]}
+            ...props.contentStyle,
+            maxHeight: (menu || menu == undefined) && !isDrawer.value ? isFullscreen.value ? 'calc(100vh - 150px)' : 'calc(90vh - 150px)' : ''
+        }}
+          class={['zt-dialog-content flex flex-col', isFullscreen.value && !isDrawer.value && '!h-100%', isDrawer.value && menu ? 'h-[calc(100%-50px)]' : 'h-100%']}
         >
           {slots.default?.()}
         </div>
@@ -250,7 +248,7 @@ export default defineComponent({
             )}
           </div>
         )}
-      </ElDialog>
+      </Component.value>
     )
   },
 })

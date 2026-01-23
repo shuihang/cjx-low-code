@@ -12,6 +12,7 @@ import {
   ElSelect,
   ElSwitch,
   ElTreeSelect,
+  ElColorPicker
 } from 'element-plus'
 // import ZtFileUpload from '@cjx-low-code/components/cjx-uploadFile/index.vue';
 import XEditTable from '../../editTable'
@@ -65,7 +66,7 @@ export interface PropsToForm {
   /** 需要绑定的值 */
   componentBindKey?: string
   /** 其他的需要绑定的数据 */
-  otherPropsFunc?: (column: FormColumnProps) => object
+  otherPropsFn?: (column: FormColumnProps) => object
   // 样式值 的转化
   // initialTransform?: (v: any, ...args: any[]) => any,
   // // 处理数据
@@ -138,12 +139,16 @@ export const tempForm: TempFormInterface = {
   treeSelect: {
     component: ElTreeSelect,
     placeholder: selectPlaceholder,
-    otherPropsFunc: (column) => {
+    otherPropsFn: (column) => {
       const data = column?.treeSelect?.data || column.dicData
       return {
         data,
       }
     },
+  },
+  colorPicker: {
+    component: ElColorPicker,
+    placeholder: selectPlaceholder,
   },
   // upload: {
   //   component: ZtFileUpload,

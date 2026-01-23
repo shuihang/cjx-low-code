@@ -1,6 +1,6 @@
 <template>
   <div>
-    <XCrud v-model:form="form" :option="option" :data="data" @before-open="beforeOpen" >
+    <XCrud v-model:form="form" :option="option" :data="data" @before-open="beforeOpen" @row-save="save" >
       <template #nameSearch>
         <el-input placeholder="请输入插槽姓名" />
       </template>
@@ -17,13 +17,13 @@
         <el-tag>{{ row.name }}</el-tag>
       </template>
 
-      <template #nameForm="{ prop, _XBoxType }">
-        <div v-if="_XBoxType === 'check'">
+      <template #nameForm="{ prop, _xBoxType }">
+        <div v-if="_xBoxType === 'check'">
            <el-tag>{{ form.name }}</el-tag>{{prop}}
         </div>
 
         <div v-else>
-          <el-input v-model="form.name" placeholder="请输入姓名" /> {{ _XBoxType }}
+          <el-input v-model="form.name" placeholder="请输入姓名" /> {{ _xBoxType }}
         </div>
       </template>
 
@@ -44,6 +44,7 @@ const option = ref<TableOption>({
   menuWidth: 220,
   updateBtn: true,
   viewBtn: true,
+  addBtn: true,
   span: 12,
   column: [ 
     {
@@ -62,6 +63,15 @@ const option = ref<TableOption>({
     {
       label: '性别',
       prop: 'sex'
+    },
+    {
+      label: '时间组件',
+      prop: 'obj.objSon.time',
+      type: 'datePicker',
+      datePicker: {
+        type: 'year',
+        valueFormat: 'YYYY-MM-DD'
+      }
     }
   ],
   group: [
@@ -91,8 +101,12 @@ const option = ref<TableOption>({
               label: '乒乓球',
               value: '4'
             }
-          ]
+          ],
+          checkbox: {
+            
+          },
         },
+        
         {
           label: '职业',
           prop: 'job',
@@ -156,5 +170,11 @@ const beforeOpen: (...args: any[]) => void = (type, row, done) => {
 
 const customizeMenuBtn = (row: any, $index: number) => {
   ElMessage.success('自定义按钮menu: row: ' + JSON.stringify(row) + ' $index: ' + $index)
+}
+
+const save = (row: any, done) => {
+  console.log(form.value)
+  ElMessage.success('保存成功:' + JSON.stringify(form.value))
+  done()
 }
 </script>

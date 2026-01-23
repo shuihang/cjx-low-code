@@ -115,7 +115,10 @@ export type ViewTabs = {
 }
 
 type RulesType = Array<Partial<FormItemRule>>
-export interface SpanMethodProps<T> {
+
+type DefaultRow = Record<PropertyKey, any>
+
+export interface SpanMethodProps<T extends DefaultRow> {
   row: T
   column: TableColumnCtx<T>
   rowIndex: number
@@ -126,7 +129,7 @@ export interface SpanMethodProps<T> {
  * @param {any} form 表单绑定的form
  * @param {TableColumnCtx<Column>} column 列数据
  * @param {number} index 行索引 cjx-crud组件才有 cjx-form为undefined
- * @param {DialogFormType} _XBoxType 弹窗类型 cjx-crud组件才有 cjx-form为undefined
+ * @param {DialogFormType} _xBoxType 弹窗类型 cjx-crud组件才有 cjx-form为undefined
  * @returns {boolean} 是否显示
  */
 export type DisplayInterface =
@@ -135,7 +138,7 @@ export type DisplayInterface =
       form: any
       column: FormColumnProps[]
       index?: number
-      _XBoxType?: DialogFormType
+      _xBoxType?: DialogFormType
     }) => boolean)
 
 export type ColumnProps = Pick<PropsToForm, 'change'> &
@@ -237,7 +240,7 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
      * @param {any} form 表单绑定的form
      * @param {FormColumnProps[]} column 列数据
      * @param {number} index 行索引
-     * @param {DialogFormType} _XBoxType 弹窗类型
+     * @param {DialogFormType} _xBoxType 弹窗类型
      * @returns {boolean} 是否显示
      */
     display?:
@@ -246,7 +249,7 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
           form: any
           column: FormColumnProps[]
           index: number
-          _XBoxType?: DialogFormType
+          _xBoxType?: DialogFormType
         }) => boolean)
     /**
      * 表单新增时当前项是否显示。可以是布尔类型或函数表达式。
@@ -254,7 +257,7 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
      * @param {any} form 表单绑定的form
      * @param {FormColumnProps[]} column 列数据
      * @param {number} index 行索引
-     * @param {DialogFormType} _XBoxType 弹窗类型
+     * @param {DialogFormType} _xBoxType 弹窗类型
      * @returns {boolean} 是否显示
      */
     createDisplay?: DisplayInterface
@@ -264,18 +267,18 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
      * @param {any} form 表单绑定的form
      * @param {FormColumnProps[]} column 列数据
      * @param {number} index 行索引
-     * @param {DialogFormType} _XBoxType 弹窗类型
+     * @param {DialogFormType} _xBoxType 弹窗类型
      * @returns {boolean} 是否显示
      */
     updateDisplay?: DisplayInterface
     /**
      * 表单查看时当前项是否显示。可以是布尔类型或函数表达式。
      * 如果未使用此参数，则取 `display` 参数的值，默认为 `true`。
-     * @type {DisplayInterface = boolean | ((props: {form: any, column: FormColumnProps[], index: number, _XBoxType?: DialogFormType }) => boolean)}
+     * @type {DisplayInterface = boolean | ((props: {form: any, column: FormColumnProps[], index: number, _xBoxType?: DialogFormType }) => boolean)}
      * @param {any} form 表单绑定的form
      * @param {FormColumnProps[]} column 列数据
      * @param {number} index 行索引
-     * @param {DialogFormType} _XBoxType 弹窗类型
+     * @param {DialogFormType} _xBoxType 弹窗类型
      * @returns {boolean} 是否显示
      */
     checkDisplay?: DisplayInterface
@@ -285,7 +288,7 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
      * @param {any} form 表单绑定的form
      * @param {FormColumnProps[]} column 列数据
      * @param {number} index 行索引
-     * @param {DialogFormType} _XBoxType 弹窗类型
+     * @param {DialogFormType} _xBoxType 弹窗类型
      * @returns {boolean} 是否可以编辑
      * */
     disabled?:
@@ -294,7 +297,7 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
           form: any
           column: FormColumnProps[]
           index: number
-          _XBoxType?: DialogFormType
+          _xBoxType?: DialogFormType
         }) => boolean)
     /**
      * 表单新增时当前项是否显示。可以是布尔类型或函数表达式。
@@ -302,7 +305,7 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
      * @param {any} form 表单绑定的form
      * @param {FormColumnProps[]} column 列数据
      * @param {number} index 行索引
-     * @param {DialogFormType} _XBoxType 弹窗类型
+     * @param {DialogFormType} _xBoxType 弹窗类型
      * @returns {boolean} 是否可以编辑
      * */
     createDisabled?:
@@ -311,7 +314,7 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
           form: any
           column: FormColumnProps[]
           index: number
-          _XBoxType?: DialogFormType
+          _xBoxType?: DialogFormType
         }) => boolean)
     /**
      * 表单编辑时当前项是否显示。可以是布尔类型或函数表达式。
@@ -319,7 +322,7 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
      * @param {any} form 表单绑定的form
      * @param {FormColumnProps[]} column 列数据
      * @param {number} index 行索引
-     * @param {DialogFormType} _XBoxType 弹窗类型
+     * @param {DialogFormType} _xBoxType 弹窗类型
      * @returns {boolean} 是否可以编辑
      * */
     updateDisabled?:
@@ -328,7 +331,7 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
           form: any
           column: FormColumnProps[]
           index: number
-          _XBoxType?: DialogFormType
+          _xBoxType?: DialogFormType
         }) => boolean)
     /**
      * 表单查看时当前项是否显示。可以是布尔类型或函数表达式。
@@ -336,7 +339,7 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
      * @param {any} form 表单绑定的form
      * @param {FormColumnProps[]} column 列数据
      * @param {number} index 行索引
-     * @param {DialogFormType} _XBoxType 弹窗类型
+     * @param {DialogFormType} _xBoxType 弹窗类型
      * @returns {boolean} 是否可以编辑
      * */
     checkDisabled?:
@@ -345,7 +348,7 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
           form: any
           column: FormColumnProps[]
           index: number
-          _XBoxType?: DialogFormType
+          _xBoxType?: DialogFormType
         }) => boolean)
     /** 表单项标题宽度 默认`90`*/
     labelWidth?: number
@@ -377,19 +380,10 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
     on?: { [key in `on${Capitalize<string>}`]: (...args: any[]) => void }
   }
 
-export type TableGroupInterface = Omit<GroupInterface, 'column'> & {
-  column?: Pick<
-    ColumnProps,
-    | typeof formColumnValues[number]
-    | 'display'
-    | 'checkDisplay'
-    | 'updateDisplay'
-    | 'createDisplay'
-    | 'disabled'
-    | 'checkDisabled'
-    | 'updateDisabled'
-    | 'createDisabled'
-  >[]
+export type TableGroupInterface = Omit<GroupInterface, 'column' | 'display'> & {
+  display?: ((props: { form: any, column: FormColumnProps[], index: number, _xBoxType?: DialogFormType }) => boolean),
+  column?: Pick<ColumnProps, (typeof formColumnValues)[number] | 'display' | 'checkDisplay' |'updateDisplay' | 'createDisplay' |
+    'disabled' | 'checkDisabled' | 'updateDisabled' | 'createDisabled'>[]
 }
 
 export type TableOption = {
@@ -508,6 +502,7 @@ export type TableOption = {
   checkColumnSpan?: number
 }
 
+export type AlignType = 'center' | 'left' | 'right'
 // export type TableOption = Partial<ExtractPropTypes<ReturnType<typeof tableOption>>>;
 
 export interface CrudPageProps {

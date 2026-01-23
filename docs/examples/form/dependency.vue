@@ -33,7 +33,12 @@ const option = ref<FormOption>({
           value: '2'
         }
       ],
-      
+      on: {
+      },
+      change: (value, column) => {
+        console.log(value, column)
+        column[0].label = value === '1' ? '审核结果1' : '不同意意见2'
+      },
       rules: [{ required: true, message: '请选择审核结果' }],
       span: 24,
     },

@@ -4,6 +4,7 @@ import { objectType, someType } from '@cjx-low-code/components/_util/type'
 import { useFormInjectKey } from '../context'
 import { InitFormTemplate } from '../init'
 import type { CustomSlotsType } from '@cjx-low-code/components/_util/type'
+import type { TableGroupInterface } from '@cjx-low-code/components/crud/src/interface'
 import type { DialogFormType, GroupInterface } from '../interface'
 
 const ZtGroupForm = defineComponent({
@@ -11,7 +12,7 @@ const ZtGroupForm = defineComponent({
   props: {
     // form: objectType<Ref<object>>(),
     group: objectType<GroupInterface[]>(),
-    ztBoxType: someType<DialogFormType>(),
+    xBoxType: someType<DialogFormType>(),
   },
   slots: Object as CustomSlotsType<{}>,
   setup(props, { slots, expose }) {
@@ -39,32 +40,24 @@ const ZtGroupForm = defineComponent({
           // 不显示任何东西
           const groupFormSlotKey = `${item.prop}GroupForm`
           if (
-            !item.label &&
-            ((item.slot &&
-              !(slots[groupFormSlotKey as keyof typeof slots] as any)?.({
-                _XBoxType: props.ztBoxType,
-              })) ||
-              (!item.slot && !item.column?.length))
-          )
-            return <></>
+            ((!(slots[groupFormSlotKey as keyof typeof slots] as any)?.({
+              _xBoxType: props.xBoxType,
+            })) || !item.column?.length)
+          ) return 
 
+          const groupDisplay = item!.display as TableGroupInterface['display']
           // 不显示任何东西
-          if (
-            item!.display &&
-            !item.display({
-              form: newForm.value,
-              column: item.column || [],
-              index,
-              _XBoxType: props.ztBoxType,
-            })
-          ) {
-            return <></>
-          }
+          if (groupDisplay && !groupDisplay({
+            form: newForm.value,
+            column: item.column || [],
+            index,
+            _xBoxType: props.xBoxType
+          })) return <></>
 
           const {
             collapse = false,
             checkColumnSpan,
-            isView: groupIsView = isView,
+            isView: groupIsView = isView.value,
             labelWidth: groupLabelWidth = labelWidth,
           } = item
           /** 默认折叠 */
@@ -101,7 +94,7 @@ const ZtGroupForm = defineComponent({
                             slots[
                               `${item.prop}GroupLabel` as keyof typeof slots
                             ] as any
-                          )?.({ _XBoxType: props.ztBoxType })
+                          )?.({ _XBoxType: props.xBoxType })
                         : item.label}
                     </div>
                   </div>
@@ -120,7 +113,7 @@ const ZtGroupForm = defineComponent({
                 <div class={'w-[calc(100%-10px)] m-r--10px m-b-20px'}>
                   {(
                     slots[`${item.prop}GroupForm` as keyof typeof slots] as any
-                  )?.({ _XBoxType: props.ztBoxType })}
+                  )?.({ _XBoxType: props.xBoxType })}
                 </div>
               ) : (
                 <>

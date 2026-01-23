@@ -5,7 +5,6 @@ export const dialogProviderKey = Symbol('dialogProviderKey')
 
 type DialogProvide = ComputedRef<{
   isFullscreen: Ref<boolean>
-  slotSuffix?: string
 }>
 
 export const useDialogProviderKey = (props: DialogProvide) => {

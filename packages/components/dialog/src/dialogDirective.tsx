@@ -1,9 +1,10 @@
-import { defineComponent, ref, watchEffect } from 'vue'
+import { defineComponent, ref, watchEffect, computed, defineAsyncComponent } from 'vue'
 import omit from '../../_util/omit'
 import { objectType } from '../../_util/type'
 import XDialog from './index'
 import type { CSSProperties, Component } from 'vue'
 import type { DialogProps } from './index'
+import { isPromise } from '../../_util/shared'
 
 export { DialogProps }
 
@@ -76,27 +77,36 @@ const XDialogDirective = defineComponent({
 
     let Component: Component | any = 'div'
 
-    watchEffect(() => {
-      option.value = {
-        ...omit(props.option, ['component', 'props', 'emitMethods']),
-        showSaveBtn,
-        menu,
-        visible: visible.value,
-      }
+    const isAsync = isPromise(props.option.component)
+    const flag = ref(!isAsync)
 
-      if (visible.value) {
-        Component = props.option.component
-      } else {
-        setTimeout(() => {
-          Component = 'div'
-          // 延迟执行，确保组件已经卸载
-          dialogCloseRemoveVNode!()
-        })
-      }
+    const optimizeStyle = computed(() => {
+      return props.option.type === 'Dialog' ? {
+        opacity: flag.value ? 1 : 0,
+        transition: visible.value ? 'opacity .2s' : 'inherit'
+      } as CSSProperties : {}
     })
 
+     watchEffect( () => {
+      Component = isAsync
+          ? defineAsyncComponent(() => (props.option.component as unknown as Promise<Component>).then(res => {
+            flag.value = true
+            return res
+          }))
+          : props.option.component
+      
+      if (!visible.value) {
+        visible.value = true
+        option.value.visible = false
+        setTimeout(() => {
+          // 延迟执行，确保组件已经卸载
+          dialogCloseRemoveVNode!()
+        }, 200)
+      } 
+    })
     return () => (
       <XDialog
+        style={optimizeStyle.value}
         option={option.value}
         onClose={() => {
           option.value.visible = false

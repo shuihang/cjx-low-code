@@ -1,6 +1,8 @@
 import { computed, defineComponent, ref, watchEffect } from 'vue'
-import { ElCol, ElDialog, ElDrawer, ElIcon, ElRow } from 'element-plus'
-import { CloseBold } from '@element-plus/icons-vue'
+import type { ComputedRef } from 'vue'
+import { ElDialog, ElDrawer} from 'element-plus'
+import XDialog from '../../../dialog/src/index';
+import type { DialogProps } from '../../../dialog/src/index';
 import XForm from '../../../form'
 import { formColumnValues } from '../../../form/src/interface'
 import pick from '../../../_util/pick'
@@ -9,7 +11,6 @@ import { cloneDeep } from 'lodash-unified'
 import { useDialogProviderKey } from '../../../dialog/src/context'
 import { useLocale } from '@cjx-low-code/hooks'
 import crudConfig from '../config'
-import { ExitRetractOutlined, RetractOutlined } from '../icon/index'
 import { useCrudInjectKey } from '../context'
 import type { CustomSlotsType } from '../../../_util/type'
 import type {
@@ -17,7 +18,6 @@ import type {
   FromProps,
 } from '../../../form/src/interface'
 import type { DialogFormType, TableGroupInterface } from '../interface'
-import type { CSSProperties } from 'vue'
 
 const { dialog_width } = crudConfig
 
@@ -63,7 +63,6 @@ const XDiaLogForm = defineComponent({
     useDialogProviderKey(
       computed(() => ({
         isFullscreen,
-        slotSuffix: 'Form',
       }))
     )
 
@@ -72,10 +71,17 @@ const XDiaLogForm = defineComponent({
       formProps: FromProps,
       newGroup: TableGroupInterface[] | undefined
 
-    const title = ref<string>()
+    const title = ref<string>('')
 
     // 是否查看
     const isView = ref<boolean>(false)
+
+    const dialogProps: ComputedRef<DialogProps> = computed(() => ({
+      title: title.value,
+      visible: props.showDialogForm,
+      width: dialogWidth,
+      menu: false,
+    }))
 
     // watch(() => boxType.value, () => {
     //   isFullscreen.value = false
@@ -150,18 +156,7 @@ const XDiaLogForm = defineComponent({
           submitBtnText,
           checkColumnSpan,
         },
-        ztBoxType: boxType,
-        contentStyle: {
-          maxHeight: isFullscreen.value
-            ? 'calc(100vh - 140px)'
-            : 'calc(90vh - 150px)',
-          overflow: 'auto',
-          boxSizing: 'border-box',
-          padding: '0 20px 30px 0px',
-          marginLeft: '-4px',
-          width: 'calc(100% + 20px)',
-          // borderBottom: '1px solid #eee',
-        } as any,
+        xBoxType: boxType,
       }
     })
 
@@ -171,66 +166,7 @@ const XDiaLogForm = defineComponent({
     const { class: $class } = attrs
 
     return () => (
-      <Component
-        class={'cjx-crud-form-dialog'}
-        style={
-          {
-            overflow: 'hidden',
-            maxHeight: isFullscreen.value ? '100vh' : '90vh',
-          } as CSSProperties
-        }
-        model-value={props.showDialogForm}
-        width={dialogWidth}
-        size={dialogWidth}
-        title={boxType.value}
-        show-close={false}
-        align-center
-        draggable
-        append-to-body
-        destroy-on-close
-        fullscreen={isFullscreen.value}
-        onClose={() => {
-          isFullscreen.value = false
-          onCloseChange()
-        }}
-        v-slots={{
-          header: () => (
-            <ElRow>
-              <ElCol
-                span={8}
-                class={
-                  'font-500 color-[var(--cjx-dialog-title-color)] font-size-16px'
-                }
-              >
-                {title.value}
-              </ElCol>
-              <ElCol span={16} class={'!flex justify-end'}>
-                <ElIcon
-                  size={16}
-                  color="var(--cjx-dialog-icon-color)"
-                  class={'mr-12px cursor-pointer'}
-                  onClick={() => (isFullscreen.value = !isFullscreen.value)}
-                >
-                  {isFullscreen.value ? (
-                    <ExitRetractOutlined />
-                  ) : (
-                    <RetractOutlined />
-                  )}
-                </ElIcon>
-
-                <ElIcon
-                  color="var(--cjx-dialog-icon-color)"
-                  size={16}
-                  class={'cursor-pointer'}
-                  onClick={onCloseChange}
-                >
-                  <CloseBold />
-                </ElIcon>
-              </ElCol>
-            </ElRow>
-          ),
-        }}
-      >
+      <XDialog option={dialogProps.value}>
         <XForm
           class={$class}
           key={reload.value}
@@ -242,6 +178,7 @@ const XDiaLogForm = defineComponent({
             ...omit(slots, ['form']),
             default: slots.form,
           }}
+          _slotSuffix="Form"
           isView={isView.value}
           onReset={() => {
             isFullscreen.value = false
@@ -250,7 +187,7 @@ const XDiaLogForm = defineComponent({
           onSubmit={onFormSubmitChange}
           onFormTabChange={onDialogTabChange}
         ></XForm>
-      </Component>
+      </XDialog>
     )
   },
 })
