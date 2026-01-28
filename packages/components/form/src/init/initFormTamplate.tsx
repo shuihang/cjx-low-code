@@ -1,29 +1,16 @@
-import { computed, createVNode, ref } from 'vue'
+import { computed, ref } from 'vue'
+import type { Ref, VNode } from 'vue'
 import { clone, cloneDeep } from 'lodash-es'
 import {
-  componentPropsValues,
-  formColumnValues,
-} from '../interface'
+  ElDescriptions,
+  ElDescriptionsItem,
+} from 'element-plus'
 import {
   arraySort,
   translateCheckFormStr,
 } from '../../../_util/tool'
-import pick from '../../../_util/pick'
 import { tempForm } from '../tempform'
-import {
-  ElCol,
-  ElDescriptions,
-  ElDescriptionsItem,
-  ElFormItem,
-  ElIcon,
-  ElTooltip,
-} from 'element-plus'
-import { QuestionFilled } from '@element-plus/icons-vue'
-import omit from '../../../_util/omit'
-import { TipOutlined } from '../../../crud/src/icon'
-// import ZtPreviewOffice from '@cjx-low-code/components/cjx-previewOffice/index.vue'
 import { useLocale } from '@cjx-low-code/hooks'
-import form_config from '../config'
 import type { Column, TableColumnCtx } from 'element-plus'
 import type {
   FormColumnProps,
@@ -32,12 +19,14 @@ import type {
   ColumnProps,
   DialogFormType,
 } from '../interface'
-import type { CSSProperties, Ref, VNode } from 'vue'
-import type { SlotsValue } from '../tempform'
 import XEditTable from '../../../editTable'
 import { FORM_ON_EVENT_SUFFIX } from '../../../_util/env'
-import { isFunction, isString } from '../../../_util/shared'
+import { isFunction } from '../../../_util/shared'
+import { MeasurePerformance } from '../../../_util/decorator/PerformanceDecorator'
+import { FormRender } from './FormRenderDecorator'
+import { defaultOnError as onError, createError, ErrorCodes } from '../../../_util/errors'
 import helpers from '../helpers'
+import form_config from '../config'
 
 const { check_column_span, span, label_width } = form_config
 
@@ -77,7 +66,7 @@ export interface RenderContext {
   fun: () => void
 }
 
-class Common implements TemplateCommonProps {
+export class Common implements TemplateCommonProps {
   column: TemplateCommonProps['column']
   formSpan: TemplateCommonProps['formSpan']
   labelWidth: TemplateCommonProps['labelWidth']
@@ -99,6 +88,7 @@ class Common implements TemplateCommonProps {
   /**
    * 表单排序
    */
+  @MeasurePerformance({ threshold: 100 })
   public _arraySort() {
     return arraySort(
       this.column as FormColumnProps[],
@@ -116,47 +106,60 @@ class Common implements TemplateCommonProps {
    * @param path 路径，例如：a.b.c
    * @returns
    */
+  @MeasurePerformance({ threshold: 50, log: false })
   public _getValueByPath(path: string) {
     const { newForm } = this
-    return computed({
-      get() {
-        let value = newForm.value
-        if (!path) return
-
-        if (path?.indexOf('.') === -1)
-          return (value as Record<string, any>)[path]
-
-        const pathArray = path.split('.')
-        pathArray.forEach((prop, index) => {
-          if (
-            !(value as Record<string, any>)[prop] &&
-            (value as Record<string, any>)[prop] !== 0
-          ) {
-            ;(value as Record<string, any>)[prop] =
-              index === pathArray.length - 1 ? '' : {}
+    
+    if (!this._computedCache) {
+      this._computedCache = {}
+    }
+    
+    if (!this._computedCache[path]) {
+      this._computedCache[path] = computed({
+        get() {
+          if (!path) return
+          
+          let value = newForm.value
+          if (path?.indexOf('.') === -1) return value[path]
+  
+          const pathArray = path.split('.')
+          pathArray.forEach((prop, index) => {
+            if (!value[prop] && value[prop] !== 0 ) {
+              value[prop] = index === pathArray.length - 1 ? '' : {}
+            }
+            value = value[prop]
+          })
+          return value
+        },
+        set(newValue) {
+          if (!path) return
+          
+          if (path.indexOf('.') === -1) {
+            newForm.value[path] = newValue
+            return
           }
-          value = (value as Record<string, any>)[prop]
-        })
-        return value
-      },
-      set(newValue) {
-        if (!path.includes('.')) {
-          ;(newForm.value as Record<string, any>)[path] = newValue
-          return
-        }
-
-        const pathArray = path.split('.')
-        const lastProp = pathArray.pop()
-        const obj = pathArray.reduce(
-          (accumulator: Record<string, any>, currentValue) => {
-            return accumulator[currentValue] || { [currentValue]: '' }
-          },
-          newForm.value as Record<string, any>
-        )
-        lastProp && (obj[lastProp] = newValue)
-      },
-    })
+  
+          const pathArray = path.split('.')
+          const lastProp = pathArray.pop()
+          if (!lastProp) return
+          
+          let current = newForm.value
+          for (let i = 0; i < pathArray.length; i++) {
+            const prop = pathArray[i]
+            if (current[prop] === undefined || current[prop] === null) {
+              current[prop] = {}
+            }
+            current = current[prop]
+          }
+          current[lastProp] = newValue
+        },
+      })
+    }
+    
+    return this._computedCache[path]
   }
+  
+  private _computedCache: Record<string, any> = {}
 
   /**
    * 获取表单项的除modeValue之外的值并进行双向绑定
@@ -179,8 +182,8 @@ class Common implements TemplateCommonProps {
         componentBindValues[`onUpdate:${componentBindKey}`] = (value: string) =>
           this.onUpdateModelValue(componentBindValue, value)
       }
-    } catch (e) {
-      console.error(e)
+    } catch (error) {
+      onError(createError(ErrorCodes.FORM_ITEM_RENDER_GETBIND_VALUE_ERROR, String(error)))
     }
 
     return componentBindValues
@@ -195,12 +198,11 @@ class Common implements TemplateCommonProps {
    */
   public _handelColumnDisPlay(data: {
     col: FormColumnProps,
-    index: number,
     form: object,
     column: FormColumnProps[],
     xBoxType?: DialogFormType
   }) {
-    const { col, index, column, xBoxType } = data
+    const { col, column, xBoxType } = data
     
      const display = col.display as ColumnProps['display']
       
@@ -209,7 +211,6 @@ class Common implements TemplateCommonProps {
     return display && display({
         form: { ...this.newForm.value },
         column,
-        index,
         _xBoxType: xBoxType,
       })
   }
@@ -253,159 +254,28 @@ export type SearchFormProps = TemplateCommonProps & {
  */
 export class RenderSearchFormVNode extends Common implements SearchFormProps {
   onSubmit: () => void
+  slotSuffix: string
 
   constructor(data: SearchFormProps) {
     super(data)
+    // 搜索表单的label宽度设为0
+    this.labelWidth = 0
     this.onSubmit = data.onSubmit
+    this.slotSuffix = 'Search'
   }
 
+  @MeasurePerformance({ threshold: 100, prefix: "Search Form Render Performance" })
+  @FormRender({ isSearch: true })
   init() {
     if (!this.column || this.column?.length === 0) return
-
-    return this._arraySort().map((item, index): VNode => {
-      const itemType = item.type || ('input' as FormItemType)
-
-      let componentProps: any = {}
-      const pickProps = pick(item, componentPropsValues)
-      componentPropsValues.map((typeValue) => {
-        componentProps = { ...componentProps, ...pickProps[typeValue] }
-      })
-
-      const componentSlotNodes = item.formSlotNodes
-        ? pick(item.formSlotNodes, tempForm[itemType]?.slots as SlotsValue)
-        : {}
-
-      const isDesign = tempForm[itemType]?.isDesign || false
-
-      const { otherPropsFn } = tempForm[itemType]
-      if (otherPropsFn) {
-        componentProps = { ...componentProps, ...otherPropsFn(item) }
-      }
-
-      const subComponent = tempForm[itemType]?.subComponent
-      return (
-        <ElCol
-          class={'p-b-5px'}
-          key={index}
-          lg={item.span || this.formSpan}
-          md={item.span || this.formSpan}
-          xs={item.span || this.formSpan || 24}
-        >
-          <ElFormItem
-            label-width={item.labelWidth}
-            prop={item.prop}
-            class={[tempForm[itemType]?.formItemClass, `_${item.prop}`]}
-            v-slots={{
-              label: () => (
-                <div class={'flex flex-items-center'}>
-                  {item.label}
-                  {item.labelTip && (
-                    <ElTooltip
-                      v-slots={{
-                        content: () => item.labelTip,
-                      }}
-                      placement={
-                        item?.labelTipPlacement || this.labelTipPlacement
-                      }
-                    >
-                      <ElIcon>
-                        <QuestionFilled />
-                      </ElIcon>
-                    </ElTooltip>
-                  )}
-                </div>
-              ),
-            }}
-          >
-            {!this.slots[`${`${item.prop}Search`}`]
-              ? createVNode(
-                  tempForm[itemType]?.component,
-                  {
-                    ...omit(item, formColumnValues),
-                    ...pick(item, tempForm[itemType]?.props || []),
-                    ...tempForm[itemType]?.[itemType],
-                    showWordLimit: false,
-                    ...(() =>
-                      !isDesign
-                        ? {
-                            ...pick(tempForm[itemType], ['type']),
-                            ...componentProps,
-                            style: {
-                              width: item.tip ? 'calc(100% - 14px)' : '100%',
-                              ...item.style,
-                            } as CSSProperties,
-                            clearable: item.clearable,
-                            placeholder:
-                              item.placeholder ||
-                              super._getI18nPlaceholder(itemType) + item.label,
-                          }
-                        : componentProps)(),
-                    modelValue: this._getValueByPath(item.prop).value,
-                    onKeyup: (e: KeyboardEvent) => {
-                      // 执行需要的操作
-                      e.key === 'Enter' && this.onSubmit()
-                    },
-                    'onUpdate:modelValue': (value: string) =>
-                      this.onUpdateModelValue(item.prop, value),
-                    ...this._getBindValue(item, itemType),
-                  },
-                  {
-                    default: subComponent
-                      ? () => {
-                          return (
-                            item.dicData &&
-                            item.dicData.map((temp) => {
-                              // element-plus 组件库得select组件的label属性 不支持VNode节点 得特殊处理
-                              const labelKey = item.props?.label || 'label'
-                              const label = isString(temp[labelKey]) ? temp[labelKey]
-                                  : temp[labelKey]?.el?.parentNode.innerText
-                              const value = temp[item.props?.value || 'value']
-
-                              return createVNode(
-                                subComponent,
-                                {
-                                  ...temp,
-                                  value,
-                                  label:
-                                    item.type === 'checkbox' ||
-                                    item.type === 'radioButton' ||
-                                    item.type === 'radio'
-                                      ? value
-                                      : label,
-                                  key: value
-                                },
-                                {
-                                  default: () => temp[labelKey]
-                                }
-                              )
-                            })
-                          )
-                        }
-                      : undefined,
-                    ...componentSlotNodes,
-                  }
-                )
-              : this.slots[`${`${item.prop}Search`}`]?.(item)}
-            {item.tip && (
-              <ElTooltip
-                v-slots={{
-                  content: () => item.tip,
-                }}
-                placement={item?.tipPlacement || this.tipPlacement}
-              >
-                <TipOutlined />
-              </ElTooltip>
-            )}
-          </ElFormItem>
-        </ElCol>
-      )
-    })
+    return this._arraySort()
   }
 }
 
 interface RenderFormVNodeProps {
   slotSuffix: string
   xBoxType?: Ref<DialogFormType>
+  isView: boolean
   isFullscreen: Ref<boolean>
 }
 
@@ -416,11 +286,13 @@ export class RenderFormVNode extends Common implements RenderInterface {
   slotSuffix: string
   xBoxType?: Ref<DialogFormType>
   isFullscreen: Ref<boolean>
+  isView: boolean
 
   constructor(data: TemplateCommonProps & RenderFormVNodeProps) {
     super(data)
     this.slotSuffix = data.slotSuffix
     this.xBoxType = data.xBoxType
+    this.isView = data.isView
     this.isFullscreen = data.isFullscreen || ref(false)
   }
 
@@ -486,171 +358,11 @@ export class RenderFormVNode extends Common implements RenderInterface {
     return onObj
   }
 
-  init() {
+  @MeasurePerformance({ threshold: 100, prefix: "Form Render Performance" })
+  @FormRender({ useComponentPropsValues: true })
+  init(): (VNode | undefined)[] | VNode | undefined {
     if (!this.column || this.column?.length === 0) return
-    const columns = clone(super._arraySort())
-    const form = clone(this.newForm.value)
-
-    return columns.map((item, index): VNode | undefined => {
-         if (
-          !this._handelColumnDisPlay({ 
-            col: item,
-            index,
-            column: columns,
-            form,
-            xBoxType: this.xBoxType?.value
-          })) return
-
-        const disabled = item.disabled as ColumnProps['disabled']
-        
-        const itemType = item.type || ('input' as FormItemType)
-
-        let componentProps: any = {}
-        const pickProps = pick(item, componentPropsValues)
-        componentPropsValues.map((typeValue) => {
-          componentProps = { ...componentProps, ...pickProps[typeValue] }
-        })
-
-        const componentSlotNodes = item.formSlotNodes
-          ? pick(item.formSlotNodes, tempForm[itemType]?.slots as SlotsValue)
-          : {}
-
-        const isDesign = tempForm[itemType]?.isDesign || false
-
-        const { otherPropsFn } = tempForm[itemType]
-        if (otherPropsFn) {
-          componentProps = { ...componentProps, ...otherPropsFn(item) }
-        }
-
-        const subComponent = tempForm[itemType]?.subComponent
-        return (
-          <ElCol
-            class={'p-b-5px'}
-            key={index}
-            lg={this._getColSpan(item, item.span || this.formSpan)}
-            md={this._getColSpan(item, item.span || this.formSpan)}
-            xs={this._getColSpan(item, item.span || this.formSpan || 24)}
-          >
-            <ElFormItem
-              label-width={item.labelWidth || this.labelWidth}
-              prop={item.prop}
-              rules={this._formatRules(item)}
-              class={[tempForm[itemType]?.formItemClass, `_${item.prop}`]}
-              v-slots={{
-                label: () => (
-                  <div class={'flex flex-items-center'} style={item.labelStyle}>
-                    {item.label}
-                    {item.labelTip && (
-                      <ElTooltip
-                        v-slots={{
-                          content: () => item.labelTip,
-                        }}
-                        placement={
-                          item?.labelTipPlacement || this.labelTipPlacement
-                        }
-                      >
-                        <ElIcon>
-                          <QuestionFilled />
-                        </ElIcon>
-                      </ElTooltip>
-                    )}
-                  </div>
-                ),
-              }}
-            >
-              {!this.slots[item.prop + this.slotSuffix] ? (
-                createVNode(
-                  tempForm[itemType]?.component,
-                  {
-                    ...omit(item, formColumnValues),
-                    ...pick(item, tempForm[itemType]?.props || []),
-                    ...tempForm[itemType]?.[itemType],
-                    ...(() =>
-                      !isDesign
-                        ? {
-                            ...pick(tempForm[itemType], ['type']),
-                            ...componentProps,
-                            style: {
-                              width: item.tip ? 'calc(100% - 14px)' : '100%',
-                              ...item.style,
-                            } as CSSProperties,
-                            clearable: item.clearable,
-                            placeholder:
-                              item.placeholder ||
-                              super._getI18nPlaceholder(itemType) + item.label,
-                          }
-                        : componentProps)(),
-                    modelValue: this._getValueByPath(item.prop).value,
-                    ...this._handleOnEvent(item, itemType),
-                    'onUpdate:modelValue': (value: string) =>
-                      this.onUpdateModelValue(item.prop, value),
-                    ...this._getBindValue(item, itemType),
-                    disabled: isFunction(disabled) ? disabled({
-                      form: { ...this.newForm.value },
-                      column: this.column,
-                      index,
-                      _xBoxType: this.xBoxType?.value,
-                    }) as ColumnProps['disabled'] : item.disabled,
-                  },
-                  {
-                    default: subComponent
-                      ? () => {
-                          return (
-                            item.dicData &&
-                            item.dicData.map((temp) => {
-                              // element-plus 组件库得select组件的label属性 不支持VNode节点 得特殊处理
-                              const labelKey = item.props?.label || 'label'
-                              const vlaueKey = item.props?.value || 'value'
-                              const label = isString(temp[labelKey]) ? temp[labelKey]
-                                  : temp[labelKey]?.el?.parentNode.innerText
-                              const value = temp[vlaueKey]
-
-                              return createVNode(
-                                subComponent,
-                                {
-                                  ...temp,
-                                  value,
-                                  label:
-                                    item.type === 'checkbox' ||
-                                    item.type === 'radioButton' ||
-                                    item.type === 'radio'
-                                      ? value
-                                      : label,
-                                  key: value
-                                },
-                                {
-                                  default: () => temp[labelKey]                   
-                                }
-                              )
-                            })
-                          )
-                        }
-                      : undefined,
-                    ...componentSlotNodes,
-                  }
-                )
-              ) : (
-                <div class="w-100%">
-                  {this.slots[item.prop + this.slotSuffix]?.({
-                    ...item,
-                    _xBoxType: this.xBoxType?.value,
-                  })}
-                </div>
-              )}
-              {item.tip && (
-                <ElTooltip
-                  v-slots={{
-                    content: () => item.tip,
-                  }}
-                  placement={item?.tipPlacement || this.tipPlacement}
-                >
-                  <TipOutlined />
-                </ElTooltip>
-              )}
-            </ElFormItem>
-          </ElCol>
-        )
-      })
+    return super._arraySort() as unknown as (VNode | undefined)[] | VNode | undefined
   }
 }
 
@@ -699,13 +411,10 @@ export class RenderViewFormVNode extends Common implements RenderInterface {
     // },
   }
 
-  /**
-   * ts 装饰器写法 注入ztBoxType参数
-   */
   // @SETParameter({
   //   xBoxType: 'check'
   // })
-  // 处理
+  // 处理查看模式下的特殊情况
   public _handleCheckValue(
     value: string | number | any[],
     column: ColumnProps
@@ -728,9 +437,11 @@ export class RenderViewFormVNode extends Common implements RenderInterface {
     return col?.checkSpan || col?.span || 1
   }
 
+  @MeasurePerformance({ threshold: 150, prefix: "Check Form Render Performance" })
   init() {
     if (!this.column || this.column?.length === 0) return
-   const columns = clone(super._arraySort())
+    const columns = clone(super._arraySort())
+    const column = clone(columns)
     const form = clone(this.newForm.value)
 
     return (
@@ -740,14 +451,12 @@ export class RenderViewFormVNode extends Common implements RenderInterface {
         column={this.checkColumnSpan}
       >
         {columns.map((item, index) => {
-          if (!this._handelColumnDisPlay({ col: item, index, column: columns, form, xBoxType: this.xBoxType?.value })) {
-            return <></>
-          }
+          if (!this._handelColumnDisPlay({ col: item, column, form, xBoxType: 'check'})) return
           
           const descriptionsItemName =
             !this.collapseStatus.value ||
             item?.collapseShow === true ||
-            (typeof item?.collapseShow == 'function' &&
+            (isFunction(item?.collapseShow) &&
               item?.collapseShow!({
                 form: { ...this._getValueByPath(item.prop).value },
                 column: columns,

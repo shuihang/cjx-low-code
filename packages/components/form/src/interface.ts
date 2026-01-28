@@ -330,10 +330,9 @@ export type FormColumnProps<F extends object = FormModelValueType> =
     * 弹出表单当前项是否显示 支持布尔类型和函数表达式 默认true
     * @param {any} form 表单绑定的form
     * @param {FormColumnProps[]} column 列数据
-    * @param {number} index 行索引
     * @returns {boolean} 是否显示
   */
-  display?: boolean | ((props: {form: F, column: FormColumnProps[], index: number }) => boolean)
+  display?: boolean | ((props: {form: F, column: FormColumnProps[] }) => boolean)
   /**
     * 弹出表单当前项是否禁用 支持布尔类型和函数表达式 默认false
     * @param {any} form 表单绑定的form
@@ -341,7 +340,7 @@ export type FormColumnProps<F extends object = FormModelValueType> =
     * @param {number} index 行索引
     * @returns {boolean} 是否可以编辑
   **/
-  disabled?: boolean | ((props: {form: F, column: FormColumnProps[], index: number }) => boolean),
+  disabled?: boolean | ((props: {form: F, column: FormColumnProps[] }) => boolean),
    /**
    * 表单项的事件处理器配置
    * @type {FormOnEventType}
@@ -410,7 +409,7 @@ export type GroupInterface<F extends object = FormModelValueType> = {
   // columnSpan?: number,
   /** 表单查看模式的 一行 Descriptions Item 的数量 */
   checkColumnSpan?: number,
-  display?: ((props: { form: F, column: FormColumnProps<F>[], index: number }) => boolean),
+  display?: ((props: { form: F, column: FormColumnProps<F>[] }) => boolean),
   /** 表单的各项 */
   column?: FormColumnProps<F>[]
 }

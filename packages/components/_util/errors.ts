@@ -6,7 +6,9 @@ export enum ErrorCodes {
   WHEN_USING_THE_CRUD_COMPONENT_TO_ADD_AND_EDITING_FUNCTIONS_THE_FORM_PARAMETER_IS_REQUIRED_TO_BE_PASSED,
   COMPONENT_IS_REQUIRED,
   ASYNCHRONOUS_COMPONENT_LOADING_FAILED,
-  FAILED_TO_RENDER_DIALOG
+  FAILED_TO_RENDER_DIALOG,
+  FORM_RENDER_DECORATOR_ERROR,
+  FORM_ITEM_RENDER_GETBIND_VALUE_ERROR
 }
 
 export const errorMessages: Record<ErrorCodes, string> = {
@@ -15,7 +17,9 @@ export const errorMessages: Record<ErrorCodes, string> = {
   [ErrorCodes.WHEN_USING_THE_CRUD_COMPONENT_TO_ADD_AND_EDITING_FUNCTIONS_THE_FORM_PARAMETER_IS_REQUIRED_TO_BE_PASSED]: 'When using the CRUD component to add, and edit functions, the form parameter must be passed',
   [ErrorCodes.COMPONENT_IS_REQUIRED]: 'Component is required',
   [ErrorCodes.ASYNCHRONOUS_COMPONENT_LOADING_FAILED]: 'Asynchronous component loading failed',
-  [ErrorCodes.FAILED_TO_RENDER_DIALOG]: 'Failed to render dialog'
+  [ErrorCodes.FAILED_TO_RENDER_DIALOG]: 'Failed to render dialog',
+  [ErrorCodes.FORM_RENDER_DECORATOR_ERROR]: 'Form render decorator error',
+  [ErrorCodes.FORM_ITEM_RENDER_GETBIND_VALUE_ERROR]: 'Form item render getBindValue error'
 }
 
 export interface CompilerError extends SyntaxError {

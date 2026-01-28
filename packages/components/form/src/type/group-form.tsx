@@ -50,7 +50,6 @@ const ZtGroupForm = defineComponent({
           if (groupDisplay && !groupDisplay({
             form: newForm.value,
             column: item.column || [],
-            index,
             _xBoxType: props.xBoxType
           })) return <></>
 
