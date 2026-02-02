@@ -24,6 +24,8 @@ import type {
   FormTypeProps,
 } from './interface'
 import type { Component, VNode } from 'vue'
+import { deepMerge } from './utils'
+import type { DeepPartial } from '../../_util/type'
 
 const { t } = useLocale()
 
@@ -163,4 +165,34 @@ export const tempForm: TempFormInterface = {
     props: ['prop', 'label'],
     formItemClass: 'isDesign',
   },
+}
+
+/**
+ * 表单的默认配置
+ */
+export const formTempForm: DeepPartial<TempFormInterface> = {}
+
+/**
+ * 搜索表单的默认配置 有的场景表单和搜索表单的配置是不一样的
+ */
+export const searchTempForm: DeepPartial<TempFormInterface> = {
+  select: {
+    select: {
+      // 根据产品要求 搜索栏的select组件默认是多选的
+      multiple: true
+    }
+  }
+}
+
+// 预计算常规表单配置，避免每次渲染时重复遍历
+const precomputedForm = deepMerge(tempForm, formTempForm)
+
+// 预计算搜索表单配置，避免每次渲染时重复遍历
+const precomputedSearchForm = deepMerge(tempForm, searchTempForm)
+
+export const componentMapData = {
+  /** 常规表单的默认配置 */
+  ordinaryForm: precomputedForm,
+  /** 搜索表单的默认配置 */
+  searchForm: precomputedSearchForm,
 }

@@ -10,6 +10,10 @@ import type {
   VNode,
 } from 'vue'
 
+export type DeepPartial<T> = T extends object ? {
+  [P in keyof T]?: DeepPartial<T[P]>;
+} : T;
+
 export type PickRequiredOptional<T, R extends keyof T, P extends keyof T> = Required<Pick<T, R>> & Partial<Pick<T, P>>
 
 export type SFCWithInstall<T> = T & Plugin
