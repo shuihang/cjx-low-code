@@ -416,15 +416,29 @@ const XCrud = withInstallVue(defineComponent({
       }
     )
 
-    // 配置项有变时重新初始化table组件
-    watch(
-      () => option,
-      () => {
-        reload.value = Math.random()
-        console.log('reload')
-      },
-      { deep: true }
-    )
+    // 监听影响 table 布局的配置项变化
+    watch(() => [
+      option.column,
+      option.height,
+      option.maxHeight,
+      option.border,
+      option.treeProps,
+      option.defaultExpandAll,
+      option.lazy,
+      option.index,
+      option.indexWidth,
+      option.selection,
+      option.selectionWidth,
+      option.menu,
+      option.menuWidth,
+      option.menuMinWidth,
+      option.menuFixed,
+      option.showOverflowTooltip,
+    ], () => {
+      nextTick(() => {
+        refTable.value?.doLayout();
+      });
+    }, { deep: true });
 
     onMounted(async () => {
       emit('on-load')

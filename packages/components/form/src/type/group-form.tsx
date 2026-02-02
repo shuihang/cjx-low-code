@@ -70,7 +70,7 @@ const ZtGroupForm = defineComponent({
           }
 
           return (
-            <ElRow class={['cjx-form-group w-100%', `zt_${item.prop}`]}>
+            <ElRow class={['cjx-form-group w-100%', `cjx_${item.prop}`]}>
               <ElCol span={24} key={index}>
                 <div class={'flex flex-items-center m-b-10px justify-between'}>
                   <div class={'flex flex-items-center is-guttered w-100%'}>

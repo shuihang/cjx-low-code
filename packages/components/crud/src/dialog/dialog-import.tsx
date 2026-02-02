@@ -2,7 +2,6 @@ import { ref } from 'vue'
 import { ElButton, ElIcon, ElUpload } from 'element-plus'
 import { UploadFilled } from '@element-plus/icons-vue'
 import ZtDialog from '../../../dialog/src/index'
-// import { VNode, defineAsyncComponent } from "vue";
 import download from '../../../_util/download'
 import { DownloadOutlined } from '../../../crud/src/icon'
 import { useLocale } from '@cjx-low-code/hooks'
@@ -12,7 +11,6 @@ import type { DialogProps } from '../../../dialog/src/index'
 import type { UploadFile, UploadFiles } from 'element-plus'
 
 const XDialogImport = (props: ImportProps, slots?: () => Promise<any>) => {
-  // const Component = slots ? defineAsyncComponent(() => slots()) : ''
   const { t } = useLocale() // 国际化
 
   const {

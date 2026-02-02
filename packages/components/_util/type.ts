@@ -10,6 +10,8 @@ import type {
   VNode,
 } from 'vue'
 
+export type PickRequiredOptional<T, R extends keyof T, P extends keyof T> = Required<Pick<T, R>> & Partial<Pick<T, P>>
+
 export type SFCWithInstall<T> = T & Plugin
 
 export type SFCInstallWithContext<T> = SFCWithInstall<T> & {
@@ -117,7 +119,7 @@ export function someType<T>(types?: any[], defaultVal?: T) {
     : anyType<T>(defaultVal)
 }
 
-export type CustomSlotsType<T> = SlotsType<T>
+export type CustomSlotsType<T extends Record<string, any>> = SlotsType<T>
 
 export type AnyObject = Record<PropertyKey, any>
 

@@ -1,6 +1,5 @@
-import { computed, defineComponent, ref, watchEffect } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 import type { ComputedRef } from 'vue'
-import { ElDialog, ElDrawer} from 'element-plus'
 import XDialog from '../../../dialog/src/index';
 import type { DialogProps } from '../../../dialog/src/index';
 import XForm from '../../../form'
@@ -14,13 +13,11 @@ import crudConfig from '../config'
 import { useCrudInjectKey } from '../context'
 import type { CustomSlotsType } from '../../../_util/type'
 import type {
-  FormColumnProps,
   FromProps,
 } from '../../../form/src/interface'
-import type { DialogFormType, TableGroupInterface } from '../interface'
+import type { DialogFormType } from '../interface'
 
 const { dialog_width } = crudConfig
-
 
 type TitleType = {
   [K in DialogFormType]: string
@@ -44,20 +41,16 @@ const XDiaLogForm = defineComponent({
   }>,
   setup(props, { slots, attrs }) {
     const { t } = useLocale() // 国际化
+    const { class: $class } = attrs
     
     const {
       option,
       boxType,
       formRef,
-      reload,
       onFormSubmitChange,
       onCloseChange,
       onDialogTabChange,
     } = useCrudInjectKey().value
-
-    const { isDrawer, dialogWidth = dialog_width } = option.value
-
-    const newSubmitBtn = ref<boolean>(false)
 
     const isFullscreen = ref<boolean>(false)
     useDialogProviderKey(
@@ -66,32 +59,38 @@ const XDiaLogForm = defineComponent({
       }))
     )
 
-    // const disabled = computed(() => boxType.value === 'check');
-    let newColumn: FormColumnProps[] | undefined,
-      formProps: FromProps,
-      newGroup: TableGroupInterface[] | undefined
-
-    const title = ref<string>('')
-
     // 是否查看
-    const isView = ref<boolean>(false)
-
-    const dialogProps: ComputedRef<DialogProps> = computed(() => ({
-      title: title.value,
-      visible: props.showDialogForm,
-      width: dialogWidth,
-      menu: false,
-    }))
-
-    // watch(() => boxType.value, () => {
-    //   isFullscreen.value = false
-    // })
-
-    watchEffect(() => {
+    const isView = computed(() => boxType.value === 'check')
+    
+    // 对话框属性
+    const dialogProps: ComputedRef<DialogProps> = computed(() => {
       const {
         viewTitle,
         addTitle,
         editTitle,
+        dialogWidth = dialog_width,
+        isDrawer = false,
+      } = option.value
+      
+      const formTitle: TitleType = {
+        check: viewTitle || t('action.check'),
+        update: editTitle || t('action.edit'),
+        create: addTitle || t('action.add'),
+      };
+      
+      return {
+        type: isDrawer ? 'Drawer' : 'Dialog',
+        title: formTitle[boxType.value],
+        visible: props.showDialogForm,
+        width: dialogWidth,
+        menu: false,
+        onClose: onCloseChange,
+      };
+    })
+    
+    // 表单属性
+    const formProps = computed<FromProps>(() => {
+      const {
         labelWidth,
         checkLabelWidth,
         span,
@@ -100,78 +99,56 @@ const XDiaLogForm = defineComponent({
         cancelBtn,
         cancelBtnText,
         submitBtn,
-        submitBtnText,
       } = option.value
-
-      const formTitle: TitleType = {
-        check: viewTitle || t('action.check'),
-        update: editTitle || t('action.edit'),
-        create: addTitle || t('action.add'),
-      }
-      // console.log('formTitle', useCrudInjectKey())
-      title.value = formTitle[boxType.value]
-
-      newSubmitBtn.value =
-        submitBtn !== undefined ? submitBtn : boxType.value !== 'check'
-      isView.value = boxType.value === 'check'
-
-      newColumn = option.value.column?.map((item) => {
-        return {
+      
+      const newSubmitBtn = submitBtn !== undefined ? submitBtn : boxType.value !== 'check'
+      
+      const newColumn = option.value.column?.map((item) => {
+        return  {
           ...pick(item, formColumnValues),
-          slot: item.formSlot,
           placeholder: item.searchPlaceholder,
           clearable: item.searchClearable,
           order: item.formOrder ?? item.order,
-          display: item[`${boxType.value}Display`] ?? item.display,
-          disabled: item[`${boxType.value}Disabled`] ?? item.disabled,
-        }
+          display: item[boxType.value + 'Display'] ?? item.display,
+          disabled: item[boxType.value + 'Disabled'] ?? item.disabled,
+        };
       })
-
-      newGroup = cloneDeep(option.value.group)?.map((item) => {
-        item.column = item?.column?.map((x) => {
+      
+      const newGroup = cloneDeep(option.value.group)?.map(item => {
+        item.column = item?.column?.map(x => {
           return {
             ...x,
-            display: x[`${boxType.value}Display`] ?? x.display,
-            disabled: x[`${boxType.value}Disabled`] ?? x.disabled,
+            display: x[boxType.value + 'Display'] ?? x.display,
+            disabled: x[boxType.value + 'Disabled'] ?? x.disabled,
           }
         })
         return item
       })
-
-      formProps = {
+      
+      return {
         option: {
           column: newColumn,
           group: newGroup,
-          labelWidth:
-            boxType.value !== 'check'
-              ? labelWidth
-              : checkLabelWidth || labelWidth,
-          formSpan: span || 12,
+          labelWidth: boxType.value !== 'check'? labelWidth : checkLabelWidth || labelWidth,
+          formSpan: span,
           viewTabsCurrent: option.value.viewTabsCurrent,
           viewTabs: option.value.viewTabs,
           menuBtn,
           cancelBtn,
           cancelBtnText,
-          submitBtn: newSubmitBtn.value,
-          submitBtnText,
-          checkColumnSpan,
+          submitBtn: newSubmitBtn,
+          submitBtnText: option.value.submitBtnText,
+          checkColumnSpan
         },
-        xBoxType: boxType,
-      }
+        ztBoxType: boxType,
+      };
     })
-
-    // 是否为抽屉
-    const Component = isDrawer ? ElDrawer : ElDialog
-
-    const { class: $class } = attrs
 
     return () => (
       <XDialog option={dialogProps.value}>
         <XForm
           class={$class}
-          key={reload.value}
-          {...formProps}
-          // option={{...formProps.option, column: newColumn}}
+          {...formProps.value}
           form={props.form}
           ref={formRef}
           v-slots={{

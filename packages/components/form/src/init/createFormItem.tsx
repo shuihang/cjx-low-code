@@ -1,18 +1,22 @@
 import { createVNode } from 'vue'
+import type { CSSProperties, VNode, Slot } from 'vue'
 import { ElCol, ElFormItem, ElIcon, ElTooltip } from 'element-plus'
 import { QuestionFilled } from '@element-plus/icons-vue'
-import type { CSSProperties, VNode, Slot } from 'vue'
-import type { FormColumnProps, FormItemType, FormTypeProps } from '../interface'
-import type { FormRenderContext, FormRenderOptions } from './FormRenderDecorator'
-import { componentPropsValues, formColumnValues } from '../interface'
 import pick from '../../../_util/pick'
 import omit from '../../../_util/omit'
 import { isString, isFunction } from '../../../_util/shared'
 import { tempForm } from '../tempform'
 import type { SlotsValue } from '../tempform'
+import { componentPropsValues, formColumnValues } from '../interface'
+import type { FormColumnProps, FormItemType, FormTypeProps } from '../interface'
+import type { FormRenderContext, FormRenderOptions } from './FormRenderDecorator'
 import { TipOutlined } from '../../../crud/src/icon'
+import form_config from '../config'
+
+const { LABEL_POSITION, getColumnFormType } = form_config
 
 const needHandelLabelComponentArr = [ 'checkbox', 'radioButton', 'radio' ]
+
 
 function createFormItemComponent(
   item: FormColumnProps,
@@ -27,6 +31,7 @@ function createFormItemComponent(
   if (options.useComponentPropsValues) {
     const pickProps = pick(item, componentPropsValues)
     componentPropsValues.map((typeValue) => {
+      // @ts-ignore
       componentProps = { ...componentProps, ...pickProps[typeValue] }
     })
   }
@@ -118,7 +123,7 @@ export default function createFormItem(
   context: FormRenderContext,
   options: FormRenderOptions
 ): VNode | undefined {
-  const itemType = item.type || 'input'
+  const itemType = getColumnFormType(item)
   const slotSuffix = options.slotSuffix || ''
 
   if (context._handelColumnDisPlay && !context._handelColumnDisPlay({
@@ -126,9 +131,7 @@ export default function createFormItem(
     column: context.column,
     form: context.newForm.value,
     xBoxType: context.xBoxType?.value
-  })) {
-    return undefined
-  }
+  })) return
 
   const colSpan = context._getColSpan ? context._getColSpan(item, item.span || context.formSpan) : item.span || context.formSpan
   
@@ -186,7 +189,7 @@ export default function createFormItem(
       class={[tempForm[itemType]?.formItemClass, `_${item.prop}`]}
       labelWidth={!options.isSearch ? (item.labelWidth || context.labelWidth) : undefined}
       prop={item.prop}
-      labelPosition="right"
+      labelPosition={LABEL_POSITION}
       rules={context._formatRules ? context._formatRules(item) : undefined}
       v-slots={formItemChildren}
     />

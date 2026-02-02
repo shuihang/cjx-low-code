@@ -5,13 +5,18 @@ import {
   ElDescriptions,
   ElDescriptionsItem,
 } from 'element-plus'
+import type { Column, TableColumnCtx } from 'element-plus'
+import { useLocale } from '@cjx-low-code/hooks'
+import XEditTable from '../../../editTable'
+import { FORM_ON_EVENT_SUFFIX } from '../../../_util/env'
+import { isFunction } from '../../../_util/shared'
 import {
   arraySort,
   translateCheckFormStr,
 } from '../../../_util/tool'
-import { tempForm } from '../tempform'
-import { useLocale } from '@cjx-low-code/hooks'
-import type { Column, TableColumnCtx } from 'element-plus'
+import { defaultOnError as onError, createError, ErrorCodes } from '../../../_util/errors'
+import type { PickRequiredOptional } from '../../../_util/type'
+import { MeasurePerformance } from '../../../_util/decorator/PerformanceDecorator'
 import type {
   FormColumnProps,
   FormItemType,
@@ -19,16 +24,15 @@ import type {
   ColumnProps,
   DialogFormType,
 } from '../interface'
-import XEditTable from '../../../editTable'
-import { FORM_ON_EVENT_SUFFIX } from '../../../_util/env'
-import { isFunction } from '../../../_util/shared'
-import { MeasurePerformance } from '../../../_util/decorator/PerformanceDecorator'
 import { FormRender } from './FormRenderDecorator'
-import { defaultOnError as onError, createError, ErrorCodes } from '../../../_util/errors'
+import { tempForm } from '../tempform'
 import helpers from '../helpers'
 import form_config from '../config'
 
-const { check_column_span, span, label_width } = form_config
+const {
+  check_column_span, span, label_width, tipPlacement, labelTipPlacement, getColumnFormType,
+  EMPTY_STRINGFORM_ITEMS, FULLSCREEN_COL_SPAN_24_FORM_ITEMS, VIEW_FORM_COL_SPAN_24_FORM_ITEMS, CHECK_LABEL_ALIGN
+} = form_config
 
 export interface TemplateProps {
   column?: FormColumnProps[]
@@ -37,7 +41,7 @@ export interface TemplateProps {
   newForm: Ref<object>
   slotSuffix: string
   readonly slots: any
-  onUpdateModelValue: (prop: string, value: string) => void
+  onUpdateModelValue: (prop: string, value: any) => void
   onSubmit?: () => void
   xBoxType?: Ref<DialogFormType>
   isView: boolean
@@ -48,14 +52,7 @@ export interface TemplateProps {
   $index?: number
 }
 
-export interface TemplateCommonProps {
-  column: FormColumnProps[]
-  formSpan: number
-  labelWidth: number
-  newForm: Ref<object>
-  readonly slots: any
-  onUpdateModelValue: (prop: string, value: any) => void
-}
+export type TemplateCommonProps = PickRequiredOptional<TemplateProps, 'column' | 'formSpan' | 'labelWidth' | 'newForm' | 'slotSuffix' | 'slots' | 'onUpdateModelValue', 'xBoxType'>
 
 interface RenderInterface {
   init(ctx?: any): (VNode | undefined)[] | VNode | undefined
@@ -71,16 +68,19 @@ export class Common implements TemplateCommonProps {
   formSpan: TemplateCommonProps['formSpan']
   labelWidth: TemplateCommonProps['labelWidth']
   newForm: TemplateCommonProps['newForm']
+  slotSuffix: TemplateCommonProps['slotSuffix']
   public readonly slots: TemplateCommonProps['slots']
+
   onUpdateModelValue: TemplateCommonProps['onUpdateModelValue']
-  public readonly labelTipPlacement = 'top'
-  public readonly tipPlacement = 'right-start'
+  public readonly labelTipPlacement = labelTipPlacement
+  public readonly tipPlacement = tipPlacement
 
   constructor(data: TemplateCommonProps) {
     this.column = data.column || []
     this.formSpan = data.formSpan || span
     this.labelWidth = data.labelWidth || label_width
     this.newForm = data.newForm
+    this.slotSuffix = data.slotSuffix
     this.slots = data.slots
     this.onUpdateModelValue = data.onUpdateModelValue
   }
@@ -204,9 +204,9 @@ export class Common implements TemplateCommonProps {
   }) {
     const { col, column, xBoxType } = data
     
-     const display = col.display as ColumnProps['display']
+    const display = col.display as ColumnProps['display']
       
-    if (typeof display !== 'function') return display !== false
+    if (!isFunction(display)) return display !== false
    
     return display && display({
         form: { ...this.newForm.value },
@@ -254,14 +254,12 @@ export type SearchFormProps = TemplateCommonProps & {
  */
 export class RenderSearchFormVNode extends Common implements SearchFormProps {
   onSubmit: () => void
-  slotSuffix: string
 
   constructor(data: SearchFormProps) {
     super(data)
     // 搜索表单的label宽度设为0
     this.labelWidth = 0
     this.onSubmit = data.onSubmit
-    this.slotSuffix = 'Search'
   }
 
   @MeasurePerformance({ threshold: 100, prefix: "Search Form Render Performance" })
@@ -273,7 +271,6 @@ export class RenderSearchFormVNode extends Common implements SearchFormProps {
 }
 
 interface RenderFormVNodeProps {
-  slotSuffix: string
   xBoxType?: Ref<DialogFormType>
   isView: boolean
   isFullscreen: Ref<boolean>
@@ -283,14 +280,12 @@ interface RenderFormVNodeProps {
  * 渲染表单
  */
 export class RenderFormVNode extends Common implements RenderInterface {
-  slotSuffix: string
   xBoxType?: Ref<DialogFormType>
   isFullscreen: Ref<boolean>
   isView: boolean
 
   constructor(data: TemplateCommonProps & RenderFormVNodeProps) {
     super(data)
-    this.slotSuffix = data.slotSuffix
     this.xBoxType = data.xBoxType
     this.isView = data.isView
     this.isFullscreen = data.isFullscreen || ref(false)
@@ -305,7 +300,7 @@ export class RenderFormVNode extends Common implements RenderInterface {
   public _getColSpan(col: FormColumnProps, span: number): number {
     if (this.isFullscreen.value) {
       if (
-        ['textarea', 'sign'].includes(col.type || 'input') ||
+        FULLSCREEN_COL_SPAN_24_FORM_ITEMS.includes(getColumnFormType(col)) ||
         (col.type === 'select' && col?.select?.multiple)
       )
         return 24
@@ -324,7 +319,7 @@ export class RenderFormVNode extends Common implements RenderInterface {
     const rules = JSON.parse(JSON.stringify(col.rules))
     if (
       !this.slots[col.prop + this.slotSuffix] &&
-      ['input', 'textarea'].includes(col.type || 'input')
+      EMPTY_STRINGFORM_ITEMS.includes(getColumnFormType(col))
     ) {
       rules.map((item) => {
         if (item.required) {
@@ -367,7 +362,6 @@ export class RenderFormVNode extends Common implements RenderInterface {
 }
 
 interface RenderViewFormVNodeProps {
-  slotSuffix: string
   /** 折叠状态 */
   collapseStatus: Ref<boolean>
   /** 表单查看模式的 一行 Descriptions Item 的数量 */
@@ -380,14 +374,12 @@ interface RenderViewFormVNodeProps {
  *  用于表单查看模式的表单渲染
  */
 export class RenderViewFormVNode extends Common implements RenderInterface {
-  slotSuffix: string
   collapseStatus: Ref<boolean>
   checkColumnSpan?: number
   xBoxType?: Ref<DialogFormType>
   $index?: number
   constructor(data: TemplateCommonProps & RenderViewFormVNodeProps) {
     super(data)
-    this.slotSuffix = data.slotSuffix
     this.collapseStatus = data.collapseStatus || ref(false)
     this.checkColumnSpan = data.checkColumnSpan || check_column_span
     this.$index = data.$index
@@ -419,8 +411,8 @@ export class RenderViewFormVNode extends Common implements RenderInterface {
     value: string | number | any[],
     column: ColumnProps
   ) {
-    if (this.valueMap[column.type || 'input'])
-      return this.valueMap[column.type || 'input'](column)
+    if (this.valueMap[getColumnFormType(column)])
+      return this.valueMap[getColumnFormType(column)](column)
 
     return column.dicData
       ? translateCheckFormStr(
@@ -432,7 +424,7 @@ export class RenderViewFormVNode extends Common implements RenderInterface {
   }
 
   public _judgeViewFormSpan(col: FormColumnProps): number {
-    if (['textarea', 'sign', 'upload'].includes(col.type || 'input'))
+    if (VIEW_FORM_COL_SPAN_24_FORM_ITEMS.includes(getColumnFormType(col)))
       return col?.checkSpan || col?.span || 2
     return col?.checkSpan || col?.span || 1
   }
@@ -468,7 +460,7 @@ export class RenderViewFormVNode extends Common implements RenderInterface {
             <ElDescriptionsItem
               width={this.labelWidth}
               span={this._judgeViewFormSpan(item)}
-              label-align="right"
+              label-align={CHECK_LABEL_ALIGN}
               v-slots={{ label: () => <>{item.label}</> }}
               key={index}
               class-name={descriptionsItemName}

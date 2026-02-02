@@ -14,9 +14,9 @@ import {
   ElInput, ElSelect, ElCascader, ElRadioGroup, ElRadioButton,
   ElSwitch, ElInputNumber, ElCheckboxGroup, ElColorPicker, ElTree
 } from 'element-plus';
-import type { Column, TableColumnCtx } from 'element-plus'
-// ISelectProps
 import type {
+  Column,
+  TableColumnCtx,
   CascaderInstance,
   CascaderProps,
   CheckboxProps,
@@ -33,7 +33,6 @@ import type {
   ViewTabs,
 } from '../../crud/src/interface'
 import type { FormHelper } from './helpers'
-// import type { UpLoadProps } from '@cjx-low-code/components/cjx-uploadFile/interface';
 import ZtEditTable from '../../editTable/src/index'
 import type { EditTableProps } from '../../editTable'
 import type { ExtractComponentsEmits, EmitsAddArgs } from '../../dialog/src/dialog'
@@ -337,7 +336,6 @@ export type FormColumnProps<F extends object = FormModelValueType> =
     * 弹出表单当前项是否禁用 支持布尔类型和函数表达式 默认false
     * @param {any} form 表单绑定的form
     * @param {FormColumnProps[]} column 列数据
-    * @param {number} index 行索引
     * @returns {boolean} 是否可以编辑
   **/
   disabled?: boolean | ((props: {form: F, column: FormColumnProps[] }) => boolean),
@@ -409,6 +407,12 @@ export type GroupInterface<F extends object = FormModelValueType> = {
   // columnSpan?: number,
   /** 表单查看模式的 一行 Descriptions Item 的数量 */
   checkColumnSpan?: number,
+  /**
+   * 弹出表单当前项是否显示 支持布尔类型和函数表达式 默认`true`
+   * @param {any} form 表单绑定的form
+   * @param {FormColumnProps[]} column 列数据
+   * @returns {boolean} 是否显示
+   */
   display?: ((props: { form: F, column: FormColumnProps<F>[] }) => boolean),
   /** 表单的各项 */
   column?: FormColumnProps<F>[]

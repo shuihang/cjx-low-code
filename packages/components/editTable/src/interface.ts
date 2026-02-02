@@ -1,8 +1,9 @@
 import type { Component, ExtractPropTypes, UnwrapRef, ComputedRef } from 'vue';
-import { ElInput, ElInputNumber, ElOption, ElSelect, FormItemRule } from 'element-plus';
+import { ElInput, ElInputNumber, ElOption, ElSelect, ElRadioGroup ,ElRadio, ElDatePicker } from 'element-plus';
+import type { FormItemRule } from 'element-plus';
 import { objectType, arrayType, stringType, booleanType } from '../../_util/type';
 import { FormTypeProps } from '../../form/src/interface';
-import type { Placement } from '../../crud/src/interface';
+import type { Placement, ColumnProps } from '../../crud/src/interface';
 import { useLocale } from '@cjx-low-code/hooks';
 
 export type {
@@ -14,7 +15,9 @@ const { t } = useLocale()
 export const inputPlaceholder = t('common.inputText');
 export const selectPlaceholder = t('common.selectText');
 
-type EditTableComponents = Pick<FormTypeProps, 'input' | 'select' | 'inputNumber' | 'textarea'>
+type EditTableFormItemType =  keyof EditTableComponents | 'text'
+
+type EditTableComponents = Pick<FormTypeProps, 'input' | 'select' | 'inputNumber' | 'textarea' | 'radio' | 'datePicker'>
 
 export const editTableMapProps: {
   [key in keyof EditTableComponents]-?: {
@@ -49,6 +52,20 @@ export const editTableMapProps: {
     placeholder: selectPlaceholder,
     defaultValue: ''
   },
+  radio: {
+    components: ElRadioGroup,
+    subComponents: ElRadio,
+    placeholder: selectPlaceholder,
+    defaultValue: ''
+  },
+  datePicker: {
+    components: ElDatePicker,
+    placeholder: selectPlaceholder,
+    defaultValue: '',
+    datePicker: {
+      valueOnClear: ''
+    }
+  }
 }
 
 export type EditTableColumn = {
@@ -56,8 +73,8 @@ export type EditTableColumn = {
   label: string;
   /** 表格表单当前项的键 */
   prop: string,
-  /** 类型 */
-  type: 'input' | 'select' | 'inputNumber',
+  /** 类型 默认`text` */
+  type: EditTableFormItemType,
   /** 字典数据 */
   dicData?: any[],
   /** 对应列的宽度 默认为`90`  */
@@ -72,8 +89,15 @@ export type EditTableColumn = {
   tipPlacement?: Placement,
   /** 是否隐藏 */
   hide?: boolean | ComputedRef<boolean>
-  /** 插槽 */
-  slot?: boolean
+   /**
+   * 用来格式化内容
+   * @param {any} row 行数据
+   * @param {TableColumnCtx<Column>} column 列数据
+   * @param {any} cellValue 单元格数据
+   * @param {number} index 行索引
+   * @returns 格式化后的内容
+   * */
+  formatter?: ColumnProps['formatter'],
   /** 组件响应的事件 */
   on?: {[key in `on${Capitalize<string>}`]: (...args: any[]) => void },
 } & EditTableComponents

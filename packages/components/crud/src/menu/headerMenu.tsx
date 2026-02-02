@@ -55,7 +55,6 @@ const XHeaderMenu = defineComponent({
 
     const {
       option,
-      reload,
       isShowHeaderSearch,
       permission,
       tableSize,
@@ -133,11 +132,6 @@ const XHeaderMenu = defineComponent({
               item.order = option.value.column.length - index - 1
             }
           })
-          // console.log(oldIndex, newIndex, arraySort(column, 'order'))
-          // 重新渲染
-          reload.value = Math.random()
-          // console.log('ss', el, column)
-          // emit('update:activityOrders', sortedActivityOrder as number[])
         },
       })
     }

@@ -1,25 +1,27 @@
 import { defineComponent, onMounted, ref, watchEffect } from 'vue'
 import { ElButton, ElCol, ElForm, ElIcon, ElRow } from 'element-plus'
+import type { CSSProperties } from 'vue'
+import type { FormInstance } from 'element-plus'
+import { useLocale } from '@cjx-low-code/hooks'
+import { useCompRef } from '@cjx-low-code/hooks/useCompRef'
 // import debounce from 'lodash-es/debounce';
 import { toReactive } from '../../_util/toReactive'
 import { ExpandOutlined } from '../../crud/src/icon'
 import { Refresh, Search } from '@element-plus/icons-vue'
 // import type { ElementPlusSize } from '@/types/elementPlus'
-import { useLocale } from '@cjx-low-code/hooks'
-import { useCompRef } from '@cjx-low-code/hooks/useCompRef'
 import { useCrudInjectKey } from '../../crud/src/context'
 import { getValueByPath } from './utils'
 import { InitSearchFormVNode } from './init'
-import form_config from './config'
 import { searchFromProps } from './interface'
 import type { CustomSlotsType } from '../../_util/type'
 import type { FormColumnProps, FormOption, FromProps } from './interface'
-import type { CSSProperties } from 'vue'
-import type { FormInstance } from 'element-plus'
+import search_config from './searchConfig'
 
 export type ElementPlusSize = 'default' | 'small' | 'large'
 
-const { search_span, label_width, menu_btn } = form_config
+const {
+  search_span, label_width, menu_btn, search_expand_style, slotSuffix, getColSpan
+} = search_config
 
 const itemHeight: { [key in ElementPlusSize]: number } = {
   default: 55,
@@ -32,24 +34,6 @@ const lineHeight: { [key in ElementPlusSize]: string } = {
   small: '24px',
 }
 
-const getColSpan = (data: { width: number; searchSpan: number }) => {
-  const { width, searchSpan } = data
-  // console.log(1111, width, searchSpan)
-  switch (true) {
-    case width < 768:
-      return 24
-    case width >= 768 && width < 992:
-      return 12
-    case width >= 992 && width < 1200:
-      return searchSpan
-    case width >= 1200 && width < 1920:
-      return searchSpan - 4
-    case width >= 1920:
-      return 4
-    default:
-      return search_span
-  }
-}
 
 const XFormSearch = defineComponent({
   name: 'XFormSearch',
@@ -89,11 +73,7 @@ const XFormSearch = defineComponent({
 
     const boxRef = ref()
     const formRowRef = useCompRef(ElRow)
-    const expandStyle = ref<CSSProperties>({
-      animationName: 'ztSlideDownIn',
-      animationDuration: '0.1s',
-      overflow: 'hidden',
-    })
+    const expandStyle = ref<CSSProperties>(search_expand_style)
 
     // 是否显示 展开状态
     const isExpand = ref<boolean>(true)
@@ -106,6 +86,7 @@ const XFormSearch = defineComponent({
             ? boxRef.value?.offsetWidth - 180
             : boxRef?.value.offsetWidth,
           searchSpan: formSpan,
+          cloumnLength: column.length,
         })
 
         const showExpand =
@@ -260,6 +241,7 @@ const XFormSearch = defineComponent({
                     formSpan: searchSpan.value,
                     labelWidth,
                     newForm,
+                    slotSuffix,
                     slots,
                     onUpdateModelValue,
                     onSubmit,

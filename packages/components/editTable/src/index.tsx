@@ -1,4 +1,5 @@
 import { computed, defineComponent, ref } from 'vue'
+import type { DefineComponent } from 'vue'
 import { Plus, QuestionFilled } from '@element-plus/icons-vue'
 import XCrud from '../../crud' // 移除循环依赖
 import { ElButton, ElFormItem, ElIcon, ElTooltip } from 'element-plus'
@@ -211,56 +212,51 @@ export const XEditTable = withInstallVue(defineComponent({
                 return newLabel
               })(),
               ...pick(item, ['width', 'minWidth', 'dicData']),
-              slot: !isView,
+              // 不能放在pick中，formatter为undefined时 会导致 zt-crud内部的 formatter 函数被覆盖
+              ...(item.formatter ? { formatter: item.formatter } : {})
             })
 
-          if (!isView) {
-            const Component = editTableMapProps[type].components as any
-            const SubComponents = editTableMapProps[type]?.subComponents as any
+          
+            if (type === 'text') return
+
+            if (isView && !slots[prop]) return
+
+            const Component = editTableMapProps[type].components as DefineComponent
+            const SubComponents = editTableMapProps[type]?.subComponents as DefineComponent
 
             vNode[prop] = ({ $index, row }) => {
-              // console.log('editTable', $index, data.value, props.modelValue)
-              return (
-                <div>
-                  {!slots[prop] ? (
-                    <ElFormItem
-                      prop={`${props.prop}[${$index}].${prop}`}
-                      rules={rules}
-                      class={'p-t-13px p-b-13px'}
-                    >
-                      <Component
-                        v-model={props.modelValue![$index]![prop]}
-                        onUpdate:modelValue={onUpdateModelValue}
-                        placeholder={editTableMapProps[type].placeholder + label}
-                        type={editTableMapProps[type].type}
-                        {...item[type]}
-                        {...item?.on}
-                      >
-                        {dicData &&
-                          SubComponents &&
-                          dicData.map((item) => (
-                            <SubComponents
-                              key={item.value}
-                              label={item.label}
-                              value={item.value}
-                            />
-                          ))}
-                      </Component>
-                    </ElFormItem>
-                  ) : (
-                    slots[prop]?.({ $index, row })
-                  )}
-                </div>
-              )
+              if (isView) {
+                return slots[prop]?.({ $index, row }) ?? null
+              }
+              
+              return (<div>{ !slots[prop] ? <ElFormItem
+                prop={`${props.prop}.${$index}.${prop}`}
+                rules={rules}
+                class={'p-t-13px p-b-13px'}
+              >
+                  <Component
+                    v-model={props.modelValue![$index]![prop]}
+                    onUpdate:modelValue={onUpdateModelValue}
+                    placeholder={editTableMapProps[type].placeholder + label}
+                    type={editTableMapProps[type].type}
+                    {...editTableMapProps[type][type]}
+                    {...item[type]}
+                    {...item?.on}
+                  >
+                    {
+                      dicData && SubComponents &&
+                      dicData.map(item => <SubComponents key={item.value} label={item.label} value={item.value} />)
+                    }
+                  </Component>
+
+              </ElFormItem> : slots[prop]?.({ $index, row }) }</div>)
             }
-          }
+          
         })
         return vNode
       })
 
     return () => {
-      // console.log(1111, tableOption.value)
-
       return (
         <div class={'cjx-edit-table w-100%'}>
           <XCrud

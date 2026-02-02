@@ -147,6 +147,8 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
     // i18nLabel?: I18nKey,
     /** 列标题的内容属性名称 同时也是弹窗绑定的值 */
     prop: string
+    /** 搜索时要绑定的属性名称 默认为prop  */
+    searchProp?: string
     /** 表单项的需要绑定的其他值 type为selectPeople/regionalGrid 的时候该参数必填 */
     componentBind?: string
     /**
@@ -155,8 +157,6 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
       'cascader' | 'switch' | 'treeSelect' | 'upload'  | 'sign' | 'editTable' | 'selectPeople'
     */
     type?: FormItemType
-    /** 控制是否使用表单项插槽，目前已废弃 现在只要有对应的插槽就会渲染  */
-    formSlot?: boolean
     /** 表单项 插槽的VNode */
     formSlotNodes?: SlotNodesInterface
     /** 表单项的栅列 */
@@ -387,6 +387,8 @@ export type TableOption = {
   indexText?: string
   /** 是否懒加载子节点数据(树形表格) */
   lazy?: boolean
+  /** 当内容过长被隐藏时显示 tooltip */
+  showOverflowTooltip?: boolean,
   /** 渲染嵌套数据的配置选项(树形表格) */
   treeProps?: {
     hasChildren?: string

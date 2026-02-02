@@ -1,8 +1,13 @@
 import { computed, defineComponent, ref } from 'vue'
 import { ElCol, ElForm, ElRow, ElTabs } from 'element-plus'
+import type { CSSProperties } from 'vue'
+import type {
+  FormInstance,
+  FormItemProp,
+  FormValidateCallback,
+} from 'element-plus'
 import { withInstall } from '../../_util/type'
 import { useDialogInjectKey } from '../../dialog/src/context'
-import { toReactive } from '../../_util/toReactive'
 import { fromProps } from './interface'
 import { useFormProviderKey } from './context'
 import form_config from './config'
@@ -19,12 +24,6 @@ import type {
   FormSlot,
   FromProps,
 } from './interface'
-import type {
-  FormInstance,
-  FormItemProp,
-  FormValidateCallback,
-} from 'element-plus'
-import type { CSSProperties } from 'vue'
 
 const { span, label_width, menu_btn } = form_config
 
@@ -58,15 +57,12 @@ export const XForm = withInstall(defineComponent({
     const { form = {}, option, xBoxType, _slotSuffix: slotSuffix = '' } = props as FromProps
 
     const disabledForm = ref<boolean>(props.disabled || false)
-    const {
+   const {
       formSpan = props.isView ? undefined : span,
       labelWidth = label_width,
-      checkColumnSpan = 2,
-    } = option as FormOption
+      checkColumnSpan = 2
+    } = option as FormOption;
 
-    let column: FormColumnProps[] = toReactive(
-      props.option?.column as FormColumnProps[]
-    )
     // 双向绑定数据 回调函数
     const newForm = computed(() => props.form);
 
@@ -171,7 +167,6 @@ export const XForm = withInstall(defineComponent({
           ruleFormRef.value?.validate((valid, fields) => {
             if (valid) {
               disableForm && (disabledForm.value = true)
-              // const form = afterTransform(newForm.value, newColumn)
               resolve([
                 newForm.value,
                 (isClear = true) => {

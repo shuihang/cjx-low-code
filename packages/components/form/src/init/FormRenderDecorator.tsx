@@ -41,7 +41,7 @@ export function FormRender(options: FormRenderOptions = {}) {
 
         const result = sortedColumns.map((item, index) =>
           createFormItem(item, index, instance, actualOptions)
-        ).filter((vnode: VNode | undefined) => vnode !== undefined)
+        ).filter(Boolean)
 
         return result.length > 0 ? result : undefined
       } catch (error) {
