@@ -156,12 +156,6 @@ export type GroupLabelSlot = Record<
   }
 >
 
-// type Last<T extends unknown[]> = T extends [infer F, ...infer R] ? Last<R> : never;
-// type Blank = ' ' | '\n' | '\t';
-// type MyTrimLeft<S extends string> = S extends `${Blank}${infer R}` ? MyTrimLeft<R> : S;
-
-// const a: MyTrimLeft<' a'> = 'b'
-
 const XCrud = withInstallVue(defineComponent({
   name: 'XCrud',
   inheritAttrs: false,
@@ -229,14 +223,14 @@ const XCrud = withInstallVue(defineComponent({
     const onCurrentChange = (pageSize: number) => {
       emit('update:page', props.page)
       emit('current-change', pageSize)
-      //emit('on-load')
+      emit('on-load')
     }
 
     // 切换每页显示条目个数
     const onSizeChange = (pageSize: number) => {
       emit('update:page', props.page)
       emit('size-change', pageSize)
-      //emit('on-load')
+      emit('on-load')
     }
 
     // 表格搜索栏清空事件

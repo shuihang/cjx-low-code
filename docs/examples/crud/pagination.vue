@@ -3,9 +3,9 @@
     <XCrud
       v-model:form="form"
       v-model:search="search"
+      v-model:page="page"
       :option="option"
       :data="data"
-      :page="page"
       @before-open="beforeOpen"
       @row-del="rowDel"
       @row-save="addSave"
