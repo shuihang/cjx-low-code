@@ -33,7 +33,7 @@ import type {
   ViewTabs,
 } from '../../crud/src/interface'
 import type { FormHelper } from './helpers'
-import ZtEditTable from '../../editTable/src/index'
+import XEditTable from '../../editTable/src/index'
 import type { EditTableProps } from '../../editTable'
 import type { ExtractComponentsEmits, EmitsAddArgs } from '../../dialog/src/dialog'
 import type { ElDatePickerEmitType, ElTreeSelectType } from './elComponentType'
@@ -161,7 +161,7 @@ export interface FormTypePropsAndEmit<F extends object = FormModelValueType> {
   /** 可编辑表格 表格表单配置项 */
   editTable: {
     props: EditTableProps;
-    emit: InferComponentEmitType<typeof ZtEditTable, F>
+    emit: InferComponentEmitType<typeof XEditTable, F>
   },
 }
 
@@ -221,7 +221,7 @@ export const componentPropsValues: FormItemType[] = [
 ]
 
 /**
- * 从zt-crud组件中 需要提取的属性
+ * 从XCrud组件中 需要提取的属性
 */
 export const formColumnValues = [
   ...componentPropsValues,
@@ -481,7 +481,7 @@ export const fromProps = () => ({
   menuStyle: objectType<CSSProperties>({}),
   /** 是否开启禁止编辑模式 */
   disabled: booleanType(false),
-  /** 插槽后缀仅在配合ZtCrud组件时使用 单独使用ZtForm组件时请不要使用 */
+  /** 插槽后缀仅在配合XCrud组件时使用 单独使用XForm组件时请不要使用 */
   _slotSuffix: stringType(''),
 })
 

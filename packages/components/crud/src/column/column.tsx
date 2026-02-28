@@ -6,7 +6,7 @@ import omit from '../../../_util/omit'
 import { useLocale } from '@cjx-low-code/hooks'
 import { useCrudInjectKey } from '../context'
 import crudConfig from '../config'
-import ZtColumnMenu from './column-menu'
+import XColumnMenu from './column-menu'
 import type {
   ColumnProps,
   Scope,
@@ -172,7 +172,7 @@ const XTableColumn = defineComponent({
         })}
 
         {/* 操作栏 */}
-        {menu && <ZtColumnMenu v-slots={{ default: slots.menu }} />}
+        {menu && <XColumnMenu v-slots={{ default: slots.menu }} />}
       </>
     )
   },

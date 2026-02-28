@@ -14,7 +14,7 @@ import {
   ElTreeSelect,
   ElColorPicker
 } from 'element-plus'
-// import ZtFileUpload from '@cjx-low-code/components/cjx-uploadFile/index.vue';
+// import XFileUpload from '@cjx-low-code/components/cjx-uploadFile/index.vue';
 import XEditTable from '../../editTable'
 import { useLocale } from '@cjx-low-code/hooks'
 import type {
@@ -153,7 +153,7 @@ export const tempForm: TempFormInterface = {
     placeholder: selectPlaceholder,
   },
   // upload: {
-  //   component: ZtFileUpload,
+  //   component: XFileUpload,
   //   placeholder: uploadPlaceholder,
   //   upload: {
   //     validateEvent: true

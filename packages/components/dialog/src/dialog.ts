@@ -62,7 +62,7 @@ export const $XDialog = (_context: AppContext) => {
 
   /**
    * 命令式弹窗组件
-   * @param component 组件（需要嵌套在`$ZtDialog`中的组件）
+   * @param component 组件（需要嵌套在`$XDialog`中的组件）
    * @param props 弹窗的配置项以及嵌入在弹窗里面组件的`props`传参和$emit通信事件`emitMethods`
    * @returns 弹窗组件的实例
    *
@@ -98,7 +98,7 @@ export const $XDialog = (_context: AppContext) => {
    * <script setup lang="ts">
    * // 引入需要嵌套在$XDialog中的组件
    * import AComponents from 'AComponents.vue';
-   * // Vue 3 提供的一个函数，用于在组件中获取当前实例的代理对象（proxy）。该对象提供了对组件数据和方法的响应式访问，避免了直接使用 this 关键字  通过proxy可以使用$ZtDialog组件
+   * // Vue 3 提供的一个函数，用于在组件中获取当前实例的代理对象（proxy）。该对象提供了对组件数据和方法的响应式访问，避免了直接使用 this 关键字  通过proxy可以使用$XDialog组件
    * const proxy = getCurrentInstance()?.proxy
    *
    * const openXDialog = () => {

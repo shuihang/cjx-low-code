@@ -7,7 +7,7 @@ import {
 } from 'vue'
 import omit from '../../_util/omit'
 import { booleanType, objectType } from '../../_util/type'
-import ZtDialog from './index'
+import XDialog from './index'
 import type { CustomSlotsType } from '../../_util/type'
 import type { DialogProps } from './index'
 import type { CSSProperties, Component } from 'vue'
@@ -37,7 +37,7 @@ export type DialogPropsVc<T extends object = object> = Omit<
 }
 
 export default defineComponent({
-  name: 'ZtDialogVc',
+  name: 'XDialogVc',
   props: dialogPropsVcProps,
   emits: ['update:modelValue'],
   slots: Object as CustomSlotsType<{
@@ -82,7 +82,7 @@ export default defineComponent({
     })
 
     return () => (
-      <ZtDialog
+      <XDialog
         option={option.value}
         onClose={() => {
           option.value.visible = false
@@ -111,7 +111,7 @@ export default defineComponent({
         {/*  v-once*/}
         {/*  onChange={(data: any) => (showSaveBtn && menu) && (option.value.data = data)}*/}
         {/*/>*/}
-      </ZtDialog>
+      </XDialog>
     )
   },
 })

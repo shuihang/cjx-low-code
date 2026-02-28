@@ -134,5 +134,3 @@ export const editTableProps = () => ({
 })
 
 export type EditTableProps = Partial<ExtractPropTypes<ReturnType<typeof editTableProps>>>;
-
-

@@ -8,8 +8,8 @@ import crudConfig from '../config'
 
 const { page_layout, pager_count, page_sizes, page_background } = crudConfig
 
-const ZtTablePage = defineComponent({
-  name: 'ZtTablePage',
+const XTablePage = defineComponent({
+  name: 'XTablePage',
   slots: Object as CustomSlotsType<{
     default: () => any // 默认插槽
   }>,
@@ -87,4 +87,4 @@ const ZtTablePage = defineComponent({
   },
 })
 
-export default ZtTablePage
+export default XTablePage

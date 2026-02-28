@@ -221,16 +221,24 @@ const XCrud = withInstallVue(defineComponent({
 
     // 页码切换
     const onCurrentChange = (pageSize: number) => {
-      emit('update:page', props.page)
-      emit('current-change', pageSize)
-      emit('on-load')
+      const updatedPage = {
+        ...props.page,
+        currentPage: pageSize
+      };
+      emit('update:page', updatedPage);
+      emit('current-change', pageSize);
+      emit('on-load');
     }
 
     // 切换每页显示条目个数
     const onSizeChange = (pageSize: number) => {
-      emit('update:page', props.page)
-      emit('size-change', pageSize)
-      emit('on-load')
+      const updatedPage = {
+        ...props.page,
+        pageSize
+      };
+      emit('update:page', updatedPage);
+      emit('size-change', pageSize);
+      emit('on-load');
     }
 
     // 表格搜索栏清空事件
@@ -257,7 +265,6 @@ const XCrud = withInstallVue(defineComponent({
     const onSearchChange = async (form: object, done: () => void) => {
       emit('update:search', form)
       emit('search-change', { query: form }, done)
-      // console.log(props.onLoad,)
       props.onLoad.constructor.name === 'AsyncFunction' && await props.onLoad().then(() => done())
     }
 
@@ -359,7 +366,7 @@ const XCrud = withInstallVue(defineComponent({
         importDialogNode.value = XDialogImport(props, slots.importHeader)
         // watch(() => importProps.value, (val) => {
         //   // console.log('importApi', props.importApi)
-        //   importDialogNode.value = ZtDialogImport(val, slots.importHeader)
+        //   importDialogNode.value = XDialogImport(val, slots.importHeader)
         // }, { deep: true })
       })
     }

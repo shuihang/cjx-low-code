@@ -3,7 +3,7 @@
  */
 import { h } from 'vue'
 import { clone } from 'lodash-es'
-import ZtDicTag from '../dicTag'
+import XDicTag from '../dicTag'
 import type {
   ColorTypeInterface,
   DicDataInterface,
@@ -67,7 +67,7 @@ export const translateStr = (
     let vNode: any = str
     dicData?.forEach((item) => {
       if (item[props?.value || 'value'] == str) {
-        vNode = item.colorType ?  h(ZtDicTag, {
+        vNode = item.colorType ?  h(XDicTag, {
           colorType: item.colorType,
           label: item[props?.label || 'label']
         }) : (

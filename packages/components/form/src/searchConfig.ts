@@ -28,7 +28,7 @@ const search_span = 12
 
 const search_config: SearchConfigType = {
   search_expand_style: {
-    animationName: 'ztSlideDownIn',
+    animationName: 'xSlideDownIn',
     animationDuration: '0.1s',
     overflow: 'hidden',
   },

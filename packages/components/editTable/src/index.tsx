@@ -212,7 +212,7 @@ export const XEditTable = withInstallVue(defineComponent({
                 return newLabel
               })(),
               ...pick(item, ['width', 'minWidth', 'dicData']),
-              // 不能放在pick中，formatter为undefined时 会导致 zt-crud内部的 formatter 函数被覆盖
+              // 不能放在pick中，formatter为undefined时 会导致 x-crud内部的 formatter 函数被覆盖
               ...(item.formatter ? { formatter: item.formatter } : {})
             })
 

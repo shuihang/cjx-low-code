@@ -24,7 +24,7 @@ export function getUUID(): number | string {
 
 export default function useId(id = ref('')) {
   // 可访问性使用的内部id。仅在客户端工作
-  const innerId = `zt_crud_${getUUID()}`
+  const innerId = `x_crud_${getUUID()}`
 
   return id.value || innerId
 }

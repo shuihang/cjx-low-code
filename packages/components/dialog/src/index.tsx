@@ -43,7 +43,7 @@ const contentDefaultStyle: CSSProperties = {
 }
 
 export default defineComponent({
-  name: 'ZtDialog',
+  name: 'XDialog',
   props: {
     option: {
       type: Object as PropType<DialogProps>,
@@ -193,7 +193,7 @@ export default defineComponent({
             ...props.contentStyle,
             maxHeight: (menu || menu == undefined) && !isDrawer.value ? isFullscreen.value ? 'calc(100vh - 150px)' : 'calc(90vh - 150px)' : ''
         }}
-          class={['zt-dialog-content flex flex-col', isFullscreen.value && !isDrawer.value && '!h-100%', isDrawer.value && menu ? 'h-[calc(100%-50px)]' : 'h-100%']}
+          class={['cjx-dialog-content flex flex-col', isFullscreen.value && !isDrawer.value && '!h-100%', isDrawer.value && menu ? 'h-[calc(100%-50px)]' : 'h-100%']}
         >
           {slots.default?.()}
         </div>

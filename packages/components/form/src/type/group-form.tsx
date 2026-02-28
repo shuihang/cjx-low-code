@@ -7,8 +7,8 @@ import type { CustomSlotsType } from '@cjx-low-code/components/_util/type'
 import type { TableGroupInterface } from '@cjx-low-code/components/crud/src/interface'
 import type { DialogFormType, GroupInterface } from '../interface'
 
-const ZtGroupForm = defineComponent({
-  name: 'ZtGroupForm',
+const XGroupForm = defineComponent({
+  name: 'XGroupForm',
   props: {
     // form: objectType<Ref<object>>(),
     group: objectType<GroupInterface[]>(),
@@ -140,4 +140,4 @@ const ZtGroupForm = defineComponent({
   },
 })
 
-export default ZtGroupForm
+export default XGroupForm

@@ -399,7 +399,7 @@ export class RenderViewFormVNode extends Common implements RenderInterface {
     //         files: value
     //       }
     //     : { images: value }
-    //   return <ZtPreviewOffice {...props} />
+    //   return <XPreviewOffice {...props} />
     // },
   }
 

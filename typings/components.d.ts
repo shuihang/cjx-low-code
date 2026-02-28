@@ -6,7 +6,6 @@ declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     XCrud: typeof import('../packages/cjx-low-code')['XCrud']
     XForm: typeof import('../packages/cjx-low-code')['XForm']
-    
   }
 
   interface ComponentCustomProperties {

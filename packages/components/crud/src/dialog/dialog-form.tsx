@@ -140,7 +140,7 @@ const XDiaLogForm = defineComponent({
           submitBtnText: option.value.submitBtnText,
           checkColumnSpan
         },
-        ztBoxType: boxType,
+        xBoxType: boxType,
       };
     })
 

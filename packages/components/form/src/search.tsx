@@ -131,7 +131,7 @@ const XFormSearch = defineComponent({
         rowLength = formRowRef.value?.$el.children.length
         // console.log('rowLength', rowLength)
       }
-      // console.log('1111', mergedId, document.querySelector(`.zt_crud_4`)?.offsetWidth)
+      // console.log('1111', mergedId, document.querySelector(`.x_crud_4`)?.offsetWidth)
       // cjx-crud组件在el-tab-pane 组件里，会导致宽度获取不到，所以这里监听宽度变化获取
       let boxWidth = 0
       const observer = new ResizeObserver((entries) => {

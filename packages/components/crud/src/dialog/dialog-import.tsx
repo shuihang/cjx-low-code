@@ -2,7 +2,7 @@ import { ref } from 'vue'
 import { ElButton, ElIcon, ElUpload } from 'element-plus'
 import type { UploadFile, UploadFiles } from 'element-plus'
 import { UploadFilled } from '@element-plus/icons-vue'
-import ZtDialog from '../../../dialog/src/index'
+import XDialog from '../../../dialog/src/index'
 import download from '../../../_util/download'
 import { DownloadOutlined } from '../../../crud/src/icon'
 import { useLocale } from '@cjx-low-code/hooks'
@@ -99,7 +99,7 @@ const XDialogImport = (props: ImportProps, slots?: () => Promise<any>) => {
   // }
 
   return (
-    <ZtDialog option={option.value}>
+    <XDialog option={option.value}>
       <div class={'flex justify-between items-center m-b-8px'}>
         <div>{slots && slots!()}</div>
         <div>
@@ -140,7 +140,7 @@ const XDialogImport = (props: ImportProps, slots?: () => Promise<any>) => {
           </p>
         </div>
       </ElUpload>
-    </ZtDialog>
+    </XDialog>
   )
 }
 

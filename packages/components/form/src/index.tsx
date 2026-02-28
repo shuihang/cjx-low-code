@@ -11,9 +11,9 @@ import { useDialogInjectKey } from '../../dialog/src/context'
 import { fromProps } from './interface'
 import { useFormProviderKey } from './context'
 import form_config from './config'
-import ZtFormColumn from './type/column-form';
-import ZtGroupForm from './type/group-form'
-import ZtFromMenu from './menu'
+import XFormColumn from './type/column-form';
+import XGroupForm from './type/group-form'
+import XFromMenu from './menu'
 import { getValueByPath } from './utils'
 import type { CustomSlotsType } from '../../_util/type'
 import type {
@@ -282,13 +282,13 @@ export const XForm = withInstall(defineComponent({
                                       'h-[calc(100vh-180px)]',
                                   ]}
                                 >
-                                <ZtFormColumn
+                                <XFormColumn
                                   column={this.$props.option?.column as FormColumnProps[]}
                                   v-slots={this.$slots}
-                                ></ZtFormColumn>
+                                ></XFormColumn>
 
                                   {/*分组*/}
-                                  <ZtGroupForm
+                                  <XGroupForm
                                     ref="groupFormRef"
                                     group={this.$props.option?.group}
                                     v-slots={this.$slots}
@@ -333,13 +333,13 @@ export const XForm = withInstall(defineComponent({
                           })}
                       </div>
 
-                      <ZtFormColumn
+                      <XFormColumn
                         column={this.$props.option?.column as FormColumnProps[]}
                         v-slots={this.$slots}
-                      ></ZtFormColumn>
+                      ></XFormColumn>
 
                       {/*分组*/}
-                      <ZtGroupForm
+                      <XGroupForm
                         ref="groupFormRef"
                         group={this.$props.option?.group}
                         xBoxType={this.xBoxType}
@@ -362,7 +362,7 @@ export const XForm = withInstall(defineComponent({
 
         {/* 搜索栏操作区域 */}
         {menuBtn && (
-          <ZtFromMenu
+          <XFromMenu
             onReset={this.onReset}
             onSubmit={this.onSubmit}
             v-slots={{ menu: this.$slots.formMenu }}
@@ -373,7 +373,7 @@ export const XForm = withInstall(defineComponent({
             submitBtn={submitBtn}
             cancelBtnText={cancelBtnText}
             submitBtnText={submitBtnText}
-          ></ZtFromMenu>
+          ></XFromMenu>
         )}
       </ElRow>
     )

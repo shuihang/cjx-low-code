@@ -6,7 +6,7 @@ import type { CustomSlotsType } from "../../../_util/type";
 import type { FormColumnProps } from '../interface'
 
 export default defineComponent({
-  name: 'ZtFormColumn',
+  name: 'XFormColumn',
   props: {
     column: arrayType<FormColumnProps[]>(),
   },
