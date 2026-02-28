@@ -34,7 +34,12 @@ export const buildModules = async () => {
           vue: vue({
             isProduction: true,
           }),
-          vueJsx: vueJsx(),
+          vueJsx: vueJsx({
+            babelPlugins: [
+              ["@babel/plugin-proposal-decorators", { legacy: true }],
+              ["@babel/plugin-proposal-class-properties", { loose: true }]
+            ]
+          }),
         },
       }),
       nodeResolve({
@@ -56,7 +61,6 @@ export const buildModules = async () => {
   await writeBundles(
     bundle,
     buildConfigEntries.map(([module, config]): OutputOptions => {
-      console.log(11111111111111, config)
       return {
         format: config.format,
         dir: config.output.path,

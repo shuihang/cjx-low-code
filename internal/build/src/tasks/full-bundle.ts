@@ -39,7 +39,12 @@ async function buildFullEntry(minify: boolean) {
         vue: vue({
           isProduction: true,
         }),
-        vueJsx: vueJsx(),
+        vueJsx: vueJsx({
+          babelPlugins: [
+            ["@babel/plugin-proposal-decorators", { legacy: true }],
+            ["@babel/plugin-proposal-class-properties", { loose: true }]
+          ]
+        }),
       },
     }),
     nodeResolve({
