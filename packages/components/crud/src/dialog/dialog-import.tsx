@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { ElButton, ElIcon, ElUpload } from 'element-plus'
+import type { UploadFile, UploadFiles } from 'element-plus'
 import { UploadFilled } from '@element-plus/icons-vue'
 import ZtDialog from '../../../dialog/src/index'
 import download from '../../../_util/download'
@@ -8,7 +9,6 @@ import { useLocale } from '@cjx-low-code/hooks'
 import { useMessage } from '@cjx-low-code/hooks/useMessage'
 import type { ImportProps } from '../interface'
 import type { DialogProps } from '../../../dialog/src/index'
-import type { UploadFile, UploadFiles } from 'element-plus'
 
 const XDialogImport = (props: ImportProps, slots?: () => Promise<any>) => {
   const { t } = useLocale() // 国际化

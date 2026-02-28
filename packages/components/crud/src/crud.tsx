@@ -40,6 +40,7 @@ import type {
   Scope,
   TableOption,
   TreeLoad,
+  CrudPageProps
 } from './interface'
 import type {
   Column,
@@ -240,7 +241,22 @@ const XCrud = withInstallVue(defineComponent({
 
     // 表格搜索栏清空事件
     const onSearchReset = () => {
-      emit('search-reset')
+      const updatedPage = {
+        ...props.page,
+        currentPage: 1
+      };
+      emit('update:page', updatedPage);
+      emit('update:search', {});
+      emit('search-reset');
+      emit('on-load');
+    }
+
+    const updatePage = (page: CrudPageProps) => {
+      const updatedPage = {
+        ...props.page,
+        ...page
+      }
+      emit('update:page', updatedPage)
     }
 
     // 表格搜索栏提交事件
@@ -309,7 +325,7 @@ const XCrud = withInstallVue(defineComponent({
     // 弹窗表单 关闭事件
     const onCloseChange = () => {
       // console.log(form)
-       emit('update:form', cacheForm || cloneDeep(props.form));
+      emit('update:form', cacheForm || cloneDeep(props.form));
       showDialogForm.value = false
       emit('dialog-close', boxType.value)
     }
@@ -705,7 +721,8 @@ const XCrud = withInstallVue(defineComponent({
       importDialogNode,
       isCard,
       boxType,
-      currentForm
+      currentForm,
+      updatePage
     }
   },
   render() {
@@ -832,7 +849,7 @@ const XCrud = withInstallVue(defineComponent({
 
           {/* 分页 */}
           {this.$props.page && (
-            <XTablePage page={this.$props.page} v-slots={this.$slots.page} />
+            <XTablePage page={this.$props.page} v-slots={this.$slots.page} updatePage={this.updatePage} />
           )}
         </CardComponent>
 

@@ -17,13 +17,13 @@
         <el-tag>{{ row.name }}</el-tag>
       </template>
 
-      <template #nameForm="{ prop, _xBoxType }">
-        <div v-if="_xBoxType === 'check'">
+      <template #nameForm="{ prop, _XBoxType }">
+        <div v-if="_XBoxType === 'check'">
            <el-tag>{{ form.name }}</el-tag>{{prop}}
         </div>
 
         <div v-else>
-          <el-input v-model="form.name" placeholder="请输入姓名" /> {{ _xBoxType }}
+          <el-input v-model="form.name" placeholder="请输入姓名" /> {{ _XBoxType }}
         </div>
       </template>
 

@@ -8,12 +8,6 @@ import type { SearchFromProps } from '@cjx-low-code/components/form/src/interfac
 
 const XHeaderSearch = defineComponent({
   name: 'XHeaderSearch',
-  // props: {
-  //   form: {
-  //     type: Object,
-  //     default: () => {}
-  //   }
-  // },
   setup(_, { slots }) {
     const { option, search, onSearchReset, onSearchChange } =
       useCrudInjectKey().value
