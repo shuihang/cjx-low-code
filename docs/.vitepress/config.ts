@@ -129,9 +129,9 @@ export default defineConfig({
     outline: {
       level: [2, 3] // 显示 h2 和 h3 标题 
     },
-    socialLinks: [
-      { icon: 'github', link: 'https://github.com/shuihang/cjx-low-code' }
-    ]
+    // socialLinks: [
+    //   { icon: 'github', link: 'https://github.com/shuihang/cjx-low-code' }
+    // ]
   },
   
   markdown: {

@@ -1,7 +1,7 @@
 import { computed, defineComponent, ref } from 'vue'
 import type { DefineComponent } from 'vue'
 import { Plus, QuestionFilled } from '@element-plus/icons-vue'
-import XCrud from '../../crud' // 移除循环依赖
+import XCrud from '../../crud'
 import { ElButton, ElFormItem, ElIcon, ElTooltip } from 'element-plus'
 import pick from '../../_util/pick'
 import { useLocale } from '@cjx-low-code/hooks'
