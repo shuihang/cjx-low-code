@@ -16,7 +16,7 @@ import {
 } from '@cjx-low-code/build-constants'
 import { epOutput, epRoot, localeRoot } from '@cjx-low-code/build-utils'
 import { version } from '../../../../packages/cjx-low-code/version'
-import { ElementPlusAlias } from '../plugins/element-plus-alias'
+import { CjxLowCodeAlias } from '../plugins/cjx-low-code-alias'
 import {
   formatBundleFilename,
   generateExternal,
@@ -31,7 +31,7 @@ const banner = `/*! ${PKG_BRAND_NAME} v${version} */\n`
 
 async function buildFullEntry(minify: boolean) {
   const plugins: Plugin[] = [
-    ElementPlusAlias(),
+    CjxLowCodeAlias(),
     VueMacros({
       setupComponent: false,
       setupSFC: false,

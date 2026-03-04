@@ -8,8 +8,7 @@ import esbuild from 'rollup-plugin-esbuild'
 import glob from 'fast-glob'
 import { epRoot, excludeFiles, pkgRoot } from '@cjx-low-code/build-utils'
 import { generateExternal, writeBundles } from '../utils'
-import { ElementPlusAlias } from '../plugins/element-plus-alias'
-import { ImportPathRewriter } from '../plugins/import-path-rewriter'
+import { CjxLowCodeAlias } from '../plugins/cjx-low-code-alias'
 import { buildConfigEntries, target } from '../build-info'
 
 import type { OutputOptions } from 'rollup'
@@ -26,7 +25,7 @@ export const buildModules = async () => {
   const bundle = await rollup({
     input,
     plugins: [
-      ElementPlusAlias(),
+      CjxLowCodeAlias(),
       VueMacros({
         setupComponent: false,
         setupSFC: false,
