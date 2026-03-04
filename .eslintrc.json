@@ -1,0 +1,4 @@
+{
+  "root": true,
+  "extends": ["@cjx-low-code/eslint-config"]
+}

@@ -1,0 +1,10 @@
+node_modules
+dist
+*.d.ts
+*.config.ts
+*.config.js
+*.config.mjs
+.vitepress
+storybook-static
+pnpm-lock.yaml
+pnpm-workspace.yaml
