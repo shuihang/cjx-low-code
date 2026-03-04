@@ -3,8 +3,18 @@ import type { ComputedRef } from 'vue'
 import type { TemplateProps } from './init/initFormTamplate'
 
 type FormProvide = {
-  isView: ComputedRef<boolean>,
-} & Pick<TemplateProps, 'newForm' | 'formSpan' | 'labelWidth' | 'slotSuffix' | 'xBoxType' | 'isFullscreen' | 'checkColumnSpan' | 'onUpdateModelValue'>
+  isView: ComputedRef<boolean>
+} & Pick<
+  TemplateProps,
+  | 'newForm'
+  | 'formSpan'
+  | 'labelWidth'
+  | 'slotSuffix'
+  | 'xBoxType'
+  | 'isFullscreen'
+  | 'checkColumnSpan'
+  | 'onUpdateModelValue'
+>
 
 export const formProviderKey = Symbol('formProviderKey')
 

@@ -32,9 +32,9 @@ export function toReactive<T extends object>(objectRef: MaybeRef<T>): T {
       getOwnPropertyDescriptor() {
         return {
           enumerable: true,
-          configurable: true,
+          configurable: true
         }
-      },
+      }
     }
   )
 

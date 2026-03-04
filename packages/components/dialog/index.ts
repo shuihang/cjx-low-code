@@ -6,5 +6,4 @@ export type { DialogDirectiveInterface } from './src/dialog'
 
 export const XDialog = withInstall(Dialog)
 
-
 export default XDialog

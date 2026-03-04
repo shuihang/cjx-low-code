@@ -1,5 +1,28 @@
 import { booleanType, objectType, stringType } from '../../_util/type'
 import type {
+  CascaderInstance,
+  CascaderProps,
+  CheckboxProps,
+  ColorPickerProps,
+  Column,
+  DatePickerProps,
+  ElCascader,
+  ElCheckboxGroup,
+  ElColorPicker,
+  ElInput,
+  ElInputNumber,
+  ElRadioButton,
+  ElRadioGroup,
+  ElSelect,
+  ElSwitch,
+  ElTree,
+  InputNumberInstance,
+  InputProps,
+  RadioProps,
+  SwitchInstance,
+  TableColumnCtx
+} from 'element-plus'
+import type {
   CSSProperties,
   ComputedRef,
   ExtractPropTypes,
@@ -8,63 +31,47 @@ import type {
   Ref,
   TextareaHTMLAttributes,
   UnwrapRef,
-  VNode,
+  VNode
 } from 'vue'
-import {
-  ElInput, ElSelect, ElCascader, ElRadioGroup, ElRadioButton,
-  ElSwitch, ElInputNumber, ElCheckboxGroup, ElColorPicker, ElTree
-} from 'element-plus';
-import type {
-  Column,
-  TableColumnCtx,
-  CascaderInstance,
-  CascaderProps,
-  CheckboxProps,
-  DatePickerProps,
-  InputNumberInstance,
-  InputProps,
-  RadioProps,
-  SwitchInstance,
-  ColorPickerProps
-} from 'element-plus'
-import type {
-  ColumnProps,
-  DialogFormType,
-  ViewTabs,
-} from '../../crud/src/interface'
+import type { ColumnProps, DialogFormType, ViewTabs } from '../../crud/src/interface'
 import type { FormHelper } from './helpers'
-import XEditTable from '../../editTable/src/index'
+import type XEditTable from '../../editTable/src/index'
 import type { EditTableProps } from '../../editTable'
-import type { ExtractComponentsEmits, EmitsAddArgs } from '../../dialog/src/dialog'
+import type { EmitsAddArgs, ExtractComponentsEmits } from '../../dialog/src/dialog'
 import type { ElDatePickerEmitType, ElTreeSelectType } from './elComponentType'
-import { FORM_ON_EVENT_SUFFIX } from '../../_util/env'
+import type { FORM_ON_EVENT_SUFFIX } from '../../_util/env'
 
-export type {
-  ColumnProps
-}
-
+export type { ColumnProps }
 
 export type RecordAnyType = Record<string, any>
 
 export type FormModelValueType = RecordAnyType
 
-type EmitsAddHelpers<T extends object, F extends object = FormModelValueType> = EmitsAddArgs<T, [[_helpers: FormHelper<F>]], 'end'>
+type EmitsAddHelpers<T extends object, F extends object = FormModelValueType> = EmitsAddArgs<
+  T,
+  [[_helpers: FormHelper<F>]],
+  'end'
+>
 
-export type InferComponentEmitType<T extends abstract new (...args: any[]) => any, F extends object = FormModelValueType> = Partial<ExtractComponentsEmits<InstanceType<T>['$props'], [[_helpers: FormHelper<F>]], 'end'>>
-
+export type InferComponentEmitType<
+  T extends abstract new (...args: any[]) => any,
+  F extends object = FormModelValueType
+> = Partial<ExtractComponentsEmits<InstanceType<T>['$props'], [[_helpers: FormHelper<F>]], 'end'>>
 
 /** 测试 */
 type CustomStr<T extends string = ''> = `${string}${T}`
 
-
 /** 表单弹窗该项的插槽 */
-export type FormSlot = Record<string, FormColumnProps & {
+export type FormSlot = Record<
+  string,
+  FormColumnProps & {
     _xBoxType: DialogFormType
     /** 表单项的值 查看表单才有 */
     $value?: any
     /** 表单项的索引 查看表单才有 */
     $index?: number
-  }>
+  }
+>
 
 /** 表单分组的插槽 */
 export type GroupFormSlot = Record<CustomStr<'GroupForm'>, never>
@@ -77,100 +84,99 @@ export type TabFormSlot = Record<CustomStr<'TabForm'>, never>
 
 export type GroupLabelSlot = Record<CustomStr<'GroupLabel'>, never>
 
-
-export type {
-  DialogFormType,
-  ViewTabs
-}
+export type { DialogFormType, ViewTabs }
 
 type OmitStr = 'modelValue'
 
 export type Arrayable<T> = T | T[]
-
 
 type SelectProps = Partial<Omit<ExtractPropTypes<InstanceType<typeof ElSelect>>, OmitStr>>
 
 export interface FormTypePropsAndEmit<F extends object = FormModelValueType> {
   /** input组件的配置项 具体参考element-plus官网 */
   input: {
-    props: InputProps & InputHTMLAttributes;
+    props: InputProps & InputHTMLAttributes
     emit: InferComponentEmitType<typeof ElInput, F>
-  };
+  }
   /** textarea组件的配置项 具体参考element-plus官网 */
   textarea: {
-    props: InputProps & TextareaHTMLAttributes;
+    props: InputProps & TextareaHTMLAttributes
     emit: InferComponentEmitType<typeof ElInput, F>
-  };
+  }
   /** inputNumber组件的配置项 具体参考element-plus官网 */
   inputNumber: {
-    props: InputNumberInstance;
+    props: InputNumberInstance
     emit: InferComponentEmitType<typeof ElInputNumber, F>
-  };
+  }
   /** select组件的配置项 具体参考element-plus官网 */
   select: {
-    props: SelectProps;
+    props: SelectProps
     emit: InferComponentEmitType<typeof ElSelect>
     // emit: Partial<EmitsAddHelpers<ElSelectType, F>>
-  };
+  }
   /** checkbox组件的配置项 具体参考element-plus官网 */
   checkbox: {
-    props: CheckboxProps;
+    props: CheckboxProps
     emit: InferComponentEmitType<typeof ElCheckboxGroup, F>
-  };
+  }
   datePicker: {
     /** datePicker组件的配置项 具体参考element-plus官网 */
-    props: DatePickerProps;
+    props: DatePickerProps
     // emit: InferComponentEmitType<typeof ElDatePicker, F>
     // 因为el-date-picker的类型声明文件中，没有emit事件，所以需要手动添加
     /** datePicker组件的事件支持el-date-picker的所有事件 具体参考element-plus官网 */
     emit: Partial<EmitsAddHelpers<ElDatePickerEmitType, F>>
-  };
+  }
   radio: {
     /** radio组件的配置项 具体参考element-plus官网 */
-    radio: RadioProps;
+    radio: RadioProps
     /** radio组件的事件支持el-radio的所有事件 具体参考element-plus官网 */
     emit: InferComponentEmitType<typeof ElRadioGroup, F>
-  };
+  }
   radioButton: {
     /** radio组件的配置项 button类型 */
-    props: RadioProps;
+    props: RadioProps
     emit: InferComponentEmitType<typeof ElRadioButton, F>
-  };
+  }
   cascader: {
     /** cascader组件的配置项 具体参考element-plus官网 */
-    props: CascaderInstance & { props: CascaderProps }; // Partial<Omit<CascaderInstance, OmitStr | 'props'> & { props: CascaderProps }>;
+    props: CascaderInstance & { props: CascaderProps } // Partial<Omit<CascaderInstance, OmitStr | 'props'> & { props: CascaderProps }>;
     emit: InferComponentEmitType<typeof ElCascader, F>
-  };
+  }
   /** switch组件的配置项 具体参考element-plus官网 */
   switch: {
-    props: SwitchInstance;
+    props: SwitchInstance
     emit: InferComponentEmitType<typeof ElSwitch, F>
-  };
+  }
   /** treeSelect组件的配置项 具体参考element-plus官网 */
   treeSelect: {
-    props: SelectProps & InstanceType<typeof ElTree>; //  Partial<Omit<ExtractPropTypes<InstanceType<typeof ElTree>>, OmitStr>>;
+    props: SelectProps & InstanceType<typeof ElTree> //  Partial<Omit<ExtractPropTypes<InstanceType<typeof ElTree>>, OmitStr>>;
     // emit: InferComponentEmitType<typeof ElTreeSelect, F>
     // 因为el-tree-select的类型声明文件中，没有emit事件，所以需要手动添加
-    emit: Partial<EmitsAddHelpers<ElTreeSelectType, F>> 
-  };
+    emit: Partial<EmitsAddHelpers<ElTreeSelectType, F>>
+  }
   /** colorPicker组件的配置项 具体参考element-plus官网 */
   colorPicker: {
-    props: ColorPickerProps;
+    props: ColorPickerProps
     emit: InferComponentEmitType<typeof ElColorPicker, F>
-  };
+  }
   /** 可编辑表格 表格表单配置项 */
   editTable: {
-    props: EditTableProps;
+    props: EditTableProps
     emit: InferComponentEmitType<typeof XEditTable, F>
-  },
+  }
 }
 
 export type FormTypeProps = {
-  [key in FormItemType]?: Partial<Omit<InferFormTypePropsType<key, 'props'>, OmitStr>> 
+  [key in FormItemType]?: Partial<Omit<InferFormTypePropsType<key, 'props'>, OmitStr>>
 }
 
 export type FormOnEventType<F extends object = FormModelValueType> = {
-  [K in FormItemType as `${K & string}${typeof FORM_ON_EVENT_SUFFIX}`]?: InferFormTypePropsType<K, 'emit', F>
+  [K in FormItemType as `${K & string}${typeof FORM_ON_EVENT_SUFFIX}`]?: InferFormTypePropsType<
+    K,
+    'emit',
+    F
+  >
 }
 
 export type InferFormTypePropsType<
@@ -181,12 +187,12 @@ export type InferFormTypePropsType<
   ? K extends keyof FormTypePropsAndEmit<F>[T]
     ? FormTypePropsAndEmit<F>[T][K]
     : never
-  : never;
+  : never
 
 /**
  * 表单控件类型枚举
  * @type {'input' | 'textarea' | 'inputNumber' | 'select' | 'checkbox' | 'datePicker' | 'radio' | 'radioButton' | 'cascader' | 'switch' | 'treeSelect' | 'colorPicker' | 'upload' | 'sign' | 'editTable' | 'selectPeople' | 'dateTimeRange'}
- * 
+ *
  * @description 定义了所有可用的表单控件类型：
  * - input: 文本输入框
  * - textarea: 多行文本输入框
@@ -210,30 +216,59 @@ export type InferFormTypePropsType<
  */
 export type FormItemType = keyof FormTypePropsAndEmit
 
-
-
 // export type FormItemType =
 //   'input' | 'textarea' | 'inputNumber' | 'select' | 'checkbox' | 'datePicker' | 'radio'  | 'radioButton' |
 //   'cascader' | 'switch' | 'treeSelect' | 'upload'   | 'sign' | 'regionalGrid' | 'deptSelect' | 'editTable' | 'selectPeople'
 export const componentPropsValues: FormItemType[] = [
-  'input', 'textarea', 'inputNumber', 'select', 'checkbox', 'datePicker', 'radio', 'radioButton', 'cascader',
-  'switch', 'treeSelect', 'editTable', 'colorPicker'
+  'input',
+  'textarea',
+  'inputNumber',
+  'select',
+  'checkbox',
+  'datePicker',
+  'radio',
+  'radioButton',
+  'cascader',
+  'switch',
+  'treeSelect',
+  'editTable',
+  'colorPicker'
 ]
 
 /**
  * 从XCrud组件中 需要提取的属性
-*/
+ */
 export const formColumnValues = [
   ...componentPropsValues,
-  'prop', 'label', 'componentBind','rules', 'order', 'dicData', 'props', 'formatter', 'tip', 'tipPlacement',
-  'span', 'checkSpan','labelWidth', 'formSlotNodes', 'type', 'labelTip', 'labelTipPlacement', 'style', 'on',
-  'dicAjaxResolve', 'labelStyle'
+  'prop',
+  'label',
+  'componentBind',
+  'rules',
+  'order',
+  'dicData',
+  'props',
+  'formatter',
+  'tip',
+  'tipPlacement',
+  'span',
+  'checkSpan',
+  'labelWidth',
+  'formSlotNodes',
+  'type',
+  'labelTip',
+  'labelTipPlacement',
+  'style',
+  'on',
+  'dicAjaxResolve',
+  'labelStyle'
 ] as const
 
 export type FormStateProps = (typeof formColumnValues)[number]
 
-export type FormColumnProps<F extends object = FormModelValueType> =
-  Omit<Pick<ColumnProps, FormStateProps>, 'type' | 'on' | 'formatter' | 'disabled' | 'display'> & {
+export type FormColumnProps<F extends object = FormModelValueType> = Omit<
+  Pick<ColumnProps, FormStateProps>,
+  'type' | 'on' | 'formatter' | 'disabled' | 'display'
+> & {
   // /** 列标题 */
   // label: string | VNode,
   // /** 列标题的内容属性名称 */
@@ -246,7 +281,7 @@ export type FormColumnProps<F extends object = FormModelValueType> =
    * @type {'input' | 'textarea' | 'inputNumber' | 'select' | 'checkbox' | 'datePicker' | 'radio' | 'radioButton' | 'cascader' | 'switch' | 'treeSelect' | 'colorPicker' | 'upload' | 'sign' | 'editTable' | 'selectPeople' | 'dateTimeRange'}
    * @description 定义了表单组件支持的所有输入类型
    * @default 'input'
-   * 
+   *
    * @description 定义了表单组件支持的所有输入类型：
    * - input: 文本输入框
    * - textarea: 多行文本输入框
@@ -267,7 +302,7 @@ export type FormColumnProps<F extends object = FormModelValueType> =
    * - editTable: 可编辑表格
    * - selectPeople: 人员选择
    * - dateTimeRange: 日期时间范围选择器
-   * 
+   *
    * @example
    * ```typescript
    * const option = ref<FormOption>({
@@ -281,7 +316,7 @@ export type FormColumnProps<F extends object = FormModelValueType> =
    * })
    * ```
    */
-  type?: FormItemType,
+  type?: FormItemType
   // /** 表单项是否插槽 */
   // formSlot?: boolean
   // /** 表单项 插槽的VNode */
@@ -310,7 +345,7 @@ export type FormColumnProps<F extends object = FormModelValueType> =
   /** 此配置仅用于 isView=true(查看模式) 有效 该项的栅列 默认为1 type为textarea/sign/upload的情况默认为2 */
   checkSpan?: number
   /** 此配置仅用于 isView=true(查看模式) 有效 */
-  collapseShow?: boolean | ((props: { form: F, column: FormColumnProps[] }) => boolean)
+  collapseShow?: boolean | ((props: { form: F; column: FormColumnProps[] }) => boolean)
   // /** 内容提示辅助语 */
   // tip?: string | VNode
   // /** 内容提示辅助语位置 */
@@ -326,20 +361,20 @@ export type FormColumnProps<F extends object = FormModelValueType> =
   /** 是否可清除 */
   clearable?: boolean
   /**
-    * 弹出表单当前项是否显示 支持布尔类型和函数表达式 默认true
-    * @param {any} form 表单绑定的form
-    * @param {FormColumnProps[]} column 列数据
-    * @returns {boolean} 是否显示
-  */
-  display?: boolean | ((props: {form: F, column: FormColumnProps[] }) => boolean)
+   * 弹出表单当前项是否显示 支持布尔类型和函数表达式 默认true
+   * @param {any} form 表单绑定的form
+   * @param {FormColumnProps[]} column 列数据
+   * @returns {boolean} 是否显示
+   */
+  display?: boolean | ((props: { form: F; column: FormColumnProps[] }) => boolean)
   /**
-    * 弹出表单当前项是否禁用 支持布尔类型和函数表达式 默认false
-    * @param {any} form 表单绑定的form
-    * @param {FormColumnProps[]} column 列数据
-    * @returns {boolean} 是否可以编辑
-  **/
-  disabled?: boolean | ((props: {form: F, column: FormColumnProps[] }) => boolean),
-   /**
+   * 弹出表单当前项是否禁用 支持布尔类型和函数表达式 默认false
+   * @param {any} form 表单绑定的form
+   * @param {FormColumnProps[]} column 列数据
+   * @returns {boolean} 是否可以编辑
+   **/
+  disabled?: boolean | ((props: { form: F; column: FormColumnProps[] }) => boolean)
+  /**
    * 表单项的事件处理器配置
    * @type {FormOnEventType}
    * @description 根据不同的表单项类型，定义相应的事件处理器
@@ -392,56 +427,55 @@ export type FormColumnProps<F extends object = FormModelValueType> =
 
 export type GroupInterface<F extends object = FormModelValueType> = {
   /** 标题 */
-  label: string | VNode,
+  label: string | VNode
   /** 表单分组的属性名称 */
-  prop?: string,
+  prop?: string
   /**  */
-  labelWidth?: number,
+  labelWidth?: number
   /** icon 图标 */
-  icon?: string,
+  icon?: string
   /** 是否开启折叠功能 */
-  collapse?: boolean,
+  collapse?: boolean
   /** 是否预览模式 默认false */
-  isView?: boolean,
+  isView?: boolean
   /** 表单 */
   // columnSpan?: number,
   /** 表单查看模式的 一行 Descriptions Item 的数量 */
-  checkColumnSpan?: number,
+  checkColumnSpan?: number
   /**
    * 弹出表单当前项是否显示 支持布尔类型和函数表达式 默认`true`
    * @param {any} form 表单绑定的form
    * @param {FormColumnProps[]} column 列数据
    * @returns {boolean} 是否显示
    */
-  display?: ((props: { form: F, column: FormColumnProps<F>[] }) => boolean),
+  display?: (props: { form: F; column: FormColumnProps<F>[] }) => boolean
   /** 表单的各项 */
   column?: FormColumnProps<F>[]
 }
 
-
 export interface FormOption<F extends object = FormModelValueType> {
   /** 标题宽度 */
-  labelWidth?: number,
+  labelWidth?: number
   /** 栅格占据的列数 */
-  formSpan?: number,
+  formSpan?: number
   /** 表单操作栏是否显示 */
-  menuBtn?: boolean,
+  menuBtn?: boolean
   /** 确定按钮是否显示 */
-  submitBtn?: boolean,
+  submitBtn?: boolean
   /** 确定按钮文本 */
   submitBtnText?: string
   /** 取消按钮是否显示 */
-  cancelBtn?: boolean,
+  cancelBtn?: boolean
   /** 取消按钮文本 */
-  cancelBtnText?: string,
+  cancelBtnText?: string
   /** 表单查看模式的 一行 Descriptions Item 的数量  */
-  checkColumnSpan?: number,
+  checkColumnSpan?: number
   /** tab */
-  viewTabs?: ViewTabs[],
+  viewTabs?: ViewTabs[]
   /** 当前tab */
-  viewTabsCurrent?: string | number,
+  viewTabsCurrent?: string | number
   /** 表单的各项 */
-  column?: FormColumnProps<F>[],
+  column?: FormColumnProps<F>[]
   /** 分组 */
   group?: GroupInterface<F>[]
 }
@@ -453,14 +487,13 @@ export const searchFromProps = () => ({
   form: {
     type: Object as PropType<ComputedRef>,
     require: true,
-    default: () => {}
+    default: () => ({})
   },
   /** 是否显示查询按钮 */
-  queryBtn: booleanType(true),
+  queryBtn: booleanType(true)
 })
 
-export type SearchFromProps = Partial<ExtractPropTypes<ReturnType<typeof searchFromProps>>>;
-
+export type SearchFromProps = Partial<ExtractPropTypes<ReturnType<typeof searchFromProps>>>
 
 export const fromProps = () => ({
   /** 配置项 */
@@ -469,7 +502,7 @@ export const fromProps = () => ({
   form: {
     type: Object,
     require: true,
-    default: () => {}
+    default: () => ({})
   },
   /** 增 删 改 */
   xBoxType: objectType<Ref<DialogFormType>>(),
@@ -477,12 +510,12 @@ export const fromProps = () => ({
   isView: booleanType(),
   /** 内容区域样式 */
   contentStyle: objectType<CSSProperties>(),
-  /** 操作区域样式 */ 
+  /** 操作区域样式 */
   menuStyle: objectType<CSSProperties>({}),
   /** 是否开启禁止编辑模式 */
   disabled: booleanType(false),
   /** 插槽后缀仅在配合XCrud组件时使用 单独使用XForm组件时请不要使用 */
-  _slotSuffix: stringType(''),
+  _slotSuffix: stringType('')
 })
 
-export type FromProps = Partial<ExtractPropTypes<ReturnType<typeof fromProps>>>;
+export type FromProps = Partial<ExtractPropTypes<ReturnType<typeof fromProps>>>

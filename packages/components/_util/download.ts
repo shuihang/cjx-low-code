@@ -4,30 +4,27 @@ const message = useMessage()
 
 // 定义一个常量来存储小数据的大小限制
 const SMALL_DATA_SIZE_LIMIT = 150
-const checkResponseValid = (responseBlob: Blob) => {
-  return new Promise<void>(async (resolve) => {
-    // 仅处理小数据，大数据默认为文件数据
-    if (responseBlob.size < SMALL_DATA_SIZE_LIMIT) {
-      try {
-        const resp = JSON.parse(await responseBlob.text())
-        if (resp?.code !== 200 && resp?.msg) {
-          message.error(resp.msg)
-        }
-      } catch (err: any) {
-        // 处理 JSON 解析失败的情况
-        if (err instanceof SyntaxError) {
-          // 说明返回的是数据流
-          resolve()
-        } else {
-          // 其他类型的错误
-          console.error('An unexpected error occurred:', err)
-          message.error(err.message)
-        }
+const checkResponseValid = async (responseBlob: Blob): Promise<void> => {
+  // 仅处理小数据，大数据默认为文件数据
+  if (responseBlob.size < SMALL_DATA_SIZE_LIMIT) {
+    try {
+      const resp = JSON.parse(await responseBlob.text())
+      if (resp?.code !== 200 && resp?.msg) {
+        message.error(resp.msg)
       }
-    } else {
-      resolve()
+    } catch (err: any) {
+      // 处理 JSON 解析失败的情况
+      if (err instanceof SyntaxError) {
+        // 说明返回的是数据流，正常情况
+        return
+      } else {
+        // 其他类型的错误
+        console.error('An unexpected error occurred:', err)
+        message.error(err.message)
+        throw err // 或者根据业务需求处理
+      }
     }
-  })
+  }
 }
 
 const download1 = (data: Blob, fileName: string, mineType: string) => {
@@ -73,7 +70,7 @@ const download = {
   },
   pdf: (data: Blob, fileName: string) => {
     download0(data, fileName, 'application/pdf')
-  },
+  }
 }
 
 export default download

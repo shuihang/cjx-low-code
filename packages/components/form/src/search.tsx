@@ -1,39 +1,43 @@
 import { defineComponent, onMounted, ref, watchEffect } from 'vue'
 import { ElButton, ElCol, ElForm, ElIcon, ElRow } from 'element-plus'
-import type { CSSProperties } from 'vue'
-import type { FormInstance } from 'element-plus'
+import { Refresh, Search } from '@element-plus/icons-vue'
 import { useLocale } from '@cjx-low-code/hooks'
 import { useCompRef } from '@cjx-low-code/hooks/useCompRef'
 // import debounce from 'lodash-es/debounce';
 import { toReactive } from '../../_util/toReactive'
 import { ExpandOutlined } from '../../crud/src/icon'
-import { Refresh, Search } from '@element-plus/icons-vue'
 // import type { ElementPlusSize } from '@/types/elementPlus'
 import { useCrudInjectKey } from '../../crud/src/context'
 import { getValueByPath } from './utils'
 import { InitSearchFormVNode } from './init'
 import { searchFromProps } from './interface'
+import searchConfig from './searchConfig'
 import type { CustomSlotsType } from '../../_util/type'
 import type { FormColumnProps, FormOption, FromProps } from './interface'
-import search_config from './searchConfig'
+import type { FormInstance } from 'element-plus'
+import type { CSSProperties } from 'vue'
 
 export type ElementPlusSize = 'default' | 'small' | 'large'
 
 const {
-  search_span, label_width, menu_btn, search_expand_style, slotSuffix, getColSpan
-} = search_config
+  searchSpan: defaultSearchSpan,
+  labelWidth: defaultLabelWidth,
+  menuBtn: defaultMenuBtn,
+  searchExpandStyle,
+  slotSuffix,
+  getColSpan
+} = searchConfig
 
 const itemHeight: { [key in ElementPlusSize]: number } = {
   default: 55,
   large: 67,
-  small: 42,
+  small: 42
 }
 const lineHeight: { [key in ElementPlusSize]: string } = {
   default: '32px',
   large: '40px',
-  small: '24px',
+  small: '24px'
 }
-
 
 const XFormSearch = defineComponent({
   name: 'XFormSearch',
@@ -52,13 +56,11 @@ const XFormSearch = defineComponent({
     const formRef = ref<FormInstance>()
 
     const {
-      formSpan = search_span,
-      labelWidth = label_width,
-      menuBtn = menu_btn,
+      formSpan = defaultSearchSpan,
+      labelWidth = defaultLabelWidth,
+      menuBtn = defaultMenuBtn
     } = option as FormOption
-    let column: FormColumnProps[] = toReactive(
-      option?.column as FormColumnProps[]
-    )
+    let column: FormColumnProps[] = toReactive(option?.column as FormColumnProps[])
     // 双向绑定数据 回调函数
     const newForm = ref<object>(props.form.value || {})
     const loading = ref<boolean>(false)
@@ -73,7 +75,7 @@ const XFormSearch = defineComponent({
 
     const boxRef = ref()
     const formRowRef = useCompRef(ElRow)
-    const expandStyle = ref<CSSProperties>(search_expand_style)
+    const expandStyle = ref<CSSProperties>(searchExpandStyle)
 
     // 是否显示 展开状态
     const isExpand = ref<boolean>(true)
@@ -82,42 +84,31 @@ const XFormSearch = defineComponent({
     const initExpand = () => {
       if (formRowRef.value?.$el) {
         searchSpan.value = getColSpan({
-          width: isExpand.value
-            ? boxRef.value?.offsetWidth - 180
-            : boxRef?.value.offsetWidth,
+          width: isExpand.value ? boxRef.value?.offsetWidth - 180 : boxRef?.value.offsetWidth,
           searchSpan: formSpan,
-          cloumnLength: column.length,
+          cloumnLength: column.length
         })
 
-        const showExpand =
-          (isExpand.value ? rowLength : rowLength + 1) / (24 / searchSpan.value)
-        isShowExpand.value =
-          (!isExpand.value && showExpand === 1) || showExpand > 1
+        const showExpand = (isExpand.value ? rowLength : rowLength + 1) / (24 / searchSpan.value)
+        isShowExpand.value = (!isExpand.value && showExpand === 1) || showExpand > 1
 
-        const storeyNumber =
-          (isExpand.value ? rowLength : rowLength + 1) / (24 / searchSpan.value)
+        const storeyNumber = (isExpand.value ? rowLength : rowLength + 1) / (24 / searchSpan.value)
         const handleStoreyNumber =
-          storeyNumber !== 1 && searchSpan.value !== 4
-            ? Math.ceil(storeyNumber)
-            : storeyNumber + 1
+          storeyNumber !== 1 && searchSpan.value !== 4 ? Math.ceil(storeyNumber) : storeyNumber + 1
 
         searchHeight.value = `${handleStoreyNumber * searchItemHeight.value}px`
         // expandStyle.value.height = searchItemHeight.value + 'px';
 
         expandStyle.value = {
-          height: !isExpand.value
-            ? searchHeight.value
-            : `${searchItemHeight.value}px`,
+          height: !isExpand.value ? searchHeight.value : `${searchItemHeight.value}px`,
           overflow: 'hidden',
-          transition: 'height 0.2s',
+          transition: 'height 0.2s'
           // transitionTimingFunction: 'linear'
         }
 
         // expandStyle.value.height = !isExpand.value ? searchHeight.value : searchItemHeight.value + 'px'
         onExpandChange(
-          !isExpand.value
-            ? Number(searchHeight.value?.replace('px', ''))
-            : searchItemHeight.value
+          !isExpand.value ? Number(searchHeight.value?.replace('px', '')) : searchItemHeight.value
         )
 
         // console.log(isExpand.value ? rowLength : rowLength + 1, searchSpan.value, storeyNumber, handleStoreyNumber)
@@ -212,10 +203,7 @@ const XFormSearch = defineComponent({
     return () => (
       <div class={'flex'} ref={boxRef}>
         <ElRow
-          class={[
-            '!position-relative ',
-            isExpand.value ? 'w-[calc(100%-180px)]' : 'w-100%',
-          ]}
+          class={['!position-relative ', isExpand.value ? 'w-[calc(100%-180px)]' : 'w-100%']}
           {...attrs}
           style={expandStyle.value}
         >
@@ -244,7 +232,7 @@ const XFormSearch = defineComponent({
                     slotSuffix,
                     slots,
                     onUpdateModelValue,
-                    onSubmit,
+                    onSubmit
                   })}
 
                   {menuBtn && isShowExpand.value && (
@@ -255,16 +243,10 @@ const XFormSearch = defineComponent({
                           style={{ lineHeight: lineHeight.default } as any}
                           onClick={onExpand}
                         >
-                          {isExpand.value ? (
-                            <>{t('common.expand')}</>
-                          ) : (
-                            <>{t('common.shrink')}</>
-                          )}
+                          {isExpand.value ? <>{t('common.expand')}</> : <>{t('common.shrink')}</>}
                           <ElIcon
                             style={{
-                              transform: `rotateZ(${
-                                isExpand.value ? 0 : 180
-                              }deg)`,
+                              transform: `rotateZ(${isExpand.value ? 0 : 180}deg)`
                             }}
                           >
                             <ExpandOutlined />
@@ -314,14 +296,10 @@ const XFormSearch = defineComponent({
                   style={{ lineHeight: lineHeight.default } as any}
                   onClick={onExpand}
                 >
-                  {isExpand.value ? (
-                    <>{t('common.expand')}</>
-                  ) : (
-                    <>{t('common.shrink')}</>
-                  )}
+                  {isExpand.value ? <>{t('common.expand')}</> : <>{t('common.shrink')}</>}
                   <ElIcon
                     style={{
-                      transform: `rotateZ(${isExpand.value ? 0 : 180}deg)`,
+                      transform: `rotateZ(${isExpand.value ? 0 : 180}deg)`
                     }}
                   >
                     <ExpandOutlined />
@@ -360,7 +338,7 @@ const XFormSearch = defineComponent({
         )}
       </div>
     )
-  },
+  }
 })
 
 export default XFormSearch

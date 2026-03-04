@@ -1,11 +1,11 @@
-import { clone } from 'lodash-es'
+import { clone } from 'lodash-unified'
 import type { FormColumnProps, FormModelValueType } from './interface'
 import type { TemplateCommonProps } from './init/initFormTamplate'
 
 type IgnoreKeys = 'on' | 'prop'
 
 const IGNORE_KEYS: IgnoreKeys[] = ['on', 'prop']
- 
+
 /**
  * 表单辅助函数
  * @description 用于更新表单列配置和表单数据
@@ -13,7 +13,7 @@ const IGNORE_KEYS: IgnoreKeys[] = ['on', 'prop']
  * @param form 表单数据
  */
 export default function helpers<F extends object = FormModelValueType>(data: {
-  columns: FormColumnProps<F>[],
+  columns: FormColumnProps<F>[]
   currentColumn: FormColumnProps<F>
   onUpdateModelValue: TemplateCommonProps['onUpdateModelValue']
 }) {
@@ -22,7 +22,7 @@ export default function helpers<F extends object = FormModelValueType>(data: {
     /**
      * 更新表单列配置
      * @param fields 需要更新的表单列 column.prop updateColumns(['name', 'age'], { label: '姓名' })
-     * @param column 更新的表单列配置 
+     * @param column 更新的表单列配置
      */
     updateColumns: (fields: string[], column: Partial<Omit<FormColumnProps<F>, IgnoreKeys>>) => {
       columns.forEach((item, index) => {
@@ -35,7 +35,7 @@ export default function helpers<F extends object = FormModelValueType>(data: {
             }
             return acc
           }, {} as Pick<FormColumnProps<F>, IgnoreKeys>)
-          
+
           columns[index] = {
             ...item,
             ...column,

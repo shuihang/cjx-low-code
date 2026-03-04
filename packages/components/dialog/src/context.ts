@@ -16,7 +16,7 @@ export const useDialogInjectKey = (): DialogProvide => {
     dialogProviderKey,
     computed(() => ({
       isFullscreen: ref<boolean>(false),
-      slotSuffix: '',
+      slotSuffix: ''
     }))
   ) as DialogProvide
 }

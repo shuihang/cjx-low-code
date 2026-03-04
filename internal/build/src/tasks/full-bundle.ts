@@ -12,17 +12,12 @@ import { camelCase, upperFirst } from 'lodash-unified'
 import {
   PKG_BRAND_NAME,
   PKG_CAMELCASE_LOCAL_NAME,
-  PKG_CAMELCASE_NAME,
+  PKG_CAMELCASE_NAME
 } from '@cjx-low-code/build-constants'
 import { epOutput, epRoot, localeRoot } from '@cjx-low-code/build-utils'
 import { version } from '../../../../packages/cjx-low-code/version'
 import { CjxLowCodeAlias } from '../plugins/cjx-low-code-alias'
-import {
-  formatBundleFilename,
-  generateExternal,
-  withTaskName,
-  writeBundles,
-} from '../utils'
+import { formatBundleFilename, generateExternal, withTaskName, writeBundles } from '../utils'
 import { target } from '../build-info'
 import type { TaskFunction } from 'gulp'
 import type { Plugin } from 'rollup'
@@ -37,18 +32,18 @@ async function buildFullEntry(minify: boolean) {
       setupSFC: false,
       plugins: {
         vue: vue({
-          isProduction: true,
+          isProduction: true
         }),
         vueJsx: vueJsx({
           babelPlugins: [
-            ["@babel/plugin-proposal-decorators", { legacy: true }],
-            ["@babel/plugin-proposal-class-properties", { loose: true }]
+            ['@babel/plugin-proposal-decorators', { legacy: true }],
+            ['@babel/plugin-proposal-class-properties', { loose: true }]
           ]
-        }),
-      },
+        })
+      }
     }),
     nodeResolve({
-      extensions: ['.mjs', '.js', '.json', '.ts'],
+      extensions: ['.mjs', '.js', '.json', '.ts']
     }),
     commonjs(),
     esbuild({
@@ -56,20 +51,20 @@ async function buildFullEntry(minify: boolean) {
       sourceMap: minify,
       target,
       loaders: {
-        '.vue': 'ts',
+        '.vue': 'ts'
       },
       define: {
-        'process.env.NODE_ENV': JSON.stringify('production'),
+        'process.env.NODE_ENV': JSON.stringify('production')
       },
       treeShaking: true,
-      legalComments: 'eof',
-    }),
+      legalComments: 'eof'
+    })
   ]
   if (minify) {
     plugins.push(
       minifyPlugin({
         target,
-        sourceMap: true,
+        sourceMap: true
       })
     )
   }
@@ -78,41 +73,33 @@ async function buildFullEntry(minify: boolean) {
     input: path.resolve(epRoot, 'index.ts'),
     plugins,
     external: await generateExternal({ full: true }),
-    treeshake: true,
+    treeshake: true
   })
   await writeBundles(bundle, [
     {
       format: 'umd',
-      file: path.resolve(
-        epOutput,
-        'dist',
-        formatBundleFilename('index.full', minify, 'js')
-      ),
+      file: path.resolve(epOutput, 'dist', formatBundleFilename('index.full', minify, 'js')),
       exports: 'named',
       name: PKG_CAMELCASE_NAME,
       globals: {
-        vue: 'Vue',
+        vue: 'Vue'
       },
       sourcemap: minify,
-      banner,
+      banner
     },
     {
       format: 'esm',
-      file: path.resolve(
-        epOutput,
-        'dist',
-        formatBundleFilename('index.full', minify, 'mjs')
-      ),
+      file: path.resolve(epOutput, 'dist', formatBundleFilename('index.full', minify, 'mjs')),
       sourcemap: minify,
-      banner,
-    },
+      banner
+    }
   ])
 }
 
 async function buildFullLocale(minify: boolean) {
   const files = await glob(`**/*.ts`, {
     cwd: path.resolve(localeRoot, 'lang'),
-    absolute: true,
+    absolute: true
   })
   return Promise.all(
     files.map(async (file) => {
@@ -125,22 +112,18 @@ async function buildFullLocale(minify: boolean) {
           esbuild({
             minify,
             sourceMap: minify,
-            target,
-          }),
-        ],
+            target
+          })
+        ]
       })
       await writeBundles(bundle, [
         {
           format: 'umd',
-          file: path.resolve(
-            epOutput,
-            'dist/locale',
-            formatBundleFilename(filename, minify, 'js')
-          ),
+          file: path.resolve(epOutput, 'dist/locale', formatBundleFilename(filename, minify, 'js')),
           exports: 'default',
           name: `${PKG_CAMELCASE_LOCAL_NAME}${name}`,
           sourcemap: minify,
-          banner,
+          banner
         },
         {
           format: 'esm',
@@ -150,8 +133,8 @@ async function buildFullLocale(minify: boolean) {
             formatBundleFilename(filename, minify, 'mjs')
           ),
           sourcemap: minify,
-          banner,
-        },
+          banner
+        }
       ])
     })
   )

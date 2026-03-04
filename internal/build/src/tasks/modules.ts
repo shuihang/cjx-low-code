@@ -6,7 +6,7 @@ import { nodeResolve } from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import esbuild from 'rollup-plugin-esbuild'
 import glob from 'fast-glob'
-import { epRoot, excludeFiles, pkgRoot } from '@cjx-low-code/build-utils'
+import { excludeFiles, pkgRoot } from '@cjx-low-code/build-utils'
 import { generateExternal, writeBundles } from '../utils'
 import { CjxLowCodeAlias } from '../plugins/cjx-low-code-alias'
 import { buildConfigEntries, target } from '../build-info'
@@ -18,10 +18,9 @@ export const buildModules = async () => {
     await glob('**/*.{js,ts,vue,tsx}', {
       cwd: pkgRoot,
       absolute: true,
-      onlyFiles: true,
+      onlyFiles: true
     })
   )
-  console.log(`Building modules...`, input)
   const bundle = await rollup({
     input,
     plugins: [
@@ -31,31 +30,31 @@ export const buildModules = async () => {
         setupSFC: false,
         plugins: {
           vue: vue({
-            isProduction: true,
+            isProduction: true
           }),
           vueJsx: vueJsx({
             babelPlugins: [
-              ["@babel/plugin-proposal-decorators", { legacy: true }],
-              ["@babel/plugin-proposal-class-properties", { loose: true }]
+              ['@babel/plugin-proposal-decorators', { legacy: true }],
+              ['@babel/plugin-proposal-class-properties', { loose: true }]
             ]
-          }),
-        },
+          })
+        }
       }),
       nodeResolve({
-        extensions: ['.mjs', '.js', '.json', '.ts'],
+        extensions: ['.mjs', '.js', '.json', '.ts']
       }),
       commonjs(),
       esbuild({
         sourceMap: true,
         target,
         loaders: {
-          '.vue': 'ts',
-        },
-      }),
+          '.vue': 'ts'
+        }
+      })
       // ImportPathRewriter(),
     ],
     external: await generateExternal({ full: false }),
-    treeshake: false,
+    treeshake: false
   })
   await writeBundles(
     bundle,
@@ -67,7 +66,7 @@ export const buildModules = async () => {
         preserveModules: true,
         preserveModulesRoot: pkgRoot, // 使用 pkgRoot 作为根目录，这样所有包都会保持相对路径
         sourcemap: true,
-        entryFileNames: `[name].${config.ext}`,
+        entryFileNames: `[name].${config.ext}`
       }
     })
   )

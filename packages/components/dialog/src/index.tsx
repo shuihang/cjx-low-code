@@ -37,11 +37,6 @@ export interface DialogProps {
   onFullscreen?: (v: boolean) => void
 }
 
-const contentDefaultStyle: CSSProperties = {
-  maxHeight: 'calc(-150px + 90vh)',
-  overflowY: 'auto',
-}
-
 export default defineComponent({
   name: 'XDialog',
   props: {
@@ -51,8 +46,8 @@ export default defineComponent({
         title: '',
         visible: false,
         width: '80%',
-        menu: true,
-      }),
+        menu: true
+      })
     },
     contentStyle: {
       type: Object as PropType<CSSProperties>,
@@ -64,9 +59,9 @@ export default defineComponent({
         // overflowX: 'hidden',
         overflow: 'hidden',
         boxSizing: 'border-box',
-        padding: '0px 20px',
-      }),
-    },
+        padding: '0px 20px'
+      })
+    }
   },
   slots: Object as CustomSlotsType<{
     /* 操作区域插槽 */
@@ -80,7 +75,7 @@ export default defineComponent({
     const isFullscreen = ref<boolean>(false)
     useDialogProviderKey(
       computed(() => ({
-        isFullscreen,
+        isFullscreen
       }))
     )
 
@@ -92,11 +87,11 @@ export default defineComponent({
       showCloseBtn = true,
       closeBtnText,
       saveBtnText,
-      loading = true,
+      loading = true
     } = props.option
 
     const isDrawer = computed(() => props.option.type === 'Drawer')
-    const Component = computed(() => isDrawer.value ? ElDrawer : ElDialog)
+    const Component = computed(() => (isDrawer.value ? ElDrawer : ElDialog))
 
     const data = ref<any>()
 
@@ -104,7 +99,7 @@ export default defineComponent({
       emit('close')
       emit('update:option', {
         ...props.option,
-        visible: false,
+        visible: false
       })
       //props.option.visible
       props.option?.onClose && props.option.onClose()
@@ -120,7 +115,11 @@ export default defineComponent({
 
     return () => (
       <Component.value
-       class={['cjx-dialog', isDrawer.value && 'cjx-dialog-drawer', isDrawer.value || isFullscreen.value ? 'max-h-100vh' : 'max-h-90vh', ]}
+        class={[
+          'cjx-dialog',
+          isDrawer.value && 'cjx-dialog-drawer',
+          isDrawer.value || isFullscreen.value ? 'max-h-100vh' : 'max-h-90vh'
+        ]}
         {...attrs}
         show-close={false}
         modelValue={visible.value}
@@ -129,9 +128,11 @@ export default defineComponent({
         size={isFullscreen.value ? '100%' : width || '80%'}
         align-center
         onClose={close}
-        style={{
-          overflow: 'hidden',
-        } as CSSProperties}
+        style={
+          {
+            overflow: 'hidden'
+          } as CSSProperties
+        }
         draggable
         append-to-body
         close-on-click-modal={false}
@@ -142,9 +143,7 @@ export default defineComponent({
             <ElRow>
               <ElCol
                 span={16}
-                class={
-                  'font-500 color-[var(--cjx-dialog-title-color)] font-size-16px'
-                }
+                class={'font-500 color-[var(--cjx-dialog-title-color)] font-size-16px'}
               >
                 {props.option.title}
               </ElCol>
@@ -156,15 +155,10 @@ export default defineComponent({
                   onClick={() => {
                     isFullscreen.value = !isFullscreen.value
                     emit('fullscreenChange', isFullscreen.value)
-                    props.option?.onFullscreen &&
-                      props.option.onFullscreen(isFullscreen.value)
+                    props.option?.onFullscreen && props.option.onFullscreen(isFullscreen.value)
                   }}
                 >
-                  {isFullscreen.value ? (
-                    <ExitRetractOutlined />
-                  ) : (
-                    <RetractOutlined />
-                  )}
+                  {isFullscreen.value ? <ExitRetractOutlined /> : <RetractOutlined />}
                 </ElIcon>
 
                 <ElIcon
@@ -174,7 +168,7 @@ export default defineComponent({
                   onClick={() => {
                     emit('update:option', {
                       ...props.option,
-                      visible: false,
+                      visible: false
                     })
                     btnLoading.value = false
                     visible.value = false
@@ -185,15 +179,24 @@ export default defineComponent({
                 </ElIcon>
               </ElCol>
             </ElRow>
-          ),
+          )
         }}
       >
         <div
           style={{
             ...props.contentStyle,
-            maxHeight: (menu || menu == undefined) && !isDrawer.value ? isFullscreen.value ? 'calc(100vh - 150px)' : 'calc(90vh - 150px)' : ''
-        }}
-          class={['cjx-dialog-content flex flex-col', isFullscreen.value && !isDrawer.value && '!h-100%', isDrawer.value && menu ? 'h-[calc(100%-50px)]' : 'h-100%']}
+            maxHeight:
+              (menu || menu == undefined) && !isDrawer.value
+                ? isFullscreen.value
+                  ? 'calc(100vh - 150px)'
+                  : 'calc(90vh - 150px)'
+                : ''
+          }}
+          class={[
+            'cjx-dialog-content flex flex-col',
+            isFullscreen.value && !isDrawer.value && '!h-100%',
+            isDrawer.value && menu ? 'h-[calc(100%-50px)]' : 'h-100%'
+          ]}
         >
           {slots.default?.()}
         </div>
@@ -209,7 +212,7 @@ export default defineComponent({
                 onClick={() => {
                   emit('update:option', {
                     ...props.option,
-                    visible: false,
+                    visible: false
                   })
                   btnLoading.value = false
                   visible.value = false
@@ -237,7 +240,7 @@ export default defineComponent({
                         visible.value = false
                         emit('update:option', {
                           ...props.option,
-                          visible: false,
+                          visible: false
                         })
                       }
                     }, data.value)
@@ -250,5 +253,5 @@ export default defineComponent({
         )}
       </Component.value>
     )
-  },
+  }
 })

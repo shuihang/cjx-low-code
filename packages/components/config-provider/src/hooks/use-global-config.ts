@@ -1,9 +1,8 @@
-import { getCurrentInstance, provide, computed, unref, ref } from 'vue'
+import { computed, getCurrentInstance, provide, ref, unref } from 'vue'
+import { localeContextKey } from '@cjx-low-code/hooks'
 import type { MaybeRef } from '@vueuse/core'
 import type { App, Ref } from 'vue'
-import { localeContextKey } from '@cjx-low-code/hooks'
 import type { ConfigProviderContext } from '../interface'
-
 
 export const provideGlobalConfig = (
   config: MaybeRef<ConfigProviderContext>,
@@ -33,13 +32,9 @@ export const provideGlobalConfig = (
     // if (!oldConfig?.value) return cfg
     // return mergeConfig(oldConfig.value, cfg)
   })
-  
+
   // console.log('provideGlobalConfig', context.value.locale)
-  provideFn(
-    localeContextKey,
-    ref(context.value.locale)
-  )
- 
+  provideFn(localeContextKey, ref(context.value.locale))
 
   // if (global || !globalConfig.value) {
   //   globalConfig.value = context.value

@@ -1,25 +1,19 @@
 import { ref } from 'vue'
 import { ElButton, ElIcon, ElUpload } from 'element-plus'
-import type { UploadFile, UploadFiles } from 'element-plus'
 import { UploadFilled } from '@element-plus/icons-vue'
+import { useLocale } from '@cjx-low-code/hooks'
+import { useMessage } from '@cjx-low-code/hooks/useMessage'
 import XDialog from '../../../dialog/src/index'
 import download from '../../../_util/download'
 import { DownloadOutlined } from '../../../crud/src/icon'
-import { useLocale } from '@cjx-low-code/hooks'
-import { useMessage } from '@cjx-low-code/hooks/useMessage'
+import type { UploadFile, UploadFiles } from 'element-plus'
 import type { ImportProps } from '../interface'
 import type { DialogProps } from '../../../dialog/src/index'
 
 const XDialogImport = (props: ImportProps, slots?: () => Promise<any>) => {
   const { t } = useLocale() // 国际化
 
-  const {
-    importApi,
-    downloadApi,
-    importParams = {},
-    onSuccess,
-    ...othersProps
-  } = props
+  const { importApi, downloadApi, importParams = {}, onSuccess, ...othersProps } = props
   const message = useMessage() // 消息弹窗
 
   const downTemplate = async () => {
@@ -70,7 +64,7 @@ const XDialogImport = (props: ImportProps, slots?: () => Promise<any>) => {
     onClose: () => {
       fileList.value = []
     },
-    onSave,
+    onSave
   })
 
   const fileList = ref<UploadFiles>([])
@@ -106,12 +100,7 @@ const XDialogImport = (props: ImportProps, slots?: () => Promise<any>) => {
           <ElIcon size={14} color={'#666666'} class={'m-b-2px'}>
             <DownloadOutlined />
           </ElIcon>
-          <ElButton
-            type="primary"
-            style={{ color: '#666666' }}
-            link
-            onClick={downTemplate}
-          >
+          <ElButton type="primary" style={{ color: '#666666' }} link onClick={downTemplate}>
             {t('table.downloadTemplate')}
           </ElButton>
         </div>

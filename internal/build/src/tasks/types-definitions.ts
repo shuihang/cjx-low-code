@@ -6,13 +6,7 @@ import * as vueCompiler from 'vue/compiler-sfc'
 import glob from 'fast-glob'
 import chalk from 'chalk'
 import { Project } from 'ts-morph'
-import {
-  buildOutput,
-  epRoot,
-  excludeFiles,
-  pkgRoot,
-  projRoot,
-} from '@cjx-low-code/build-utils'
+import { buildOutput, epRoot, excludeFiles, pkgRoot, projRoot } from '@cjx-low-code/build-utils'
 import { pathRewriter } from '../utils'
 import type { CompilerOptions, SourceFile } from 'ts-morph'
 
@@ -29,12 +23,12 @@ export const generateTypesDefinitions = async () => {
     baseUrl: projRoot,
     preserveSymlinks: true,
     skipLibCheck: true,
-    noImplicitAny: false,
+    noImplicitAny: false
   }
   const project = new Project({
     compilerOptions,
     tsConfigFilePath: TSCONFIG_PATH,
-    skipAddingFilesFromTsConfig: true,
+    skipAddingFilesFromTsConfig: true
   })
 
   const sourceFiles = await addSourceFiles(project)
@@ -44,17 +38,13 @@ export const generateTypesDefinitions = async () => {
   // consola.success('Type check passed!')
 
   await project.emit({
-    emitOnlyDtsFiles: true,
+    emitOnlyDtsFiles: true
   })
 
   const tasks = sourceFiles.map(async (sourceFile) => {
     const relativePath = path.relative(pkgRoot, sourceFile.getFilePath())
 
-    consola.trace(
-      chalk.yellow(
-        `Generating definition for file: ${chalk.bold(relativePath)}`
-      )
-    )
+    consola.trace(chalk.yellow(`Generating definition for file: ${chalk.bold(relativePath)}`))
 
     const emitOutput = sourceFile.getEmitOutput()
     const emitFiles = emitOutput.getOutputFiles()
@@ -67,20 +57,12 @@ export const generateTypesDefinitions = async () => {
     const subTasks = emitFiles.map(async (outputFile) => {
       const filepath = outputFile.getFilePath()
       await mkdir(path.dirname(filepath), {
-        recursive: true,
+        recursive: true
       })
 
-      await writeFile(
-        filepath,
-        pathRewriter('esm')(outputFile.getText()),
-        'utf8'
-      )
+      await writeFile(filepath, pathRewriter('esm')(outputFile.getText()), 'utf8')
 
-      consola.success(
-        chalk.green(
-          `Definition for file: ${chalk.bold(relativePath)} generated`
-        )
-      )
+      consola.success(chalk.green(`Definition for file: ${chalk.bold(relativePath)} generated`))
     })
 
     await Promise.all(subTasks)
@@ -97,13 +79,13 @@ async function addSourceFiles(project: Project) {
     await glob([globSourceFile, '!cjx-low-code/**/*'], {
       cwd: pkgRoot,
       absolute: true,
-      onlyFiles: true,
+      onlyFiles: true
     })
   )
   const epPaths = excludeFiles(
     await glob(globSourceFile, {
       cwd: epRoot,
-      onlyFiles: true,
+      onlyFiles: true
     })
   )
 
@@ -117,12 +99,11 @@ async function addSourceFiles(project: Project) {
         const sfc = vueCompiler.parse(content)
         const { script, scriptSetup } = sfc.descriptor
         if (script || scriptSetup) {
-          let content =
-            (hasTsNoCheck ? '// @ts-nocheck\n' : '') + (script?.content ?? '')
+          let content = (hasTsNoCheck ? '// @ts-nocheck\n' : '') + (script?.content ?? '')
 
           if (scriptSetup) {
             const compiled = vueCompiler.compileScript(sfc.descriptor, {
-              id: 'xxx',
+              id: 'xxx'
             })
             content += compiled.content
           }
@@ -141,10 +122,8 @@ async function addSourceFiles(project: Project) {
     }),
     ...epPaths.map(async (file) => {
       const content = await readFile(path.resolve(epRoot, file), 'utf-8')
-      sourceFiles.push(
-        project.createSourceFile(path.resolve(pkgRoot, file), content)
-      )
-    }),
+      sourceFiles.push(project.createSourceFile(path.resolve(pkgRoot, file), content))
+    })
   ])
 
   return sourceFiles

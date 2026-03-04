@@ -11,43 +11,43 @@ const XFromMenu = defineComponent({
   props: {
     disabled: {
       type: Boolean,
-      default: false,
+      default: false
     },
     loading: {
       type: Boolean,
-      default: false,
+      default: false
     },
     menuStyle: {
       type: Object as PropType<CSSProperties>,
-      default: () => {},
+      default: () => ({})
     },
     submitBtn: {
       type: Boolean,
-      default: true,
+      default: true
     },
     cancelBtn: {
       type: Boolean,
-      default: true,
+      default: true
     },
     resetBtn: {
       type: Boolean,
-      default: true,
+      default: true
     },
     submitBtnText: {
       type: String,
-      default: '',
+      default: ''
     },
     cancelBtnText: {
       type: String,
-      default: '',
+      default: ''
     },
     cancelText: {
       type: String,
-      default: '',
+      default: ''
     },
     resetText: {
-      type: String,
-    },
+      type: String
+    }
   },
   slots: Object as CustomSlotsType<{
     /* 表单操作区域插槽 */
@@ -66,10 +66,7 @@ const XFromMenu = defineComponent({
             style={props.menuStyle}
           >
             {props.cancelBtn && (
-              <ElButton
-                onClick={() => emit('reset')}
-                v-slots={{ icon: () => <CircleClose /> }}
-              >
+              <ElButton onClick={() => emit('reset')} v-slots={{ icon: () => <CircleClose /> }}>
                 {props.cancelBtnText || t('common.cancel')}
               </ElButton>
             )}
@@ -90,7 +87,7 @@ const XFromMenu = defineComponent({
         </>
       )
     }
-  },
+  }
 })
 
 export default XFromMenu

@@ -1,12 +1,9 @@
 import { computed } from 'vue'
+import { isArray, isObject } from '../../_util/shared'
 import type { Ref } from 'vue'
-import { isObject, isArray } from '../../_util/shared'
 import type { DeepPartial } from '../../_util/type'
 
-export const getValueByPath = (
-  form: Ref<Record<string, any>>,
-  path: string
-) => {
+export const getValueByPath = (form: Ref<Record<string, any>>, path: string) => {
   return computed({
     get() {
       let value = form.value
@@ -34,28 +31,25 @@ export const getValueByPath = (
 
       const pathArray = path.split('.')
       const lastProp = pathArray.pop()
-      const obj = pathArray.reduce(
-        (accumulator: Record<string, any>, currentValue) => {
-          return accumulator[currentValue] || { [currentValue]: '' }
-        },
-        form.value
-      )
+      const obj = pathArray.reduce((accumulator: Record<string, any>, currentValue) => {
+        return accumulator[currentValue] || { [currentValue]: '' }
+      }, form.value)
       lastProp && (obj[lastProp] = newValue)
-    },
+    }
   })
 }
 
 export function deepMerge<T extends object, K extends DeepPartial<T>>(target: T, source: K): T {
   const result = { ...target }
-  
-  Object.keys(source).forEach(key => {
+
+  Object.keys(source).forEach((key) => {
     const sourceValue = source[key]
     if (sourceValue && isObject(sourceValue) && !isArray(sourceValue)) {
-      result[key] = deepMerge((result[key] || {}), sourceValue)
+      result[key] = deepMerge(result[key] || {}, sourceValue)
     } else {
       result[key] = sourceValue
     }
   })
-  
+
   return result
 }

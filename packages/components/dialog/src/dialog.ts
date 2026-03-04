@@ -1,17 +1,16 @@
 import { createVNode, render } from 'vue'
+import { ErrorCodes, createError, defaultOnError as onError } from '../../_util/errors'
 import XDialogDirective, { type DialogDirectiveOption } from './dialogDirective'
 import type {
   AllowedComponentProps,
   AppContext,
   CSSProperties,
+  Component,
   ComponentCustomProps,
   VNode,
-  VNodeProps,
-  Component,
-  ExtractPropTypes
+  VNodeProps
 } from 'vue'
 import type { DialogPropsVc } from './vc-dialog'
-import { defaultOnError as onError, createError, ErrorCodes } from '../../_util/errors'
 
 export type EmitsAddArgs<
   T extends object,
@@ -20,11 +19,11 @@ export type EmitsAddArgs<
 > = {
   [K in keyof T]-?: T[K] extends ((...args: infer Args) => infer Return) | undefined
     ? Args extends []
-      ? ((...args: [...ArgsGroups[number]]) => Return)
+      ? (...args: [...ArgsGroups[number]]) => Return
       : Position extends 'start'
-        ? ((...args: [...ArgsGroups[number], ...Args]) => Return)
-        : ((...args: [...Args, ...ArgsGroups[number]]) => Return)
-    : T[K];
+      ? (...args: [...ArgsGroups[number], ...Args]) => Return
+      : (...args: [...Args, ...ArgsGroups[number]]) => Return
+    : T[K]
 }
 
 export type IsEmptyToNeverObj<T> = T extends object
@@ -33,18 +32,21 @@ export type IsEmptyToNeverObj<T> = T extends object
     : T
   : never
 
+type RemoveFunctions<T> = {
+  [K in keyof T as T[K] extends (...args: any[]) => any | undefined ? never : K]-?: T[K]
+}
 
-
-type RemoveFunctions<T> = { [K in keyof T as T[K] extends Function | undefined ? never : K]-?: T[K] };
-
-type PropsAndEmits<T> = Omit<T, keyof(VNodeProps & AllowedComponentProps & ComponentCustomProps)>
+type PropsAndEmits<T> = Omit<T, keyof (VNodeProps & AllowedComponentProps & ComponentCustomProps)>
 
 type ExtractComponentProps<T> = RemoveFunctions<PropsAndEmits<T>>
 
 export type ExtractComponentsEmits<
-    T, ArgsGroups extends readonly unknown[][] = [], Position extends 'start' | 'end' = 'start'> =
-    IsEmptyToNeverObj<EmitsAddArgs<Omit<PropsAndEmits<T>, keyof ExtractComponentProps<T>>, ArgsGroups, Position>
-  >
+  T,
+  ArgsGroups extends readonly unknown[][] = [],
+  Position extends 'start' | 'end' = 'start'
+> = IsEmptyToNeverObj<
+  EmitsAddArgs<Omit<PropsAndEmits<T>, keyof ExtractComponentProps<T>>, ArgsGroups, Position>
+>
 
 type DialogDirectiveProps<T extends object, K extends object = object> = {
   /** 弹窗的配置项以及嵌入在弹窗里面组件的props传参和$emit通信事件（emitMethods） */
@@ -53,9 +55,13 @@ type DialogDirectiveProps<T extends object, K extends object = object> = {
   contentStyle?: CSSProperties
 }
 
-type AsyncDialogDirectiveProps<T extends object | (abstract new (...args: any[]) => any), E extends object> =
-  DialogDirectiveProps<T extends Promise<Component> ? Record<string, any> : T, EmitsAddArgs<E, [[close: () => void]]>>
-           
+type AsyncDialogDirectiveProps<
+  T extends object | (abstract new (...args: any[]) => any),
+  E extends object
+> = DialogDirectiveProps<
+  T extends Promise<Component> ? Record<string, any> : T,
+  EmitsAddArgs<E, [[close: () => void]]>
+>
 
 export const $XDialog = (_context: AppContext) => {
   const defaultContext = _context
@@ -132,13 +138,17 @@ export const $XDialog = (_context: AppContext) => {
    * <script/>
    * ```
    */
-  return async <T extends object | (abstract new (...args: any[]) => any), K extends object = Required<DialogPropsVc>['emitMethods']>(
-    component: T extends (abstract new (...args: any[]) => any) ? T : Promise<Component>,
+  return async <
+    T extends object | (abstract new (...args: any[]) => any),
+    K extends object = Required<DialogPropsVc>['emitMethods']
+  >(
+    component: T extends abstract new (...args: any[]) => any ? T : Promise<Component>,
     props?: T extends abstract new (...args: any[]) => any
       ? DialogDirectiveProps<
           ExtractComponentProps<InstanceType<T>['$props']>,
-          ExtractComponentsEmits<InstanceType<T>['$props'], [[close: () => void]]>>
-      : AsyncDialogDirectiveProps<T, K>,
+          ExtractComponentsEmits<InstanceType<T>['$props'], [[close: () => void]]>
+        >
+      : AsyncDialogDirectiveProps<T, K>
   ) => {
     if (!component) {
       onError(createError(ErrorCodes.COMPONENT_IS_REQUIRED))
@@ -150,34 +160,33 @@ export const $XDialog = (_context: AppContext) => {
     } catch (error) {
       onError(createError(ErrorCodes.ASYNCHRONOUS_COMPONENT_LOADING_FAILED, String(error)))
     }
-    
+
     const parent = document.createElement('div')
     let instance: VNode | null = null
 
     if (props) {
       const { option = {}, contentStyle = {} } = props
-      
-      instance = createVNode(XDialogDirective, { option: {
+
+      instance = createVNode(XDialogDirective, {
+        option: {
           ...option,
           component,
           dialogCloseRemoveVNode: () => {
-            render(null, parent);
-            parent.remove();
-          },
+            render(null, parent)
+            parent.remove()
+          }
         },
         contentStyle
       })
-      
     } else {
       instance = createVNode(XDialogDirective, {
         option: {
           component
         }
       })
-
     }
 
-    defaultContext && (instance.appContext = defaultContext);
+    defaultContext && (instance.appContext = defaultContext)
 
     try {
       render(instance, parent)
@@ -186,7 +195,7 @@ export const $XDialog = (_context: AppContext) => {
       parent.remove()
       onError(createError(ErrorCodes.FAILED_TO_RENDER_DIALOG, String(error)))
     }
-    return instance;
+    return instance
   }
 }
 

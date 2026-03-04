@@ -1,12 +1,5 @@
 import { computed, defineComponent, nextTick, onMounted, ref } from 'vue'
-import {
-  ElButton,
-  ElCheckbox,
-  ElCheckboxGroup,
-  ElIcon,
-  ElPopover,
-  ElTooltip,
-} from 'element-plus'
+import { ElButton, ElCheckbox, ElCheckboxGroup, ElIcon, ElPopover, ElTooltip } from 'element-plus'
 import { CirclePlus } from '@element-plus/icons-vue'
 import Sortable from 'sortablejs'
 import { someType } from '@cjx-low-code/components/_util/type'
@@ -21,7 +14,7 @@ import {
   ImportOutlined,
   RefreshOutlined,
   SettingOutlined,
-  ShowSearchBarOutlined,
+  ShowSearchBarOutlined
 } from '../icon/index'
 import { useCrudInjectKey } from '../context'
 import crudConfig from '../config'
@@ -32,20 +25,20 @@ import type { CSSProperties, PropType, VNode } from 'vue'
 const getIsDark: 'dark' | 'light' = 'dark'
 const effect = computed(() => getIsDark)
 
-const { menu_header_right } = crudConfig
+const { menuHeaderRight: defaultMenuHeaderRight } = crudConfig
 
 const XHeaderMenu = defineComponent({
   name: 'XHeaderMenu',
   props: {
     isShowSearchMenu: {
       type: Boolean,
-      default: true,
+      default: true
     },
     title: someType<string | VNode>(),
     page: {
       type: Object as PropType<CrudPageProps>,
-      default: () => {},
-    },
+      default: () => ({})
+    }
   },
   slots: Object as CustomSlotsType<{
     default?: () => any // 默认插槽
@@ -63,16 +56,16 @@ const XHeaderMenu = defineComponent({
       onHandleImport,
       onCurrentChange,
       onTableDensity,
-      setUpMenuChange,
+      setUpMenuChange
     } = useCrudInjectKey().value
 
     const {
       addBtn,
       importBtn,
       excelBtn,
-      menuHeaderRight = menu_header_right,
+      menuHeaderRight = defaultMenuHeaderRight,
       index,
-      selection,
+      selection
     } = option.value
 
     const wrappingRef = ref<HTMLElement>()
@@ -82,7 +75,7 @@ const XHeaderMenu = defineComponent({
     const isIndeterminate = ref<boolean>(false)
     const checkedCities = ref<number[]>([])
     const cities: number[] = []
-    option.value.column.map((item, index) => {
+    option.value.column.forEach((item, index) => {
       if (!item.setUpHide) {
         item.setUpHide = false
         checkedCities.value.push(index)
@@ -132,7 +125,7 @@ const XHeaderMenu = defineComponent({
               item.order = option.value.column.length - index - 1
             }
           })
-        },
+        }
       })
     }
 
@@ -178,15 +171,11 @@ const XHeaderMenu = defineComponent({
       !slots.default ? (
         <template></template>
       ) : (
-        <div
-          class={[
-            'cjx-crud__header flex justify-between grid-items-center mb-20px',
-          ]}
-        >
+        <div class={['cjx-crud__header flex justify-between grid-items-center mb-20px']}>
           <div
             class={[
               'cjx-crud__header__left',
-              'font-size-16px color-[var(--title-text-color)] font-500 whitespace-nowrap',
+              'font-size-16px color-[var(--title-text-color)] font-500 whitespace-nowrap'
             ]}
           >
             {props.title}
@@ -198,7 +187,7 @@ const XHeaderMenu = defineComponent({
                 // v-hasPermi={[permission?.addBtn || ['']]}
                 onClick={() => handleShowDialogForm('create')}
                 v-slots={{
-                  icon: () => <CirclePlus />,
+                  icon: () => <CirclePlus />
                 }}
               >
                 {t('action.add')}
@@ -210,7 +199,7 @@ const XHeaderMenu = defineComponent({
                 onClick={onHandleImport}
                 // v-hasPermi={[permission?.importBtn || ['']]}
                 v-slots={{
-                  icon: () => <ImportOutlined />,
+                  icon: () => <ImportOutlined />
                 }}
               >
                 {t('action.import')}
@@ -223,7 +212,7 @@ const XHeaderMenu = defineComponent({
                 onClick={onHandleExport}
                 // v-hasPermi={[permission?.exportBtn || ['']]}
                 v-slots={{
-                  icon: () => <ExcelOutlined />,
+                  icon: () => <ExcelOutlined />
                 }}
               >
                 {t('action.export')}
@@ -298,7 +287,7 @@ const XHeaderMenu = defineComponent({
                           <DensityFilled />
                         </ElTooltip>
                       </ElIcon>
-                    ),
+                    )
                   }}
                 >
                   <div class={'flex flex-col'}>
@@ -334,7 +323,7 @@ const XHeaderMenu = defineComponent({
                     {
                       padding: '0px',
                       minWidth: '300px',
-                      width: 'auto',
+                      width: 'auto'
                     } as CSSProperties
                   }
                   trigger="click"
@@ -354,13 +343,11 @@ const XHeaderMenu = defineComponent({
                           <SettingOutlined />
                         </ElTooltip>
                       </ElIcon>
-                    ),
+                    )
                   }}
                 >
                   <div
-                    class={
-                      'flex flex-items-center justify-between b-b b-b-solid b-#E4E7ED'
-                    }
+                    class={'flex flex-items-center justify-between b-b b-b-solid b-#E4E7ED'}
                     style={{ padding: '10px 17px' } as CSSProperties}
                   >
                     <ElCheckbox
@@ -378,9 +365,7 @@ const XHeaderMenu = defineComponent({
                       class={'!mr-10px'}
                       disabled={!index}
                       v-model={newIndex.value}
-                      onChange={(value: boolean) =>
-                        setUpMenuChange('index', value)
-                      }
+                      onChange={(value: boolean) => setUpMenuChange('index', value)}
                     >
                       {t('table.numberColumn')}
                     </ElCheckbox>
@@ -390,19 +375,12 @@ const XHeaderMenu = defineComponent({
                       class={'!mr-10px'}
                       disabled={!selection}
                       v-model={newSelection.value}
-                      onChange={(value: boolean) =>
-                        setUpMenuChange('selection', value)
-                      }
+                      onChange={(value: boolean) => setUpMenuChange('selection', value)}
                     >
                       {t('table.checkColumn')}
                     </ElCheckbox>
 
-                    <ElButton
-                      size="default"
-                      type="primary"
-                      link
-                      onClick={resetChange}
-                    >
+                    <ElButton size="default" type="primary" link onClick={resetChange}>
                       {t('common.reset')}
                     </ElButton>
                   </div>
@@ -427,9 +405,7 @@ const XHeaderMenu = defineComponent({
                               <ElCheckbox
                                 size="default"
                                 class="m-l-10px !h-28px"
-                                onChange={(value: boolean) =>
-                                  checkboxChange(value, index)
-                                }
+                                onChange={(value: boolean) => checkboxChange(value, index)}
                                 label={index}
                                 value={index}
                               >
@@ -454,13 +430,9 @@ const XHeaderMenu = defineComponent({
                                       : (item.fixed = undefined)
                                   }
                                 >
-                                  {isReset.value && (
-                                    <FixedOutlined></FixedOutlined>
-                                  )}
+                                  {isReset.value && <FixedOutlined></FixedOutlined>}
                                 </ElIcon>
-                                <div
-                                  class={'w-1px h-12px bg-#EAEFF4 m10px'}
-                                ></div>
+                                <div class={'w-1px h-12px bg-#EAEFF4 m10px'}></div>
                                 <ElIcon
                                   size={18}
                                   color={
@@ -469,18 +441,14 @@ const XHeaderMenu = defineComponent({
                                       : fixedColor.value
                                   }
                                   class={'cursor-pointer'}
-                                  style={
-                                    'transform: rotate(180deg) translateY(2px)'
-                                  }
+                                  style={'transform: rotate(180deg) translateY(2px)'}
                                   onClick={() =>
                                     item.fixed !== 'right'
                                       ? (item.fixed = 'right')
                                       : (item.fixed = undefined)
                                   }
                                 >
-                                  {isReset.value && (
-                                    <FixedOutlined></FixedOutlined>
-                                  )}
+                                  {isReset.value && <FixedOutlined></FixedOutlined>}
                                 </ElIcon>
                                 {/*<ElTooltip content={t('table.fixedRight')} placement='bottom' hide-after={0}>*/}
                                 {/*  */}
@@ -498,7 +466,7 @@ const XHeaderMenu = defineComponent({
           </div>
         </div>
       )
-  },
+  }
 })
 
 export default XHeaderMenu

@@ -1,10 +1,9 @@
 import { computed, inject, isRef, ref, unref } from 'vue'
-import type { ComputedRef } from 'vue'
 import { get } from 'lodash-unified'
 import Chinese from '../../locale/lang/zh-CN'
+import type { ComputedRef, InjectionKey, Ref } from 'vue'
 
 import type { MaybeRef } from '@vueuse/core'
-import type { InjectionKey, Ref } from 'vue'
 import type { Language } from '@cjx-low-code/locale'
 
 export type TranslatorOption = Record<string, string | number>
@@ -32,16 +31,14 @@ export const translate = (
   )
 }
 
-export const buildLocaleContext = (
-  locale: ComputedRef<Language>
-): LocaleContext => {
+export const buildLocaleContext = (locale: ComputedRef<Language>): LocaleContext => {
   const lang = computed(() => unref(locale).name)
   const localeRef = isRef(locale) ? locale : ref(locale)
   // console.log('locale', locale.value)
   return {
     lang,
     locale: localeRef,
-    t: buildTranslator(locale),
+    t: buildTranslator(locale)
   }
 }
 

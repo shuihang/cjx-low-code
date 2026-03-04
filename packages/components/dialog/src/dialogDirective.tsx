@@ -1,33 +1,33 @@
-import { defineComponent, ref, watchEffect, computed, defineAsyncComponent } from 'vue'
+import { computed, defineAsyncComponent, defineComponent, ref, watchEffect } from 'vue'
 import omit from '../../_util/omit'
 import { objectType } from '../../_util/type'
+import { isPromise } from '../../_util/shared'
 import XDialog from './index'
 import type { CSSProperties, Component } from 'vue'
 import type { DialogProps } from './index'
-import { isPromise } from '../../_util/shared'
 
 export { DialogProps }
 
 const dialogDirectiveProps = {
   option: objectType<DialogDirectiveOption>(),
-  contentStyle: objectType<CSSProperties>(),
+  contentStyle: objectType<CSSProperties>()
 }
 
 type OmitUpdateModelValue<T extends object> = {
   [K in keyof T as K extends `onUpdate${string}` ? never : K]: T[K]
 }
 
-type IsEmptyToIsOptionalEmptyObj<
-  T extends string,
-  K extends object | never
-> = K extends Record<keyof K extends string ? string : keyof K, never>
+type IsEmptyToIsOptionalEmptyObj<T extends string, K extends object | never> = K extends Record<
+  keyof K extends string ? string : keyof K,
+  never
+>
   ? { [P in T]?: { [key in string]: never } }
   : { [P in T]: K }
 
-export type DialogDirectiveOption<
-  T extends object = object,
-  K extends object = object
-> = Omit<DialogProps, 'visible'> & {
+export type DialogDirectiveOption<T extends object = object, K extends object = object> = Omit<
+  DialogProps,
+  'visible'
+> & {
   /** 弹窗里面加载的组件 */
   component: abstract new (...args: any[]) => any
   /** 弹窗被关闭时触发 删除该弹窗 */
@@ -51,7 +51,7 @@ const XDialogDirective = defineComponent({
       menu = true,
       props: componentProps = {},
       emitMethods = {},
-      dialogCloseRemoveVNode,
+      dialogCloseRemoveVNode
     } = props.option
 
     const visible = ref<boolean>(true)
@@ -60,10 +60,7 @@ const XDialogDirective = defineComponent({
     emitMethods &&
       Object.keys(emitMethods).forEach((key) => {
         handleEmitMethods[key] = (...args: any[]) => {
-          ;(emitMethods as Record<string, any>)[key](
-            () => (visible.value = false),
-            ...args
-          )
+          ;(emitMethods as Record<string, any>)[key](() => (visible.value = false), ...args)
         }
       })
 
@@ -72,7 +69,7 @@ const XDialogDirective = defineComponent({
       title: props.option.title || '',
       showSaveBtn,
       menu,
-      visible: visible.value,
+      visible: visible.value
     })
 
     let Component: Component | any = 'div'
@@ -81,20 +78,24 @@ const XDialogDirective = defineComponent({
     const flag = ref(!isAsync)
 
     const optimizeStyle = computed(() => {
-      return props.option.type === 'Dialog' ? {
-        opacity: flag.value ? 1 : 0,
-        transition: visible.value ? 'opacity .2s' : 'inherit'
-      } as CSSProperties : {}
+      return props.option.type === 'Dialog'
+        ? ({
+            opacity: flag.value ? 1 : 0,
+            transition: visible.value ? 'opacity .2s' : 'inherit'
+          } as CSSProperties)
+        : {}
     })
 
-     watchEffect( () => {
+    watchEffect(() => {
       Component = isAsync
-          ? defineAsyncComponent(() => (props.option.component as unknown as Promise<Component>).then(res => {
-            flag.value = true
-            return res
-          }))
-          : props.option.component
-      
+        ? defineAsyncComponent(() =>
+            (props.option.component as unknown as Promise<Component>).then((res) => {
+              flag.value = true
+              return res
+            })
+          )
+        : props.option.component
+
       if (!visible.value) {
         visible.value = true
         option.value.visible = false
@@ -102,7 +103,7 @@ const XDialogDirective = defineComponent({
           // 延迟执行，确保组件已经卸载
           dialogCloseRemoveVNode!()
         }, 200)
-      } 
+      }
     })
     return () => (
       <XDialog
@@ -116,7 +117,7 @@ const XDialogDirective = defineComponent({
         {<Component {...componentProps} {...handleEmitMethods} />}
       </XDialog>
     )
-  },
+  }
 })
 
 export default XDialogDirective

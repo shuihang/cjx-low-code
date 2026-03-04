@@ -1,11 +1,15 @@
 import { defineComponent } from 'vue'
 import { ElTableColumn } from 'element-plus'
+import { useLocale } from '@cjx-low-code/hooks'
 import { useCrudInjectKey } from '../context'
 import crudConfig from '../config'
 import type { CustomSlotsType } from '../../../_util/type'
-import { useLocale } from '@cjx-low-code/hooks';
 
-const { menu_fixed, menu_width, menu_header_align } = crudConfig
+const {
+  menuFixed: defaultMenuFixed,
+  menuWidth: defaultMenuWidth,
+  menuHeaderAlign: defaultMenuHeaderAlign
+} = crudConfig
 
 const XColumnMenu = defineComponent({
   name: 'XColumnMenu',
@@ -13,14 +17,14 @@ const XColumnMenu = defineComponent({
     default?: any
   }>,
   setup(_, { slots }) {
-    const { t } = useLocale();
+    const { t } = useLocale()
 
     const {
       menuTitle,
-      menuFixed = menu_fixed,
+      menuFixed = defaultMenuFixed,
       menuWidth,
-      menuMinWidth = menu_width,
-      menuHeaderAlign = menu_header_align,
+      menuMinWidth = defaultMenuWidth,
+      menuHeaderAlign = defaultMenuHeaderAlign
     } = useCrudInjectKey().value.option.value
     return () => (
       <>
@@ -36,7 +40,7 @@ const XColumnMenu = defineComponent({
         ></ElTableColumn>
       </>
     )
-  },
+  }
 })
 
 export default XColumnMenu

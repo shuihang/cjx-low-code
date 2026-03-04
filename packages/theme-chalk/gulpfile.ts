@@ -28,10 +28,10 @@ function compressWithCssnano() {
           // avoid color transform
           colormin: false,
           // avoid font transform
-          minifyFontValues: false,
-        },
-      ],
-    }),
+          minifyFontValues: false
+        }
+      ]
+    })
   ])
   return new Transform({
     objectMode: true,
@@ -50,13 +50,13 @@ function compressWithCssnano() {
         const name = path.basename(file.path)
         file.contents = Buffer.from(result.css)
         consola.success(
-          `${chalk.cyan(name)}: ${chalk.yellow(
-            cssString.length / 1000
-          )} KB -> ${chalk.green(result.css.length / 1000)} KB`
+          `${chalk.cyan(name)}: ${chalk.yellow(cssString.length / 1000)} KB -> ${chalk.green(
+            result.css.length / 1000
+          )} KB`
         )
         callback(null, file)
       })
-    },
+    }
   })
 }
 
@@ -107,9 +107,7 @@ export function copyThemeChalkBundle() {
  */
 
 export function copyThemeChalkSource() {
-  return src(path.resolve(__dirname, 'src/**')).pipe(
-    dest(path.resolve(distBundle, 'src'))
-  )
+  return src(path.resolve(__dirname, 'src/**')).pipe(dest(path.resolve(distBundle, 'src')))
 }
 
 export const build: TaskFunction = parallel(

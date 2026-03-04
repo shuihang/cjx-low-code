@@ -2,6 +2,7 @@ import {
   ElCascader,
   ElCheckbox,
   ElCheckboxGroup,
+  ElColorPicker,
   ElDatePicker,
   ElInput,
   ElInputNumber,
@@ -11,20 +12,14 @@ import {
   ElRadioGroup,
   ElSelect,
   ElSwitch,
-  ElTreeSelect,
-  ElColorPicker
+  ElTreeSelect
 } from 'element-plus'
 // import XFileUpload from '@cjx-low-code/components/cjx-uploadFile/index.vue';
-import XEditTable from '../../editTable'
 import { useLocale } from '@cjx-low-code/hooks'
-import type {
-  FormColumnProps,
-  FormItemType,
-  FormStateProps,
-  FormTypeProps,
-} from './interface'
-import type { Component, VNode } from 'vue'
+import XEditTable from '../../editTable'
 import { deepMerge } from './utils'
+import type { FormColumnProps, FormItemType, FormStateProps, FormTypeProps } from './interface'
+import type { Component, VNode } from 'vue'
 import type { DeepPartial } from '../../_util/type'
 
 const { t } = useLocale()
@@ -85,20 +80,20 @@ export const tempForm: TempFormInterface = {
     placeholder: selectPlaceholder,
     slots: ['tag', 'header'],
     select: {
-      filterable: true,
-    },
+      filterable: true
+    }
   },
   input: {
     component: ElInput,
     placeholder: inputPlaceholder,
     input: {
       maxlength: 50,
-      showWordLimit: true,
-    },
+      showWordLimit: true
+    }
   },
   cascader: {
     component: ElCascader,
-    placeholder: selectPlaceholder,
+    placeholder: selectPlaceholder
   },
   textarea: {
     component: ElInput,
@@ -107,36 +102,36 @@ export const tempForm: TempFormInterface = {
     textarea: {
       maxlength: 1000,
       showWordLimit: true,
-      rows: 4,
-    },
+      rows: 4
+    }
   },
   checkbox: {
     component: ElCheckboxGroup,
-    subComponent: ElCheckbox,
+    subComponent: ElCheckbox
   },
   datePicker: {
     component: ElDatePicker,
     placeholder: selectPlaceholder,
     datePicker: {
       // 清空选项的值 @2.7.0
-      valueOnClear: '',
-    },
+      valueOnClear: ''
+    }
   },
   inputNumber: {
     component: ElInputNumber,
-    placeholder: inputPlaceholder,
+    placeholder: inputPlaceholder
     // initialTransform: (v: string | number) => v ? Number(v) : 0
   },
   switch: {
-    component: ElSwitch,
+    component: ElSwitch
   },
   radio: {
     component: ElRadioGroup,
-    subComponent: ElRadio,
+    subComponent: ElRadio
   },
   radioButton: {
     component: ElRadioGroup,
-    subComponent: ElRadioButton,
+    subComponent: ElRadioButton
   },
   treeSelect: {
     component: ElTreeSelect,
@@ -144,13 +139,13 @@ export const tempForm: TempFormInterface = {
     otherPropsFn: (column) => {
       const data = column?.treeSelect?.data || column.dicData
       return {
-        data,
+        data
       }
-    },
+    }
   },
   colorPicker: {
     component: ElColorPicker,
-    placeholder: selectPlaceholder,
+    placeholder: selectPlaceholder
   },
   // upload: {
   //   component: XFileUpload,
@@ -163,8 +158,8 @@ export const tempForm: TempFormInterface = {
     component: XEditTable,
     isDesign: true,
     props: ['prop', 'label'],
-    formItemClass: 'isDesign',
-  },
+    formItemClass: 'isDesign'
+  }
 }
 
 /**
@@ -194,5 +189,5 @@ export const componentMapData = {
   /** 常规表单的默认配置 */
   ordinaryForm: precomputedForm,
   /** 搜索表单的默认配置 */
-  searchForm: precomputedSearchForm,
+  searchForm: precomputedSearchForm
 }

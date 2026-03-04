@@ -12,12 +12,11 @@ const XGroupForm = defineComponent({
   props: {
     // form: objectType<Ref<object>>(),
     group: objectType<GroupInterface[]>(),
-    xBoxType: someType<DialogFormType>(),
+    xBoxType: someType<DialogFormType>()
   },
-  slots: Object as CustomSlotsType<{}>,
+  slots: Object as CustomSlotsType<object>,
   setup(props, { slots, expose }) {
-    const { newForm, isView, labelWidth, ...othersProps } =
-      useFormInjectKey().value
+    const { newForm, isView, labelWidth, ...othersProps } = useFormInjectKey().value
 
     /** 是否全部展开 */
     const allCollapseStatus = ref<boolean | undefined>(undefined)
@@ -31,7 +30,7 @@ const XGroupForm = defineComponent({
     }
 
     expose({
-      collapseAllChange,
+      collapseAllChange
     })
 
     return () => (
@@ -40,30 +39,34 @@ const XGroupForm = defineComponent({
           // 不显示任何东西
           const groupFormSlotKey = `${item.prop}GroupForm`
           if (
-            ((!(slots[groupFormSlotKey as keyof typeof slots] as any)?.({
-              _xBoxType: props.xBoxType,
-            })) || !item.column?.length)
-          ) return 
+            !(slots[groupFormSlotKey as keyof typeof slots] as any)?.({
+              _xBoxType: props.xBoxType
+            }) ||
+            !item.column?.length
+          )
+            return null
 
           const groupDisplay = item!.display as TableGroupInterface['display']
           // 不显示任何东西
-          if (groupDisplay && !groupDisplay({
-            form: newForm.value,
-            column: item.column || [],
-            _xBoxType: props.xBoxType
-          })) return <></>
+          if (
+            groupDisplay &&
+            !groupDisplay({
+              form: newForm.value,
+              column: item.column || [],
+              _xBoxType: props.xBoxType
+            })
+          )
+            return <></>
 
           const {
             collapse = false,
             checkColumnSpan,
             isView: groupIsView = isView.value,
-            labelWidth: groupLabelWidth = labelWidth,
+            labelWidth: groupLabelWidth = labelWidth
           } = item
           /** 默认折叠 */
           const collapseStatus = ref<boolean>(
-            allCollapseStatus.value != undefined
-              ? allCollapseStatus.value
-              : collapse
+            allCollapseStatus.value != undefined ? allCollapseStatus.value : collapse
           )
           const collapseChange = () => {
             collapseStatus.value = !collapseStatus.value
@@ -75,25 +78,17 @@ const XGroupForm = defineComponent({
                 <div class={'flex flex-items-center m-b-10px justify-between'}>
                   <div class={'flex flex-items-center is-guttered w-100%'}>
                     {item.label && (
-                      <span
-                        class={
-                          'w-4px h-14px bg-[var(--el-color-primary)] m-r-8px'
-                        }
-                      ></span>
+                      <span class={'w-4px h-14px bg-[var(--el-color-primary)] m-r-8px'}></span>
                     )}
                     <div
                       class={
                         'color-[var(--cjx-dialog-title-color)] font-500 font-size-14px w-[calc(100%-12px)]'
                       }
                     >
-                      {(slots[
-                        `${item.prop}GroupLabel` as keyof typeof slots
-                      ] as any)
-                        ? (
-                            slots[
-                              `${item.prop}GroupLabel` as keyof typeof slots
-                            ] as any
-                          )?.({ _XBoxType: props.xBoxType })
+                      {(slots[`${item.prop}GroupLabel` as keyof typeof slots] as any)
+                        ? (slots[`${item.prop}GroupLabel` as keyof typeof slots] as any)?.({
+                            _XBoxType: props.xBoxType
+                          })
                         : item.label}
                     </div>
                   </div>
@@ -110,9 +105,9 @@ const XGroupForm = defineComponent({
               </ElCol>
               {slots[`${item.prop}GroupForm` as keyof typeof slots] ? (
                 <div class={'w-[calc(100%-10px)] m-r--10px m-b-20px'}>
-                  {(
-                    slots[`${item.prop}GroupForm` as keyof typeof slots] as any
-                  )?.({ _XBoxType: props.xBoxType })}
+                  {(slots[`${item.prop}GroupForm` as keyof typeof slots] as any)?.({
+                    _XBoxType: props.xBoxType
+                  })}
                 </div>
               ) : (
                 <>
@@ -128,7 +123,7 @@ const XGroupForm = defineComponent({
                       $index: index,
                       labelWidth: groupLabelWidth,
                       isView: groupIsView,
-                      ...othersProps,
+                      ...othersProps
                     })}
                 </>
               )}
@@ -137,7 +132,7 @@ const XGroupForm = defineComponent({
         })}
       </>
     )
-  },
+  }
 })
 
 export default XGroupForm

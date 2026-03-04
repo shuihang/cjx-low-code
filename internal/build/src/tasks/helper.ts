@@ -6,14 +6,9 @@ import {
   hyphenate,
   isCommonType,
   isUnionType,
-  main,
+  main
 } from 'components-helper'
-import {
-  epOutput,
-  epPackage,
-  getPackageManifest,
-  projRoot,
-} from '@cjx-low-code/build-utils'
+import { epOutput, epPackage, getPackageManifest, projRoot } from '@cjx-low-code/build-utils'
 
 import type { TaskFunction } from 'gulp'
 import type {
@@ -21,11 +16,11 @@ import type {
   ReComponentName,
   ReDocUrl,
   ReWebTypesSource,
-  ReWebTypesType,
+  ReWebTypesType
 } from 'components-helper'
 
 const typeMap = {
-  vue: ['Component', 'VNode', 'CSSProperties', 'StyleValue'],
+  vue: ['Component', 'VNode', 'CSSProperties', 'StyleValue']
 }
 
 const removeTag = (str: string) => {
@@ -38,9 +33,7 @@ const reComponentName: ReComponentName = (title) => {
 
 const reDocUrl: ReDocUrl = (fileName, header) => {
   const docs = 'https://element-plus.org/en-US/component/'
-  const _header = header
-    ? removeTag(header).replaceAll(/\s+/g, '-').toLowerCase()
-    : ''
+  const _header = header ? removeTag(header).replaceAll(/\s+/g, '-').toLowerCase() : ''
 
   return `${docs}${fileName}.html${_header ? '#' : ''}${_header}`
 }
@@ -193,11 +186,7 @@ export const buildHelper: TaskFunction = (done) => {
   const { name, version } = getPackageManifest(epPackage)
 
   const tagVer = process.env.TAG_VERSION
-  const _version = tagVer
-    ? tagVer.startsWith('v')
-      ? tagVer.slice(1)
-      : tagVer
-    : version!
+  const _version = tagVer ? (tagVer.startsWith('v') ? tagVer.slice(1) : tagVer) : version!
   let entry = `${path.resolve(
     projRoot,
     'docs/en-US/component'
@@ -219,7 +208,7 @@ export const buildHelper: TaskFunction = (done) => {
     props: 'Attributes',
     propsOptions: 'Accepted Values',
     tableRegExp:
-      /#+\s+(.*\s*Attributes|.*\s*Events|.*\s*Slots|.*\s*Directives)\s*\n+(\|?.+\|.+)\n\|?\s*:?-+:?\s*\|.+((\n\|?.+\|.+)+)/g,
+      /#+\s+(.*\s*Attributes|.*\s*Events|.*\s*Slots|.*\s*Directives)\s*\n+(\|?.+\|.+)\n\|?\s*:?-+:?\s*\|.+((\n\|?.+\|.+)+)/g
   })
 
   done()

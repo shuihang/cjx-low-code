@@ -17,17 +17,11 @@ const subTextStyle = {
   fontSize: '13px',
   lineHeight: '16px',
   marginTop: '4px',
-  color: '#999999',
+  color: '#999999'
 }
-const getCombContentVNode = (
-  content: ElMessageBoxOptions['message'],
-  subContent?: string
-) => {
+const getCombContentVNode = (content: ElMessageBoxOptions['message'], subContent?: string) => {
   if (typeof content === 'function' || !subContent) return content
-  return h('div', { style: mainTextStyle }, [
-    content,
-    h('p', { style: subTextStyle }, subContent),
-  ])
+  return h('div', { style: mainTextStyle }, [content, h('p', { style: subTextStyle }, subContent)])
 }
 
 export const useMessage = () => {
@@ -50,50 +44,34 @@ export const useMessage = () => {
       ElMessage.warning(content)
     },
     // 弹出提示
-    alert(
-      content: ElMessageBoxOptions['message'],
-      title?: string,
-      options?: BoxOptions
-    ) {
+    alert(content: ElMessageBoxOptions['message'], title?: string, options?: BoxOptions) {
       content = getCombContentVNode(content, options?.subContent)
       ElMessageBox.alert(content, title || t('common.confirmTitle'), {
-        ...options,
+        ...options
       })
     },
     // 错误提示
-    alertError(
-      content: ElMessageBoxOptions['message'],
-      title?: string,
-      options?: BoxOptions
-    ) {
+    alertError(content: ElMessageBoxOptions['message'], title?: string, options?: BoxOptions) {
       content = getCombContentVNode(content, options?.subContent)
       ElMessageBox.alert(content, title || t('common.confirmTitle'), {
         ...options,
-        type: 'error',
+        type: 'error'
       })
     },
     // 成功提示
-    alertSuccess(
-      content: ElMessageBoxOptions['message'],
-      title?: string,
-      options?: BoxOptions
-    ) {
+    alertSuccess(content: ElMessageBoxOptions['message'], title?: string, options?: BoxOptions) {
       content = getCombContentVNode(content, options?.subContent)
       ElMessageBox.alert(content, title || t('common.confirmTitle'), {
         ...options,
-        type: 'success',
+        type: 'success'
       })
     },
     // 警告提示
-    alertWarning(
-      content: ElMessageBoxOptions['message'],
-      title?: string,
-      options?: BoxOptions
-    ) {
+    alertWarning(content: ElMessageBoxOptions['message'], title?: string, options?: BoxOptions) {
       content = getCombContentVNode(content, options?.subContent)
       ElMessageBox.alert(content, title || t('common.confirmTitle'), {
         ...options,
-        type: 'warning',
+        type: 'warning'
       })
     },
     // 通知提示
@@ -113,29 +91,17 @@ export const useMessage = () => {
       ElNotification.warning(content)
     },
     // 确认窗体
-    confirm(
-      content: ElMessageBoxOptions['message'],
-      title?: string,
-      options?: BoxOptions
-    ) {
+    confirm(content: ElMessageBoxOptions['message'], title?: string, options?: BoxOptions) {
       content = getCombContentVNode(content, options?.subContent)
-      return ElMessageBox.confirm(
-        content,
-        title ? title : t('common.confirmTitle'),
-        {
-          confirmButtonText: t('common.ok'),
-          cancelButtonText: t('common.cancel'),
-          ...options,
-          type: 'warning',
-        }
-      )
+      return ElMessageBox.confirm(content, title ? title : t('common.confirmTitle'), {
+        confirmButtonText: t('common.ok'),
+        cancelButtonText: t('common.cancel'),
+        ...options,
+        type: 'warning'
+      })
     },
     // 删除窗体
-    delConfirm(
-      content?: ElMessageBoxOptions['message'],
-      title?: string,
-      options?: BoxOptions
-    ) {
+    delConfirm(content?: ElMessageBoxOptions['message'], title?: string, options?: BoxOptions) {
       content = getCombContentVNode(content, options?.subContent)
       return ElMessageBox.confirm(
         content ? content : t('common.delMessage'),
@@ -144,7 +110,7 @@ export const useMessage = () => {
           confirmButtonText: t('common.ok'),
           cancelButtonText: t('common.cancel'),
           ...options,
-          type: 'error',
+          type: 'error'
         }
       )
     },
@@ -156,7 +122,7 @@ export const useMessage = () => {
         {
           confirmButtonText: t('common.ok'),
           cancelButtonText: t('common.cancel'),
-          type: 'warning',
+          type: 'warning'
         }
       )
     },
@@ -165,8 +131,8 @@ export const useMessage = () => {
       return ElMessageBox.prompt(content, tip, {
         confirmButtonText: t('common.ok'),
         cancelButtonText: t('common.cancel'),
-        type: 'warning',
+        type: 'warning'
       })
-    },
+    }
   }
 }

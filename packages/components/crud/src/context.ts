@@ -1,12 +1,6 @@
 import { inject, provide } from 'vue'
 import type { ComputedRef, Ref } from 'vue'
-import type {
-  CrudPermission,
-  DialogFormType,
-  EmitFn,
-  Scope,
-  TableOption,
-} from './interface'
+import type { CrudPermission, DialogFormType, EmitFn, Scope, TableOption } from './interface'
 
 export type SetUpInterface = Required<Pick<TableOption, 'index' | 'selection'>>
 

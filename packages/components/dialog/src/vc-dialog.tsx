@@ -1,10 +1,4 @@
-import {
-  createVNode,
-  defineAsyncComponent,
-  defineComponent,
-  ref,
-  watchEffect,
-} from 'vue'
+import { createVNode, defineAsyncComponent, defineComponent, ref, watchEffect } from 'vue'
 import omit from '../../_util/omit'
 import { booleanType, objectType } from '../../_util/type'
 import XDialog from './index'
@@ -17,13 +11,10 @@ export { DialogProps }
 const dialogPropsVcProps = {
   option: objectType<DialogPropsVc>(),
   modelValue: booleanType(false),
-  contentStyle: objectType<CSSProperties>(),
+  contentStyle: objectType<CSSProperties>()
 }
 
-export type DialogPropsVc<T extends object = object> = Omit<
-  DialogProps,
-  'visible'
-> & {
+export type DialogPropsVc<T extends object = object> = Omit<DialogProps, 'visible'> & {
   /**
    * 加载的组件component 里面是否emit了change（emit('change', data)）事件 默认true 只有当为true时 onSave(点击确定按钮响应的事件)里的第二个参数data才有值
    */
@@ -50,7 +41,7 @@ export default defineComponent({
       showSaveBtn = true,
       menu = true,
       props: componentProps = {},
-      emitMethods = {},
+      emitMethods = {}
     } = props.option
 
     const option = ref<DialogProps>({
@@ -58,7 +49,7 @@ export default defineComponent({
       title: props.option.title || '',
       showSaveBtn,
       menu,
-      visible: props.modelValue,
+      visible: props.modelValue
     })
     let component: Component | any = 'div'
 
@@ -69,7 +60,7 @@ export default defineComponent({
         ...omit(props.option, ['component', 'props', 'emitMethods']),
         showSaveBtn,
         menu,
-        visible: props.modelValue,
+        visible: props.modelValue
       }
 
       if (props.modelValue) {
@@ -97,11 +88,11 @@ export default defineComponent({
             ? {
                 ...componentProps,
                 ...emitMethods,
-                onChange: (data: any) => (option.value.data = data),
+                onChange: (data: any) => (option.value.data = data)
               }
             : {
                 ...componentProps,
-                ...emitMethods,
+                ...emitMethods
               }
         )}
 
@@ -113,5 +104,5 @@ export default defineComponent({
         {/*/>*/}
       </XDialog>
     )
-  },
+  }
 })

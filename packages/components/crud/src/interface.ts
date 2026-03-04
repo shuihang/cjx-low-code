@@ -4,21 +4,16 @@ import {
   functionType,
   objectType,
   someType,
-  stringType,
+  stringType
 } from '../../_util/type'
-import type {
-  Column,
-  FormItemRule,
-  TableColumnCtx,
-  TreeNode,
-} from 'element-plus'
+import type { Column, FormItemRule, TableColumnCtx, TreeNode } from 'element-plus'
 import type { CSSProperties, ComputedRef, UnwrapRef, VNode } from 'vue'
 import type {
   FormColumnProps,
   FormItemType,
   FormTypeProps,
   GroupInterface,
-  formColumnValues,
+  formColumnValues
 } from '../../form/src/interface'
 import type { PropsToForm, SlotNodesInterface } from '../../form/src/tempform'
 import type { DicDataInterface, PropsInterface } from '../../_util/tool'
@@ -27,7 +22,7 @@ export { FormItemRule, SlotNodesInterface, PropsInterface, DicDataInterface }
 
 export const dialogFormTypeValues = ['check', 'create', 'update'] as const
 
-export type DialogFormType = typeof dialogFormTypeValues[number]
+export type DialogFormType = (typeof dialogFormTypeValues)[number]
 
 export type Row<T> = T
 
@@ -40,7 +35,7 @@ export interface Scope {
 }
 
 export type Placement =
-  'top'
+  | 'top'
   | 'top-start'
   | 'top-end'
   | 'bottom'
@@ -74,19 +69,11 @@ export type TreeLoad<T extends object> = (
 ) => void
 
 // 表单弹窗弹出前的回调
-export type BeforeOpen<T> = (
-  type: DialogFormType,
-  row: T,
-  done: () => void
-) => void
+export type BeforeOpen<T> = (type: DialogFormType, row: T, done: () => void) => void
 
 // 导出
 export type HandleExport = (
-  exportFn: (
-    exportApi: (params?: object) => Promise<any>,
-    name: string,
-    params?: object
-  ) => void
+  exportFn: (exportApi: (params?: object) => Promise<any>, name: string, params?: object) => void
 ) => void
 
 export interface ImportProps {
@@ -133,11 +120,7 @@ export interface SpanMethodProps<T extends DefaultRow> {
  */
 export type DisplayInterface =
   | boolean
-  | ((props: {
-      form: any
-      column: FormColumnProps[]
-      _xBoxType?: DialogFormType
-    }) => boolean)
+  | ((props: { form: any; column: FormColumnProps[]; _xBoxType?: DialogFormType }) => boolean)
 
 export type ColumnProps = Pick<PropsToForm, 'change'> &
   FormTypeProps & {
@@ -183,12 +166,7 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
      * @param {number} index 行索引
      * @returns 格式化后的内容
      * */
-    formatter?: (
-      row: any,
-      column: TableColumnCtx<Column>,
-      cellValue: any,
-      index: number
-    ) => any
+    formatter?: (row: any, column: TableColumnCtx<Column>, cellValue: any, index: number) => any
     /** 列的 className */
     className?: string
     /** 当前列标题的自定义类名 */
@@ -242,11 +220,7 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
      */
     display?:
       | boolean
-      | ((props: {
-          form: any
-          column: FormColumnProps[]
-          _xBoxType?: DialogFormType
-        }) => boolean)
+      | ((props: { form: any; column: FormColumnProps[]; _xBoxType?: DialogFormType }) => boolean)
     /**
      * 表单新增时当前项是否显示。可以是布尔类型或函数表达式。
      * 如果未使用此参数，则取 `display` 参数的值，默认为 `true`。
@@ -285,11 +259,7 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
      * */
     disabled?:
       | boolean
-      | ((props: {
-          form: any
-          column: FormColumnProps[]
-          _xBoxType?: DialogFormType
-        }) => boolean)
+      | ((props: { form: any; column: FormColumnProps[]; _xBoxType?: DialogFormType }) => boolean)
     /**
      * 表单新增时当前项是否显示。可以是布尔类型或函数表达式。
      * 如果未使用此参数，则取 `disabled` 参数的值，默认为 `false`。
@@ -316,11 +286,7 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
      * */
     updateDisabled?:
       | boolean
-      | ((props: {
-          form: any
-          column: FormColumnProps[]
-          _xBoxType?: DialogFormType
-        }) => boolean)
+      | ((props: { form: any; column: FormColumnProps[]; _xBoxType?: DialogFormType }) => boolean)
     /**
      * 表单查看时当前项是否显示。可以是布尔类型或函数表达式。
      * 如果未使用此参数，则取 `disabled` 参数的值，默认为 `false`。
@@ -331,11 +297,7 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
      * */
     checkDisabled?:
       | boolean
-      | ((props: {
-          form: any
-          column: FormColumnProps[]
-          _xBoxType?: DialogFormType
-        }) => boolean)
+      | ((props: { form: any; column: FormColumnProps[]; _xBoxType?: DialogFormType }) => boolean)
     /** 表单项标题宽度 默认`90`*/
     labelWidth?: number
     /** 表格项是否隐藏 默认为 `false` */
@@ -367,9 +329,19 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
   }
 
 export type TableGroupInterface = Omit<GroupInterface, 'column' | 'display'> & {
-  display?: ((props: { form: any, column: FormColumnProps[], _xBoxType?: DialogFormType }) => boolean),
-  column?: Pick<ColumnProps, (typeof formColumnValues)[number] | 'display' | 'checkDisplay' |'updateDisplay' | 'createDisplay' |
-    'disabled' | 'checkDisabled' | 'updateDisabled' | 'createDisabled'>[]
+  display?: (props: { form: any; column: FormColumnProps[]; _xBoxType?: DialogFormType }) => boolean
+  column?: Pick<
+    ColumnProps,
+    | (typeof formColumnValues)[number]
+    | 'display'
+    | 'checkDisplay'
+    | 'updateDisplay'
+    | 'createDisplay'
+    | 'disabled'
+    | 'checkDisabled'
+    | 'updateDisabled'
+    | 'createDisabled'
+  >[]
 }
 
 export type TableOption = {
@@ -388,7 +360,7 @@ export type TableOption = {
   /** 是否懒加载子节点数据(树形表格) */
   lazy?: boolean
   /** 当内容过长被隐藏时显示 tooltip */
-  showOverflowTooltip?: boolean,
+  showOverflowTooltip?: boolean
   /** 渲染嵌套数据的配置选项(树形表格) */
   treeProps?: {
     hasChildren?: string
@@ -505,9 +477,7 @@ export interface CrudPageProps {
   /** 是否为分页按钮添加背景色 */
   background?: boolean
   /** 组件布局，子组件名用逗号分隔 */
-  layout?: Array<
-    'prev' | 'pager' | 'next' | 'jumper' | '->' | 'sizes' | 'total' | 'slot'
-  >
+  layout?: Array<'prev' | 'pager' | 'next' | 'jumper' | '->' | 'sizes' | 'total' | 'slot'>
   /** 每页显示个数选择器的选项设置 */
   pageSizes?: number[]
 }
@@ -538,7 +508,7 @@ export interface EmitFn {
   onDialogTabChange: (index: number) => void
 }
 
-export type PermissionMenBtnType = ComputedRef<boolean> | ((porps: Scope) => boolean) 
+export type PermissionMenBtnType = ComputedRef<boolean> | ((porps: Scope) => boolean)
 
 /* 权限配置 */
 export interface CrudPermission {
@@ -580,10 +550,7 @@ export const crudProps = () => ({
   /** 自定义的合计计算方法 */
   summaryMethod: functionType(),
   /** 行的 className 的回调方法，也可以使用字符串为所有行设置一个固定的 className。 */
-  rowClassName:
-    someType<
-      (data: { row: any; rowIndex: number }) => string | CSSProperties
-    >(),
+  rowClassName: someType<(data: { row: any; rowIndex: number }) => string | CSSProperties>(),
   /** 单元格的 className 的回调方法，也可以使用字符串为所有单元格设置一个固定的 className。 */
   cellClassName:
     someType<
@@ -598,5 +565,5 @@ export const crudProps = () => ({
   /** 加载动画 */
   tableLoading: booleanType(),
   /** 表单弹窗的className */
-  dialogClassName: stringType(),
+  dialogClassName: stringType()
 })

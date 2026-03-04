@@ -5,17 +5,8 @@ import { Octokit } from 'octokit'
 import consola from 'consola'
 import chalk from 'chalk'
 import { chunk, mapValues, uniqBy } from 'lodash-unified'
-import {
-  ensureDir,
-  errorAndExit,
-  projRoot,
-  writeJson,
-} from '@cjx-low-code/build-utils'
-import {
-  REPO_BRANCH,
-  REPO_NAME,
-  REPO_OWNER,
-} from '@cjx-low-code/build-constants'
+import { ensureDir, errorAndExit, projRoot, writeJson } from '@cjx-low-code/build-utils'
+import { REPO_BRANCH, REPO_NAME, REPO_OWNER } from '@cjx-low-code/build-constants'
 
 interface FetchOption {
   key: string
@@ -56,9 +47,7 @@ interface ContributorInfo {
   count: number
 }
 
-const fetchCommits = async (
-  options: FetchOption[]
-): Promise<Record<string, ApiResult>> => {
+const fetchCommits = async (options: FetchOption[]): Promise<Record<string, ApiResult>> => {
   const query = `{
     repository(owner: "${REPO_OWNER}", name: "${REPO_NAME}") {
       object(expression: "${REPO_BRANCH}") {
@@ -66,9 +55,7 @@ const fetchCommits = async (
           ${options
             .map(({ path, after }, index) => {
               return `
-              path${index}: history(path: "${path}"${
-                after ? `, after: "${after}"` : ''
-              }) {
+              path${index}: history(path: "${path}"${after ? `, after: "${after}"` : ''}) {
                 nodes {
                   oid
                   author {
@@ -113,7 +100,7 @@ const calcContributors = (commits: ApiResult['nodes']) => {
         name: author.name,
         email: author.email,
         avatar: author.avatarUrl,
-        count: 0,
+        count: 0
       }
 
     contributors[login].count++
@@ -126,7 +113,7 @@ const getContributorsByComponents = async (components: string[]) => {
     { key: component, path: `packages/components/${component}` },
     { key: component, path: `packages/theme-chalk/src/${component}.scss` },
     { key: component, path: `docs/examples/${component}` },
-    { key: component, path: `docs/en-US/component/${component}.md` },
+    { key: component, path: `docs/en-US/component/${component}.md` }
   ])
   const commits: Record<string /* component name */, ApiResult['nodes']> = {}
   do {
@@ -147,9 +134,7 @@ const getContributorsByComponents = async (components: string[]) => {
       .filter((option) => !!option.after)
   } while (options.length > 0)
 
-  return mapValues(commits, (commits) =>
-    calcContributors(uniqBy(commits, 'oid'))
-  )
+  return mapValues(commits, (commits) => calcContributors(uniqBy(commits, 'oid')))
 }
 
 async function getContributors() {
@@ -157,7 +142,7 @@ async function getContributors() {
 
   const components = await glob('*', {
     cwd: path.resolve(projRoot, 'packages/components'),
-    onlyDirectories: true,
+    onlyDirectories: true
   })
   let contributors: Record<string, ContributorInfo[]> = {}
 
@@ -165,11 +150,9 @@ async function getContributors() {
   for (const chunkComponents of chunk(components, 10)) {
     contributors = {
       ...contributors,
-      ...(await getContributorsByComponents(chunkComponents)),
+      ...(await getContributorsByComponents(chunkComponents))
     }
-    consola.success(
-      chalk.green(`Fetched contributors: ${chunkComponents.join(', ')}`)
-    )
+    consola.success(chalk.green(`Fetched contributors: ${chunkComponents.join(', ')}`))
   }
   return contributors
 }
@@ -178,7 +161,7 @@ const pathOutput = path.resolve(__dirname, '..', 'dist')
 const pathDest = path.resolve(pathOutput, 'contributors.json')
 
 const octokit = new Octokit({
-  auth: process.env.GITHUB_TOKEN,
+  auth: process.env.GITHUB_TOKEN
 })
 
 async function main() {

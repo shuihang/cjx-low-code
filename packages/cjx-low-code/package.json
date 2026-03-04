@@ -60,8 +60,8 @@
     "lib/components/*/style/*"
   ],
   "peerDependencies": {
-    "vue": "^3.5.0",
-    "element-plus": "^2.8.4"
+    "element-plus": "^2.8.4",
+    "vue": "^3.5.0"
   },
   "dependencies": {
     "@ctrl/tinycolor": "^3.4.1",

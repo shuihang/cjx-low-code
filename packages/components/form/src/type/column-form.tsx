@@ -1,18 +1,23 @@
-import { defineComponent } from 'vue';
+import { defineComponent } from 'vue'
 import { useFormInjectKey } from '../context'
 import { InitFormTemplate } from '../init'
-import { arrayType } from "../../../_util/type";
-import type { CustomSlotsType } from "../../../_util/type";
+import { arrayType } from '../../../_util/type'
+import type { CustomSlotsType } from '../../../_util/type'
 import type { FormColumnProps } from '../interface'
 
 export default defineComponent({
   name: 'XFormColumn',
   props: {
-    column: arrayType<FormColumnProps[]>(),
+    column: arrayType<FormColumnProps[]>()
   },
-  slots: Object as CustomSlotsType<{}>,
+  slots: Object as CustomSlotsType<object>,
   render() {
-    const {isView, ...otherProps } = useFormInjectKey().value
-    return InitFormTemplate({...this.$props, ...otherProps, isView: isView.value, slots: this.$slots})
+    const { isView, ...otherProps } = useFormInjectKey().value
+    return InitFormTemplate({
+      ...this.$props,
+      ...otherProps,
+      isView: isView.value,
+      slots: this.$slots
+    })
   }
 })

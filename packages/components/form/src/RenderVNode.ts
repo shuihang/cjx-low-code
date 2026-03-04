@@ -4,12 +4,12 @@ const RenderVNode = defineComponent({
   props: {
     vNode: {
       type: [Object, String],
-      quailified: true,
-    },
+      quailified: true
+    }
   },
   render() {
     return this.vNode
-  },
+  }
 })
 
 export default RenderVNode

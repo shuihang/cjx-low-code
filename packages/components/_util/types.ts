@@ -74,10 +74,7 @@ export type EpPropMergeType<Type, Value, Validator> =
  *
  * 处理输入参数的默认值（约束）
  */
-export type EpPropInputDefault<
-  Required extends boolean,
-  Default
-> = Required extends true
+export type EpPropInputDefault<Required extends boolean, Default> = Required extends true
   ? never
   : Default extends Record<string, unknown> | Array<any>
   ? () => Default
@@ -239,9 +236,7 @@ export const buildProp = <
             warn(
               `Invalid prop: validation failed${
                 key ? ` for prop "${key}"` : ''
-              }. Expected one of [${allowValuesText}], got value ${JSON.stringify(
-                val
-              )}.`
+              }. Expected one of [${allowValuesText}], got value ${JSON.stringify(val)}.`
             )
           }
           return valid
@@ -252,7 +247,7 @@ export const buildProp = <
     type,
     required: !!required,
     validator: _validator,
-    [epPropKey]: true,
+    [epPropKey]: true
   }
   if (hasOwn(prop, 'default')) epProp.default = defaultValue
   return epProp
@@ -261,9 +256,7 @@ export const buildProp = <
 export const buildProps = <
   Props extends Record<
     string,
-    | { [epPropKey]: true }
-    | NativePropType
-    | EpPropInput<any, any, any, any, any>
+    { [epPropKey]: true } | NativePropType | EpPropInput<any, any, any, any, any>
   >
 >(
   props: Props
@@ -275,10 +268,7 @@ export const buildProps = <
   >
 } =>
   fromPairs(
-    Object.entries(props).map(([key, option]) => [
-      key,
-      buildProp(option as any, key),
-    ])
+    Object.entries(props).map(([key, option]) => [key, buildProp(option as any, key)])
   ) as any
 
 export {}

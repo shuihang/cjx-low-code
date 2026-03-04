@@ -2,12 +2,9 @@
  ** 工具函数
  */
 import { h } from 'vue'
-import { clone } from 'lodash-es'
+import { clone } from 'lodash-unified'
 import XDicTag from '../dicTag'
-import type {
-  ColorTypeInterface,
-  DicDataInterface,
-} from '../dicTag'
+import type { ColorTypeInterface, DicDataInterface } from '../dicTag'
 
 export type { DicDataInterface, ColorTypeInterface }
 
@@ -67,19 +64,18 @@ export const translateStr = (
     let vNode: any = str
     dicData?.forEach((item) => {
       if (item[props?.value || 'value'] == str) {
-        vNode = item.colorType ?  h(XDicTag, {
-          colorType: item.colorType,
-          label: item[props?.label || 'label']
-        }) : (
-          item[props?.label || 'label']
-        )
+        vNode = item.colorType
+          ? h(XDicTag, {
+              colorType: item.colorType,
+              label: item[props?.label || 'label']
+            })
+          : item[props?.label || 'label']
       }
     })
     return vNode
   }
   dicData.forEach((item) => {
-    arr.includes(`${item[props?.value || 'value']}`) &&
-      strArr.push(item[props?.label || 'label'])
+    arr.includes(`${item[props?.value || 'value']}`) && strArr.push(item[props?.label || 'label'])
   })
   return strArr.join(',')
 }

@@ -11,7 +11,7 @@ async function main() {
 
   const components = await glob('*', {
     cwd: path.resolve(projRoot, 'packages/components'),
-    onlyDirectories: true,
+    onlyDirectories: true
   })
 
   await writeJson(path.resolve(pathOutput, 'components.json'), components)

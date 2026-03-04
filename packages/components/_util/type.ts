@@ -1,20 +1,15 @@
 // @ts-ignore
 import type { JSX } from 'vue/jsx-runtime'
-import type {
-  App,
-  AppContext,
-  Plugin,
-  PropType,
-  Ref,
-  SlotsType,
-  VNode,
-} from 'vue'
+import type { App, AppContext, Plugin, PropType, Ref, SlotsType, VNode } from 'vue'
 
-export type DeepPartial<T> = T extends object ? {
-  [P in keyof T]?: DeepPartial<T[P]>;
-} : T;
+export type DeepPartial<T> = T extends object
+  ? {
+      [P in keyof T]?: DeepPartial<T[P]>
+    }
+  : T
 
-export type PickRequiredOptional<T, R extends keyof T, P extends keyof T> = Required<Pick<T, R>> & Partial<Pick<T, P>>
+export type PickRequiredOptional<T, R extends keyof T, P extends keyof T> = Required<Pick<T, R>> &
+  Partial<Pick<T, P>>
 
 export type SFCWithInstall<T> = T & Plugin
 
@@ -31,16 +26,12 @@ export const tupleNum = <T extends number[]>(...args: T) => args
  * https://stackoverflow.com/a/59187769
  * Extract the type of an element of an array/tuple without performing indexing
  */
-export type ElementOf<T> = T extends (infer E)[]
-  ? E
-  : T extends readonly (infer F)[]
-  ? F
-  : never
+export type ElementOf<T> = T extends (infer E)[] ? E : T extends readonly (infer F)[] ? F : never
 
 /**
  * https://github.com/Microsoft/TypeScript/issues/29729
  */
-export type LiteralUnion<T extends string> = T | (string & {})
+export type LiteralUnion<T extends string> = T | (string & Record<string, any>)
 
 export type Data = Record<string, unknown>
 
@@ -55,14 +46,7 @@ export interface PropOptions<T = any, D = T> {
   validator?(value: unknown): boolean
 }
 
-declare type VNodeChildAtom =
-  | VNode
-  | string
-  | number
-  | boolean
-  | null
-  | undefined
-  | void
+declare type VNodeChildAtom = VNode | string | number | boolean | null | undefined | void
 
 // eslint-disable-next-line no-undef
 export type VueNode = VNodeChildAtom | VNodeChildAtom[] | JSX.Element
@@ -73,7 +57,7 @@ export function eventType<T>() {
   return { type: [Function, Array] as PropType<T | T[]> }
 }
 
-export function objectType<T = {}>(defaultVal?: T) {
+export function objectType<T = Record<string, any>>(defaultVal?: T) {
   return { type: Object as PropType<T>, default: defaultVal as T }
 }
 
@@ -81,7 +65,7 @@ export function booleanType(defaultVal?: boolean) {
   return { type: Boolean, default: defaultVal as boolean }
 }
 
-export function functionType<T = () => {}>(defaultVal?: T) {
+export function functionType<T = () => Record<string, any>>(defaultVal?: T) {
   return { type: Function as PropType<T>, default: defaultVal as T }
 }
 
@@ -109,7 +93,7 @@ export function arrayType<T extends any[]>(defaultVal?: T) {
 export function stringType<T extends string = string>(defaultVal?: T) {
   return {
     type: String as unknown as PropType<T | string>,
-    default: defaultVal as T,
+    default: defaultVal as T
   }
 }
 
@@ -118,19 +102,14 @@ export function numberType<T extends number = number>(defaultVal?: T) {
 }
 
 export function someType<T>(types?: any[], defaultVal?: T) {
-  return types
-    ? { type: types as PropType<T>, default: defaultVal as T }
-    : anyType<T>(defaultVal)
+  return types ? { type: types as PropType<T>, default: defaultVal as T } : anyType<T>(defaultVal)
 }
 
 export type CustomSlotsType<T extends Record<string, any>> = SlotsType<T>
 
 export type AnyObject = Record<PropertyKey, any>
 
-export const withInstallVue = <T, E extends Record<string, any>>(
-  main: T,
-  extra?: E
-) => {
+export const withInstallVue = <T, E extends Record<string, any>>(main: T, extra?: E) => {
   ;(main as SFCWithInstall<T>).install = (app: any): void => {
     for (const comp of [main, ...Object.values(extra ?? {})]) {
       app.component(comp.name, comp)
@@ -145,10 +124,7 @@ export const withInstallVue = <T, E extends Record<string, any>>(
   return main as SFCWithInstall<T> & E
 }
 
-export const withInstall = <T, E extends Record<string, any>>(
-  main: T,
-  extra?: E
-) => {
+export const withInstall = <T, E extends Record<string, any>>(main: T, extra?: E) => {
   ;(main as SFCWithInstall<T>).install = (app): void => {
     for (const comp of [main, ...Object.values(extra ?? {})]) {
       app.component(comp.name, comp)

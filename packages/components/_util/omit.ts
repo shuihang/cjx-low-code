@@ -1,7 +1,4 @@
-function omit<T extends object, K extends keyof T>(
-  obj: T,
-  fields: K[] | readonly K[]
-): Omit<T, K> {
+function omit<T extends object, K extends keyof T>(obj: T, fields: K[] | readonly K[]): Omit<T, K> {
   // eslint-disable-next-line prefer-object-spread
   const shallowCopy = Object.assign({}, obj)
   for (const key of fields) {

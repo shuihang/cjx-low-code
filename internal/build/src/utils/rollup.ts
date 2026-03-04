@@ -11,9 +11,7 @@ export const generateExternal = async (options: { full: boolean }) => {
       packages.push('@vue', ...dependencies)
     }
 
-    return [...new Set(packages)].some(
-      (pkg) => id === pkg || id.startsWith(`${pkg}/`)
-    )
+    return [...new Set(packages)].some((pkg) => id === pkg || id.startsWith(`${pkg}/`))
   }
 }
 
@@ -21,10 +19,6 @@ export function writeBundles(bundle: RollupBuild, options: OutputOptions[]) {
   return Promise.all(options.map((option) => bundle.write(option)))
 }
 
-export function formatBundleFilename(
-  name: string,
-  minify: boolean,
-  ext: string
-) {
+export function formatBundleFilename(name: string, minify: boolean, ext: string) {
   return `${name}${minify ? '.min' : ''}.${ext}`
 }

@@ -22,9 +22,7 @@ export default {
       copySuccess: 'Copy Success',
       copyError: 'Copy Error'
     },
-    permission: {
-    
-    },
+    permission: {},
     size: {
       default: 'Default',
       large: 'Large',
@@ -100,7 +98,7 @@ export default {
       displaySearchBar: 'Display Search Bar',
       compact: 'Compact',
       looseAndComfortable: 'Loose and Comfortable',
-      add_a_row: 'Add a row',
+      add_a_row: 'Add a row'
     },
     action: {
       create: 'Create',
@@ -113,7 +111,7 @@ export default {
       more: 'More',
       export: 'Export',
       import: 'Import',
-      check: 'Check',
+      check: 'Check'
     },
     cropper: {
       selectImage: 'Select Image',
@@ -128,6 +126,6 @@ export default {
       btn_zoom_in: 'Zoom In',
       btn_zoom_out: 'Zoom Out',
       preview: 'Preview'
-    },
-  },
+    }
+  }
 }

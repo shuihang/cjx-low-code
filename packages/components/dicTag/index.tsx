@@ -10,7 +10,7 @@ export const tagColor = {
   default: '#909399',
   purple: '#8f58e5',
   darkGreen: '#00BFBF',
-  lightYellow: '#fee100',
+  lightYellow: '#fee100'
 }
 
 export type ColorTypeInterface = keyof typeof tagColor
@@ -29,13 +29,13 @@ export default defineComponent({
     colorType: {
       type: String as PropType<ColorTypeInterface>,
       require: true,
-      default: 'default',
+      default: 'default'
     },
     label: {
       type: String,
       default: '',
-      require: true,
-    },
+      require: true
+    }
   },
   setup(props) {
     return () => (
@@ -48,15 +48,13 @@ export default defineComponent({
                 borderRadius: '1em',
                 width: '0.4em',
                 height: '0.4em',
-                marginRight: '0.4em',
+                marginRight: '0.4em'
               } as any
             }
           ></div>
-          <div style={{ color: tagColor[props.colorType] } as any}>
-            {props.label}
-          </div>
+          <div style={{ color: tagColor[props.colorType] } as any}>{props.label}</div>
         </div>
       </>
     )
-  },
+  }
 })

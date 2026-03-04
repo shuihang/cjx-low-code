@@ -1,20 +1,21 @@
 import { defineComponent, ref } from 'vue'
 import { ElRadio, ElRadioGroup, ElTableColumn } from 'element-plus'
+import { useLocale } from '@cjx-low-code/hooks'
 import { objectType } from '../../../_util/type'
 import { arraySort, translateStr } from '../../../_util/tool'
 import omit from '../../../_util/omit'
-import { useLocale } from '@cjx-low-code/hooks'
 import { useCrudInjectKey } from '../context'
 import crudConfig from '../config'
 import XColumnMenu from './column-menu'
-import type {
-  ColumnProps,
-  Scope,
-} from '../../../crud/src/interface'
+import type { ColumnProps, Scope } from '../../../crud/src/interface'
 import type { SetUpInterface } from '../context'
 import type { CustomSlotsType } from '../../../_util/type'
 
-const { row_key, index_width, selection_width } = crudConfig
+const {
+  defaultRowKey,
+  indexWidth: defaultIndexWidth,
+  selectionWidth: defaultSelectionWidth
+} = crudConfig
 
 export type TableColumRef = {
   setRadioCurrent: (v: any) => void
@@ -43,7 +44,7 @@ const XTableColumn = defineComponent({
   name: 'XTableColumn',
   inheritAttrs: false,
   props: {
-    setUpMenu: objectType<SetUpInterface>(),
+    setUpMenu: objectType<SetUpInterface>()
   },
   slots: Object as CustomSlotsType<{
     /* 操作栏插槽 */
@@ -57,14 +58,14 @@ const XTableColumn = defineComponent({
     const {
       column = [],
       index,
-      rowKey = row_key,
-      indexWidth = index_width,
+      rowKey = defaultRowKey,
+      indexWidth = defaultIndexWidth,
       indexText,
       selection,
       radio,
-      selectionWidth = selection_width,
+      selectionWidth = defaultSelectionWidth,
       menu,
-      reserveSelection = true,
+      reserveSelection = true
     } = useCrudInjectKey().value.option.value
 
     const radioValue = ref<any>('')
@@ -81,7 +82,7 @@ const XTableColumn = defineComponent({
     // console.log('dicDataMap', dicDataMap.value)
 
     expose({
-      setRadioCurrent,
+      setRadioCurrent
     })
     return () => (
       <>
@@ -115,7 +116,7 @@ const XTableColumn = defineComponent({
                     {' '}
                   </ElRadio>
                 </ElRadioGroup>
-              ),
+              )
             }}
           />
         )}
@@ -137,9 +138,7 @@ const XTableColumn = defineComponent({
           'order',
           async (item: ColumnProps) => {
             if (!dicDataMap.value[item.prop]) {
-              const dicData = item.dicAjaxResolve
-                ? await item.dicAjaxResolve
-                : item.dicData
+              const dicData = item.dicAjaxResolve ? await item.dicAjaxResolve : item.dicData
               dicDataMap.value[item.prop] = dicData
             }
           }
@@ -162,8 +161,7 @@ const XTableColumn = defineComponent({
                 v-slots={{
                   header: () => item.label,
                   default: (scope: Scope) =>
-                    (slots as any)[item.prop] &&
-                    (slots as any)[item.prop](scope),
+                    (slots as any)[item.prop] && (slots as any)[item.prop](scope)
                 }}
                 {...omit(item as ColumnProps, ['label'])}
               ></ElTableColumn>
@@ -175,7 +173,7 @@ const XTableColumn = defineComponent({
         {menu && <XColumnMenu v-slots={{ default: slots.menu }} />}
       </>
     )
-  },
+  }
 })
 
 export default XTableColumn

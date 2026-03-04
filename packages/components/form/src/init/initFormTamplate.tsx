@@ -1,38 +1,40 @@
 import { computed, ref } from 'vue'
-import type { Ref, VNode } from 'vue'
-import { clone, cloneDeep } from 'lodash-es'
-import {
-  ElDescriptions,
-  ElDescriptionsItem,
-} from 'element-plus'
-import type { Column, TableColumnCtx } from 'element-plus'
+import { clone } from 'lodash-unified'
+import { ElDescriptions, ElDescriptionsItem } from 'element-plus'
 import { useLocale } from '@cjx-low-code/hooks'
 import XEditTable from '../../../editTable'
 import { FORM_ON_EVENT_SUFFIX } from '../../../_util/env'
 import { isFunction } from '../../../_util/shared'
-import {
-  arraySort,
-  translateCheckFormStr,
-} from '../../../_util/tool'
-import { defaultOnError as onError, createError, ErrorCodes } from '../../../_util/errors'
-import type { PickRequiredOptional } from '../../../_util/type'
+import { arraySort, translateCheckFormStr } from '../../../_util/tool'
+import { ErrorCodes, createError, defaultOnError as onError } from '../../../_util/errors'
 import { MeasurePerformance } from '../../../_util/decorator/PerformanceDecorator'
-import type {
-  FormColumnProps,
-  FormItemType,
-  FormTypeProps,
-  ColumnProps,
-  DialogFormType,
-} from '../interface'
-import { FormRender } from './FormRenderDecorator'
 import { tempForm } from '../tempform'
 import helpers from '../helpers'
-import form_config from '../config'
+import formConfig from '../config'
+import { FormRender } from './FormRenderDecorator'
+import type {
+  ColumnProps,
+  DialogFormType,
+  FormColumnProps,
+  FormItemType,
+  FormTypeProps
+} from '../interface'
+import type { PickRequiredOptional } from '../../../_util/type'
+import type { Column, TableColumnCtx } from 'element-plus'
+import type { Ref, VNode } from 'vue'
 
 const {
-  check_column_span, span, label_width, tipPlacement, labelTipPlacement, getColumnFormType,
-  EMPTY_STRINGFORM_ITEMS, FULLSCREEN_COL_SPAN_24_FORM_ITEMS, VIEW_FORM_COL_SPAN_24_FORM_ITEMS, CHECK_LABEL_ALIGN
-} = form_config
+  checkColumnSpan: defaultCheckColumnSpan,
+  span,
+  labelWidth: defaultLabelWidth,
+  tipPlacement,
+  labelTipPlacement,
+  getColumnFormType,
+  EMPTY_STRINGFORM_ITEMS,
+  FULLSCREEN_COL_SPAN_24_FORM_ITEMS,
+  VIEW_FORM_COL_SPAN_24_FORM_ITEMS,
+  CHECK_LABEL_ALIGN
+} = formConfig
 
 export interface TemplateProps {
   column?: FormColumnProps[]
@@ -52,7 +54,11 @@ export interface TemplateProps {
   $index?: number
 }
 
-export type TemplateCommonProps = PickRequiredOptional<TemplateProps, 'column' | 'formSpan' | 'labelWidth' | 'newForm' | 'slotSuffix' | 'slots' | 'onUpdateModelValue', 'xBoxType'>
+export type TemplateCommonProps = PickRequiredOptional<
+  TemplateProps,
+  'column' | 'formSpan' | 'labelWidth' | 'newForm' | 'slotSuffix' | 'slots' | 'onUpdateModelValue',
+  'xBoxType'
+>
 
 interface RenderInterface {
   init(ctx?: any): (VNode | undefined)[] | VNode | undefined
@@ -78,7 +84,7 @@ export class Common implements TemplateCommonProps {
   constructor(data: TemplateCommonProps) {
     this.column = data.column || []
     this.formSpan = data.formSpan || span
-    this.labelWidth = data.labelWidth || label_width
+    this.labelWidth = data.labelWidth || defaultLabelWidth
     this.newForm = data.newForm
     this.slotSuffix = data.slotSuffix
     this.slots = data.slots
@@ -90,15 +96,11 @@ export class Common implements TemplateCommonProps {
    */
   @MeasurePerformance({ threshold: 100 })
   public _arraySort() {
-    return arraySort(
-      this.column as FormColumnProps[],
-      'order',
-      async (item) => {
-        if (item.dicAjaxResolve) {
-          item.dicData = await item.dicAjaxResolve
-        }
+    return arraySort(this.column as FormColumnProps[], 'order', async (item) => {
+      if (item.dicAjaxResolve) {
+        item.dicData = await item.dicAjaxResolve
       }
-    )
+    })
   }
 
   /**
@@ -109,22 +111,22 @@ export class Common implements TemplateCommonProps {
   @MeasurePerformance({ threshold: 50, log: false })
   public _getValueByPath(path: string) {
     const { newForm } = this
-    
+
     if (!this._computedCache) {
       this._computedCache = {}
     }
-    
+
     if (!this._computedCache[path]) {
       this._computedCache[path] = computed({
         get() {
           if (!path) return
-          
+
           let value = newForm.value
           if (path?.indexOf('.') === -1) return value[path]
-  
+
           const pathArray = path.split('.')
           pathArray.forEach((prop, index) => {
-            if (!value[prop] && value[prop] !== 0 ) {
+            if (!value[prop] && value[prop] !== 0) {
               value[prop] = index === pathArray.length - 1 ? '' : {}
             }
             value = value[prop]
@@ -133,32 +135,31 @@ export class Common implements TemplateCommonProps {
         },
         set(newValue) {
           if (!path) return
-          
-          if (path.indexOf('.') === -1) {
+
+          if (!path.includes('.')) {
             newForm.value[path] = newValue
             return
           }
-  
+
           const pathArray = path.split('.')
           const lastProp = pathArray.pop()
           if (!lastProp) return
-          
+
           let current = newForm.value
-          for (let i = 0; i < pathArray.length; i++) {
-            const prop = pathArray[i]
+          for (const prop of pathArray) {
             if (current[prop] === undefined || current[prop] === null) {
               current[prop] = {}
             }
             current = current[prop]
           }
           current[lastProp] = newValue
-        },
+        }
       })
     }
-    
+
     return this._computedCache[path]
   }
-  
+
   private _computedCache: Record<string, any> = {}
 
   /**
@@ -177,8 +178,7 @@ export class Common implements TemplateCommonProps {
       }
 
       if (componentBindKey && componentBindValue) {
-        componentBindValues[componentBindKey] =
-          this.newForm.value[componentBindValue]
+        componentBindValues[componentBindKey] = this.newForm.value[componentBindValue]
         componentBindValues[`onUpdate:${componentBindKey}`] = (value: string) =>
           this.onUpdateModelValue(componentBindValue, value)
       }
@@ -197,22 +197,25 @@ export class Common implements TemplateCommonProps {
    * @returns Boolean
    */
   public _handelColumnDisPlay(data: {
-    col: FormColumnProps,
-    form: object,
-    column: FormColumnProps[],
+    col: FormColumnProps
+    form: object
+    column: FormColumnProps[]
     xBoxType?: DialogFormType
   }) {
     const { col, column, xBoxType } = data
-    
+
     const display = col.display as ColumnProps['display']
-      
+
     if (!isFunction(display)) return display !== false
-   
-    return display && display({
+
+    return (
+      display &&
+      display({
         form: { ...this.newForm.value },
         column,
-        _xBoxType: xBoxType,
+        _xBoxType: xBoxType
       })
+    )
   }
 
   /**
@@ -239,7 +242,7 @@ export class Common implements TemplateCommonProps {
       treeSelect: selectPlaceholder,
       // upload: uploadPlaceholder,
       editTable: designPlaceholder,
-      colorPicker: selectPlaceholder,
+      colorPicker: selectPlaceholder
     }
     return formTypeI18nMap[type] || ''
   }
@@ -262,7 +265,7 @@ export class RenderSearchFormVNode extends Common implements SearchFormProps {
     this.onSubmit = data.onSubmit
   }
 
-  @MeasurePerformance({ threshold: 100, prefix: "Search Form Render Performance" })
+  @MeasurePerformance({ threshold: 100, prefix: 'Search Form Render Performance' })
   @FormRender({ isSearch: true })
   init() {
     if (!this.column || this.column?.length === 0) return
@@ -312,7 +315,7 @@ export class RenderFormVNode extends Common implements RenderInterface {
   /**
    * 格式化输入框和文本域组件 空字符校验通过的问题
    * @param col 表单列配置
-   * @returns 
+   * @returns
    */
   public _formatRules(col: FormColumnProps) {
     if (!col?.rules) return []
@@ -321,10 +324,10 @@ export class RenderFormVNode extends Common implements RenderInterface {
       !this.slots[col.prop + this.slotSuffix] &&
       EMPTY_STRINGFORM_ITEMS.includes(getColumnFormType(col))
     ) {
-      rules.map((item) => {
+      rules.forEach((item) => {
         if (item.required) {
           // 解决空字符串校验通过
-          item.pattern = '[^ \x20]+'
+          item.pattern = '[^ \u0020]+'
         }
       })
     }
@@ -342,18 +345,21 @@ export class RenderFormVNode extends Common implements RenderInterface {
     Object.keys(on[onType]).forEach((key) => {
       if (isFunction(on[onType][key])) {
         onObj[key] = (...args: any[]) => {
-          on[onType][key](...args, helpers({
-            columns: this.column,
-            onUpdateModelValue: this.onUpdateModelValue,
-            currentColumn:{...row}}
-          ))
+          on[onType][key](
+            ...args,
+            helpers({
+              columns: this.column,
+              onUpdateModelValue: this.onUpdateModelValue,
+              currentColumn: { ...row }
+            })
+          )
         }
       }
     })
     return onObj
   }
 
-  @MeasurePerformance({ threshold: 100, prefix: "Form Render Performance" })
+  @MeasurePerformance({ threshold: 100, prefix: 'Form Render Performance' })
   @FormRender({ useComponentPropsValues: true })
   init(): (VNode | undefined)[] | VNode | undefined {
     if (!this.column || this.column?.length === 0) return
@@ -381,7 +387,7 @@ export class RenderViewFormVNode extends Common implements RenderInterface {
   constructor(data: TemplateCommonProps & RenderViewFormVNodeProps) {
     super(data)
     this.collapseStatus = data.collapseStatus || ref(false)
-    this.checkColumnSpan = data.checkColumnSpan || check_column_span
+    this.checkColumnSpan = data.checkColumnSpan || defaultCheckColumnSpan
     this.$index = data.$index
   }
 
@@ -407,10 +413,7 @@ export class RenderViewFormVNode extends Common implements RenderInterface {
   //   xBoxType: 'check'
   // })
   // 处理查看模式下的特殊情况
-  public _handleCheckValue(
-    value: string | number | any[],
-    column: ColumnProps
-  ) {
+  public _handleCheckValue(value: string | number | any[], column: ColumnProps) {
     if (this.valueMap[getColumnFormType(column)])
       return this.valueMap[getColumnFormType(column)](column)
 
@@ -429,7 +432,7 @@ export class RenderViewFormVNode extends Common implements RenderInterface {
     return col?.checkSpan || col?.span || 1
   }
 
-  @MeasurePerformance({ threshold: 150, prefix: "Check Form Render Performance" })
+  @MeasurePerformance({ threshold: 150, prefix: 'Check Form Render Performance' })
   init() {
     if (!this.column || this.column?.length === 0) return
     const columns = clone(super._arraySort())
@@ -443,15 +446,16 @@ export class RenderViewFormVNode extends Common implements RenderInterface {
         column={this.checkColumnSpan}
       >
         {columns.map((item, index) => {
-          if (!this._handelColumnDisPlay({ col: item, column, form, xBoxType: 'check'})) return
-          
+          if (!this._handelColumnDisPlay({ col: item, column, form, xBoxType: 'check' }))
+            return null
+
           const descriptionsItemName =
             !this.collapseStatus.value ||
             item?.collapseShow === true ||
             (isFunction(item?.collapseShow) &&
               item?.collapseShow!({
                 form: { ...this._getValueByPath(item.prop).value },
-                column: columns,
+                column: columns
               }))
               ? 'cjx-view-descriptions-item'
               : 'cjx-view-descriptions-item-none'
@@ -474,15 +478,12 @@ export class RenderViewFormVNode extends Common implements RenderInterface {
                       this._getValueByPath(item.prop).value,
                       index
                     )
-                  : this._handleCheckValue(
-                      this._getValueByPath(item.prop).value,
-                      item
-                    )
+                  : this._handleCheckValue(this._getValueByPath(item.prop).value, item)
                 : this.slots[item.prop + this.slotSuffix]?.({
                     ...item,
                     _xBoxType: 'check',
                     $value: this._getValueByPath(item.prop).value,
-                    $index: this.$index,
+                    $index: this.$index
                   })}
             </ElDescriptionsItem>
           )

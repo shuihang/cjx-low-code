@@ -1,22 +1,21 @@
 import { createVNode } from 'vue'
-import type { CSSProperties, VNode, Slot } from 'vue'
 import { ElCol, ElFormItem, ElIcon, ElTooltip } from 'element-plus'
 import { QuestionFilled } from '@element-plus/icons-vue'
 import pick from '../../../_util/pick'
 import omit from '../../../_util/omit'
-import { isString, isFunction } from '../../../_util/shared'
+import { isFunction, isString } from '../../../_util/shared'
 import { tempForm } from '../tempform'
-import type { SlotsValue } from '../tempform'
 import { componentPropsValues, formColumnValues } from '../interface'
+import { TipOutlined } from '../../../crud/src/icon'
+import formConfig from '../config'
+import type { SlotsValue } from '../tempform'
 import type { FormColumnProps, FormItemType, FormTypeProps } from '../interface'
 import type { FormRenderContext, FormRenderOptions } from './FormRenderDecorator'
-import { TipOutlined } from '../../../crud/src/icon'
-import form_config from '../config'
+import type { CSSProperties, Slot, VNode } from 'vue'
 
-const { LABEL_POSITION, getColumnFormType } = form_config
+const { LABEL_POSITION, getColumnFormType } = formConfig
 
-const needHandelLabelComponentArr = [ 'checkbox', 'radioButton', 'radio' ]
-
+const needHandelLabelComponentArr = ['checkbox', 'radioButton', 'radio']
 
 function createFormItemComponent(
   item: FormColumnProps,
@@ -24,13 +23,15 @@ function createFormItemComponent(
   context: FormRenderContext,
   options: FormRenderOptions
 ): VNode | VNode[] {
-  let componentProps: FormTypeProps[keyof FormTypeProps] | {} = {}
-  const componentSlotNodes = item.formSlotNodes ? pick(item.formSlotNodes, tempForm[itemType]?.slots as SlotsValue) : {}
+  let componentProps: FormTypeProps[keyof FormTypeProps] | object = {}
+  const componentSlotNodes = item.formSlotNodes
+    ? pick(item.formSlotNodes, tempForm[itemType]?.slots as SlotsValue)
+    : {}
   const isDesign = tempForm[itemType]?.isDesign || false
 
   if (options.useComponentPropsValues) {
     const pickProps = pick(item, componentPropsValues)
-    componentPropsValues.map((typeValue) => {
+    componentPropsValues.forEach((typeValue) => {
       // @ts-ignore
       componentProps = { ...componentProps, ...pickProps[typeValue] }
     })
@@ -48,7 +49,7 @@ function createFormItemComponent(
     showWordLimit: false,
     modelValue: context._getValueByPath(item.prop).value,
     'onUpdate:modelValue': (value: string) => context.onUpdateModelValue(item.prop, value),
-    ...context._getBindValue(item, itemType),
+    ...context._getBindValue(item, itemType)
   }
 
   if (!isDesign) {
@@ -77,11 +78,13 @@ function createFormItemComponent(
   }
 
   if (context._formatRules && !options.isSearch && (item.disabled as any)) {
-    baseProps.disabled = isFunction(item.disabled) ? item.disabled({
-      form: { ...context.newForm.value },
-      column: context.column,
-      xBoxType: context.xBoxType?.value,
-    } as any) : item.disabled
+    baseProps.disabled = isFunction(item.disabled)
+      ? item.disabled({
+          form: { ...context.newForm.value },
+          column: context.column,
+          xBoxType: context.xBoxType?.value
+        } as any)
+      : item.disabled
   }
 
   const children: any = {
@@ -95,7 +98,9 @@ function createFormItemComponent(
       return item.dicData.map((temp) => {
         const labelKey = item.props?.label || 'label'
         const valueKey = item.props?.value || 'value'
-        const label = isString(temp[labelKey]) ? temp[labelKey] : temp[labelKey]?.el?.parentNode.innerText
+        const label = isString(temp[labelKey])
+          ? temp[labelKey]
+          : temp[labelKey]?.el?.parentNode.innerText
         const value = temp[valueKey]
 
         return createVNode(
@@ -126,30 +131,42 @@ export default function createFormItem(
   const itemType = getColumnFormType(item)
   const slotSuffix = options.slotSuffix || ''
 
-  if (context._handelColumnDisPlay && !context._handelColumnDisPlay({
-    col: item,
-    column: context.column,
-    form: context.newForm.value,
-    xBoxType: context.xBoxType?.value
-  })) return
+  if (
+    context._handelColumnDisPlay &&
+    !context._handelColumnDisPlay({
+      col: item,
+      column: context.column,
+      form: context.newForm.value,
+      xBoxType: context.xBoxType?.value
+    })
+  )
+    return
 
-  const colSpan = context._getColSpan ? context._getColSpan(item, item.span || context.formSpan) : item.span || context.formSpan
-  
+  const colSpan = context._getColSpan
+    ? context._getColSpan(item, item.span || context.formSpan)
+    : item.span || context.formSpan
+
   const formItemChildren: {
-    label: () => VNode | VNode[],
+    label: () => VNode | VNode[]
     default: () => VNode | VNode[] | Slot | undefined
   } = {
-    label: () => <div class="flex flex-items-center">
-      {item.label}
-      {item.labelTip && <ElTooltip
-        placement={item?.labelTipPlacement || context.labelTipPlacement}
-        v-slots={{
-          content: () => item.labelTip
-        }}
-      >
-        <ElIcon><QuestionFilled /></ElIcon>
-      </ElTooltip>}
-    </div>,
+    label: () => (
+      <div class="flex flex-items-center">
+        {item.label}
+        {item.labelTip && (
+          <ElTooltip
+            placement={item?.labelTipPlacement || context.labelTipPlacement}
+            v-slots={{
+              content: () => item.labelTip
+            }}
+          >
+            <ElIcon>
+              <QuestionFilled />
+            </ElIcon>
+          </ElTooltip>
+        )}
+      </div>
+    ),
     default: () => <></>
   }
 
@@ -165,33 +182,33 @@ export default function createFormItem(
 
   if (item.tip) {
     const originalDefault = formItemChildren.default
-    formItemChildren.default = () => <>
-      {originalDefault?.()}
-      <ElTooltip
-        placement={item?.tipPlacement || context.tipPlacement}
-        v-slots={{
-          content: () => item.tip
-        }}
-      >
-        <ElIcon><TipOutlined /></ElIcon>
-      </ElTooltip>
-    </>
+    formItemChildren.default = () => (
+      <>
+        {originalDefault?.()}
+        <ElTooltip
+          placement={item?.tipPlacement || context.tipPlacement}
+          v-slots={{
+            content: () => item.tip
+          }}
+        >
+          <ElIcon>
+            <TipOutlined />
+          </ElIcon>
+        </ElTooltip>
+      </>
+    )
   }
 
-  return <ElCol
-    class="p-b-5px"
-    key={index}
-    lg={colSpan}
-    md={colSpan}
-    xs={colSpan}
-  >
-    <ElFormItem
-      class={[tempForm[itemType]?.formItemClass, `_${item.prop}`]}
-      labelWidth={!options.isSearch ? (item.labelWidth || context.labelWidth) : undefined}
-      prop={item.prop}
-      labelPosition={LABEL_POSITION}
-      rules={context._formatRules ? context._formatRules(item) : undefined}
-      v-slots={formItemChildren}
-    />
-  </ElCol>
+  return (
+    <ElCol class="p-b-5px" key={index} lg={colSpan} md={colSpan} xs={colSpan}>
+      <ElFormItem
+        class={[tempForm[itemType]?.formItemClass, `_${item.prop}`]}
+        labelWidth={!options.isSearch ? item.labelWidth || context.labelWidth : undefined}
+        prop={item.prop}
+        labelPosition={LABEL_POSITION}
+        rules={context._formatRules ? context._formatRules(item) : undefined}
+        v-slots={formItemChildren}
+      />
+    </ElCol>
+  )
 }

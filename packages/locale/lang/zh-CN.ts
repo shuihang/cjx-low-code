@@ -22,9 +22,7 @@ export default {
       copySuccess: '复制成功',
       copyError: '复制失败'
     },
-    permission: {
-    
-    },
+    permission: {},
     size: {
       default: '默认',
       large: '大',
@@ -113,7 +111,7 @@ export default {
       more: '更多',
       export: '导出',
       import: '导入',
-      check: '查看',
+      check: '查看'
     },
     cropper: {
       selectImage: '选择图片',
@@ -128,6 +126,6 @@ export default {
       btn_zoom_in: '放大',
       btn_zoom_out: '缩小',
       preview: '预览'
-    },
+    }
   }
 }
