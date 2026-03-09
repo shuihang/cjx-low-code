@@ -24,7 +24,6 @@ export const translate = (
   option: undefined | TranslatorOption,
   locale: Language
 ): string => {
-  // console.log('translate', path, option)
   return (get(locale, `cjx.${path}`, `cjx.${path}`) as string).replace(
     /\{(\w+)\}/g,
     (_, key) => `${option?.[key] ?? `{${key}}`}`
@@ -34,7 +33,6 @@ export const translate = (
 export const buildLocaleContext = (locale: ComputedRef<Language>): LocaleContext => {
   const lang = computed(() => unref(locale).name)
   const localeRef = isRef(locale) ? locale : ref(locale)
-  // console.log('locale', locale.value)
   return {
     lang,
     locale: localeRef,
@@ -47,6 +45,5 @@ export const localeContextKey: InjectionKey<Ref<Language | undefined>> =
 
 export const useLocale = (localeOverrides?: Ref<Language | undefined>) => {
   const locale = localeOverrides || inject(localeContextKey, ref())!
-  // console.log('useLocale', inject(localeContextKey)?.value)
   return buildLocaleContext(computed(() => locale?.value || Chinese))
 }

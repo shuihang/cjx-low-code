@@ -26,7 +26,6 @@ export const makeInstaller = (components: Plugin[] = []) => {
       xProvideGlobalConfig({ locale: options.cjxLocale }, app, true)
     } else {
       provideGlobalConfig({ locale: zhCn }, app, true)
-      //xProvideGlobalConfig({ locale: zhCn}, app, true)
     }
   }
 

@@ -7,8 +7,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { XForm } from 'cjx-low-code'
-import type { FormOption } from 'cjx-low-code'
 import { ElMessage } from 'element-plus'
+import type { FormOption } from 'cjx-low-code'
 
 const form = ref({
   name: '',
@@ -26,7 +26,7 @@ const option = ref<FormOption>({
     {
       label: '年龄',
       prop: 'age',
-      type: 'inputNumber',
+      type: 'inputNumber'
     },
     {
       label: '性别',
@@ -56,5 +56,4 @@ const save = async (data: any, done) => {
     done()
   }, 500)
 }
-
 </script>
