@@ -1,5 +1,12 @@
 import installer from './defaults'
-export { XConfigProvider, XCrud, XDialog, XForm, XEditTable, $XDialog } from '@cjx-low-code/components';
+export {
+  XConfigProvider,
+  XCrud,
+  XDialog,
+  XForm,
+  XEditTable,
+  $XDialog
+} from '@cjx-low-code/components'
 export type {
   TableOption,
   ColumnProps,
@@ -13,8 +20,8 @@ export type {
   EditTableProps,
   EditTableOption,
   DialogProps,
-  DialogDirectiveInterface,
-} from '@cjx-low-code/components';
+  DialogDirectiveInterface
+} from '@cjx-low-code/components'
 export * from './make-installer'
 
 export const install = installer.install

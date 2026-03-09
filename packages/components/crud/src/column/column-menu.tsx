@@ -14,7 +14,7 @@ const {
 const XColumnMenu = defineComponent({
   name: 'XColumnMenu',
   slots: Object as CustomSlotsType<{
-    default?: any
+    default?: () => void
   }>,
   setup(_, { slots }) {
     const { t } = useLocale()

@@ -2,7 +2,7 @@ import { createVNode, defineAsyncComponent, defineComponent, ref, watchEffect } 
 import omit from '../../_util/omit'
 import { booleanType, objectType } from '../../_util/type'
 import XDialog from './index'
-import type { CustomSlotsType } from '../../_util/type'
+import type { AnyObject, CustomSlotsType } from '../../_util/type'
 import type { DialogProps } from './index'
 import type { CSSProperties, Component } from 'vue'
 
@@ -32,9 +32,9 @@ export default defineComponent({
   props: dialogPropsVcProps,
   emits: ['update:modelValue'],
   slots: Object as CustomSlotsType<{
-    default?: any
+    default?: () => void
     /* 操作区域插槽 */
-    menu?: any
+    menu?: () => void
   }>,
   setup(props, { slots, emit }) {
     const {
@@ -51,7 +51,7 @@ export default defineComponent({
       menu,
       visible: props.modelValue
     })
-    let component: Component | any = 'div'
+    let component: Component | string = 'div'
 
     // console.log(props.option.title, componentProps)
 
@@ -88,20 +88,13 @@ export default defineComponent({
             ? {
                 ...componentProps,
                 ...emitMethods,
-                onChange: (data: any) => (option.value.data = data)
+                onChange: (data: AnyObject) => (option.value.data = data)
               }
             : {
                 ...componentProps,
                 ...emitMethods
               }
         )}
-
-        {/*<Component*/}
-        {/*  {...componentProps}*/}
-        {/*  {...emitMethods}*/}
-        {/*  v-once*/}
-        {/*  onChange={(data: any) => (showSaveBtn && menu) && (option.value.data = data)}*/}
-        {/*/>*/}
       </XDialog>
     )
   }

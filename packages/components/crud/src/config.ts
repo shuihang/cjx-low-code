@@ -9,13 +9,13 @@ type CrudConfigType = {
   /** 序号栏宽度 */
   indexWidth: string
   /** 序号栏标题 */
-  index_title: string
+  indexTitle: string
   /** 复选框栏宽度 */
   selectionWidth: string
   /** 操作栏宽度 */
   menuWidth: string
   /** 操作栏标题 */
-  menu_title: string
+  menuTitle: string
   /** 标题栏列是否固定在左侧或者右侧。 true 表示固定在左侧 */
   menuFixed: 'left' | 'right'
   /** 操作栏表头的对齐方式 */
@@ -25,13 +25,13 @@ type CrudConfigType = {
   /** 表格头部菜单栏右边是否显示 */
   menuHeaderRight: boolean
   /** 表格是否显示加载动画 */
-  table_loading: boolean
+  tableLoading: boolean
   /** 表格弹窗宽度 */
   dialogWidth: string
   /** 拖动排序绑定的dom元素 */
   dropRowClass: string
   /** 是否显示溢出提示 默认 `true` */
-  show_overflow_tooltip: boolean
+  showOverflowTooltip: boolean
   /** 最大菜单按钮数量 超出后显示更多按钮，默认为3个按钮 */
   MAX_MENU_BTN_COUNT: number
   /** 导出文件默认后缀 */
@@ -54,17 +54,17 @@ type CrudConfigType = {
 const crudConfig: CrudConfigType = {
   defaultRowKey: 'id',
   indexWidth: '62',
-  index_title: t('table.index'),
+  indexTitle: t('table.index'),
   selectionWidth: '50',
   menuWidth: '220',
-  menu_title: t('table.action'),
+  menuTitle: t('table.action'),
   menuFixed: 'right',
   menuHeaderAlign: 'center',
   menuHeaderRight: true,
-  table_loading: true,
+  tableLoading: true,
   dialogWidth: '80%',
   dropRowClass: '.el-table__body-wrapper table tbody',
-  show_overflow_tooltip: true,
+  showOverflowTooltip: true,
   MAX_MENU_BTN_COUNT: 3,
   exportFileSuffix: '.xlsx',
   pageLayout: ['total', 'sizes', 'prev', 'pager', 'next', 'jumper'],

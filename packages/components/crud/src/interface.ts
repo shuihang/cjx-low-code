@@ -17,6 +17,7 @@ import type {
 } from '../../form/src/interface'
 import type { PropsToForm, SlotNodesInterface } from '../../form/src/tempform'
 import type { DicDataInterface, PropsInterface } from '../../_util/tool'
+import type { AnyObject } from '../../_util/type'
 
 export { FormItemRule, SlotNodesInterface, PropsInterface, DicDataInterface }
 
@@ -31,7 +32,7 @@ export interface Scope {
   /** 当前行索引 */
   $index: Index
   /** 当前行数据 */
-  row: Row<any>
+  row: AnyObject
 }
 
 export type Placement =
@@ -63,7 +64,7 @@ export type CrudFunction<T> = (
 
 // 表格开启懒加载
 export type TreeLoad<T extends object> = (
-  row: any,
+  row: AnyObject,
   treeNode: TreeNode,
   resolve: (data: T[]) => void
 ) => void
@@ -73,14 +74,18 @@ export type BeforeOpen<T> = (type: DialogFormType, row: T, done: () => void) => 
 
 // 导出
 export type HandleExport = (
-  exportFn: (exportApi: (params?: object) => Promise<any>, name: string, params?: object) => void
+  exportFn: (
+    exportApi: (params?: object) => Promise<AnyObject>,
+    name: string,
+    params?: object
+  ) => void
 ) => void
 
 export interface ImportProps {
   /** 导入接口 */
-  importApi: (params?: object) => Promise<any>
+  importApi: (params?: object) => Promise<AnyObject>
   /** 下载模版的接口 */
-  downloadApi: (params?: object) => Promise<any>
+  downloadApi: (params?: object) => Promise<Blob>
   /** 导入模版弹窗的标题 */
   title: string
   /** 模版下载完成的名字 */
@@ -88,9 +93,7 @@ export interface ImportProps {
   /** 要下载的模版的标识 */
   fileName?: string
   /** 导入的参数 */
-  importParams?: {
-    [K in string]: any
-  }
+  importParams?: AnyObject
   /** 导入成功之后响应的函数 */
   onSuccess: () => void
 }
@@ -103,9 +106,7 @@ export type ViewTabs = {
 
 type RulesType = Array<Partial<FormItemRule>>
 
-type DefaultRow = Record<PropertyKey, any>
-
-export interface SpanMethodProps<T extends DefaultRow> {
+export interface SpanMethodProps<T extends AnyObject> {
   row: T
   column: TableColumnCtx<T>
   rowIndex: number
@@ -113,14 +114,14 @@ export interface SpanMethodProps<T extends DefaultRow> {
 }
 
 /**
- * @param {any} form 表单绑定的form
+ * @param {AnyObject} form 表单绑定的form
  * @param {TableColumnCtx<Column>} column 列数据
  * @param {DialogFormType} _xBoxType 弹窗类型 cjx-crud组件才有 cjx-form为undefined
  * @returns {boolean} 是否显示
  */
 export type DisplayInterface =
   | boolean
-  | ((props: { form: any; column: FormColumnProps[]; _xBoxType?: DialogFormType }) => boolean)
+  | ((props: { form: AnyObject; column: FormColumnProps[]; _xBoxType?: DialogFormType }) => boolean)
 
 export type ColumnProps = Pick<PropsToForm, 'change'> &
   FormTypeProps & {
@@ -160,13 +161,18 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
     showOverflowTooltip?: boolean
     /**
      * 用来格式化内容
-     * @param {any} row 行数据
+     * @param {AnyObject} row 行数据
      * @param {TableColumnCtx<Column>} column 列数据
-     * @param {any} cellValue 单元格数据
+     * @param {AnyObject} cellValue 单元格数据
      * @param {number} index 行索引
      * @returns 格式化后的内容
      * */
-    formatter?: (row: any, column: TableColumnCtx<Column>, cellValue: any, index: number) => any
+    formatter?: (
+      row: AnyObject,
+      column: TableColumnCtx<Column>,
+      cellValue: any,
+      index: number
+    ) => any
     /** 列的 className */
     className?: string
     /** 当前列标题的自定义类名 */
@@ -177,7 +183,7 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
     props?: PropsInterface
     /**
      * 数据字典值
-     * @type {DicDataInterface} 默认为 {label: any, value: any}[]
+     * @type {DicDataInterface} 默认为 {label: string, value: string | number}[]
      */
     dicData?: DicDataInterface
     /** 数据字典接口url地址 */
@@ -187,9 +193,9 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
     /** 数据字典接口url携带头部参数 */
     // dicHeaders?: object,
     /** 数据字典接口函数 返回数据格式化方法  */
-    // dicAjaxFormatter?: (res: any) => any[],
+    // dicAjaxFormatter?: (res: AnyObject) => AnyObject[],
     /** 数据字典 接口函数返回的数据  */
-    dicAjaxResolve?: Promise<any>
+    dicAjaxResolve?: Promise<DicDataInterface>
     /** 数据字典接口请求方式 */
     // dicMethod?: 'GET' | 'POST' | 'PUT',
     /** 搜索项框栅列 */
@@ -213,18 +219,22 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
     /**
      * 表单当前项是否显示。可以是布尔类型或函数表达式。
      * 如果未使用此参数，则取 `display` 参数的值，默认为 `true`。
-     * @param {any} form 表单绑定的form
+     * @param {AnyObject} form 表单绑定的form
      * @param {FormColumnProps[]} column 列数据
      * @param {DialogFormType} _xBoxType 弹窗类型
      * @returns {boolean} 是否显示
      */
     display?:
       | boolean
-      | ((props: { form: any; column: FormColumnProps[]; _xBoxType?: DialogFormType }) => boolean)
+      | ((props: {
+          form: AnyObject
+          column: FormColumnProps[]
+          _xBoxType?: DialogFormType
+        }) => boolean)
     /**
      * 表单新增时当前项是否显示。可以是布尔类型或函数表达式。
      * 如果未使用此参数，则取 `display` 参数的值，默认为 `true`。
-     * @param {any} form 表单绑定的form
+     * @param {AnyObject} form 表单绑定的form
      * @param {FormColumnProps[]} column 列数据
      * @param {DialogFormType} _xBoxType 弹窗类型
      * @returns {boolean} 是否显示
@@ -233,7 +243,7 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
     /**
      * 表单编辑时当前项是否显示。可以是布尔类型或函数表达式。
      * 如果未使用此参数，则取 `display` 参数的值，默认为 `true`。
-     * @param {any} form 表单绑定的form
+     * @param {AnyObject} form 表单绑定的form
      * @param {FormColumnProps[]} column 列数据
      * @param {DialogFormType} _xBoxType 弹窗类型
      * @returns {boolean} 是否显示
@@ -242,8 +252,8 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
     /**
      * 表单查看时当前项是否显示。可以是布尔类型或函数表达式。
      * 如果未使用此参数，则取 `display` 参数的值，默认为 `true`。
-     * @type {DisplayInterface = boolean | ((props: {form: any, column: FormColumnProps[], index: number, _xBoxType?: DialogFormType }) => boolean)}
-     * @param {any} form 表单绑定的form
+     * @type {DisplayInterface = boolean | ((props: {form: AnyObject, column: FormColumnProps[], index: number, _xBoxType?: DialogFormType }) => boolean)}
+     * @param {AnyObject} form 表单绑定的form
      * @param {FormColumnProps[]} column 列数据
      * @param {DialogFormType} _xBoxType 弹窗类型
      * @returns {boolean} 是否显示
@@ -252,18 +262,22 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
     /**
      * 表单当前项是否显示。可以是布尔类型或函数表达式。
      * 如果未使用此参数，则取 `display` 参数的值，默认为 `true`。
-     * @param {any} form 表单绑定的form
+     * @param {AnyObject} form 表单绑定的form
      * @param {FormColumnProps[]} column 列数据
      * @param {DialogFormType} _xBoxType 弹窗类型
      * @returns {boolean} 是否可以编辑
      * */
     disabled?:
       | boolean
-      | ((props: { form: any; column: FormColumnProps[]; _xBoxType?: DialogFormType }) => boolean)
+      | ((props: {
+          form: AnyObject
+          column: FormColumnProps[]
+          _xBoxType?: DialogFormType
+        }) => boolean)
     /**
      * 表单新增时当前项是否显示。可以是布尔类型或函数表达式。
      * 如果未使用此参数，则取 `disabled` 参数的值，默认为 `false`。
-     * @param {any} form 表单绑定的form
+     * @param {AnyObject} form 表单绑定的form
      * @param {FormColumnProps[]} column 列数据
      * @param {DialogFormType} _xBoxType 弹窗类型
      * @returns {boolean} 是否可以编辑
@@ -271,7 +285,7 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
     createDisabled?:
       | boolean
       | ((props: {
-          form: any
+          form: AnyObject
           column: FormColumnProps[]
           index: number
           _xBoxType?: DialogFormType
@@ -279,25 +293,33 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
     /**
      * 表单编辑时当前项是否显示。可以是布尔类型或函数表达式。
      * 如果未使用此参数，则取 `disabled` 参数的值，默认为 `false`。
-     * @param {any} form 表单绑定的form
+     * @param {AnyObject} form 表单绑定的form
      * @param {FormColumnProps[]} column 列数据
      * @param {DialogFormType} _xBoxType 弹窗类型
      * @returns {boolean} 是否可以编辑
      * */
     updateDisabled?:
       | boolean
-      | ((props: { form: any; column: FormColumnProps[]; _xBoxType?: DialogFormType }) => boolean)
+      | ((props: {
+          form: AnyObject
+          column: FormColumnProps[]
+          _xBoxType?: DialogFormType
+        }) => boolean)
     /**
      * 表单查看时当前项是否显示。可以是布尔类型或函数表达式。
      * 如果未使用此参数，则取 `disabled` 参数的值，默认为 `false`。
-     * @param {any} form 表单绑定的form
+     * @param {AnyObject} form 表单绑定的form
      * @param {FormColumnProps[]} column 列数据
      * @param {DialogFormType} _xBoxType 弹窗类型
      * @returns {boolean} 是否可以编辑
      * */
     checkDisabled?:
       | boolean
-      | ((props: { form: any; column: FormColumnProps[]; _xBoxType?: DialogFormType }) => boolean)
+      | ((props: {
+          form: AnyObject
+          column: FormColumnProps[]
+          _xBoxType?: DialogFormType
+        }) => boolean)
     /** 表单项标题宽度 默认`90`*/
     labelWidth?: number
     /** 表格项是否隐藏 默认为 `false` */
@@ -329,7 +351,11 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
   }
 
 export type TableGroupInterface = Omit<GroupInterface, 'column' | 'display'> & {
-  display?: (props: { form: any; column: FormColumnProps[]; _xBoxType?: DialogFormType }) => boolean
+  display?: (props: {
+    form: AnyObject
+    column: FormColumnProps[]
+    _xBoxType?: DialogFormType
+  }) => boolean
   column?: Pick<
     ColumnProps,
     | (typeof formColumnValues)[number]
@@ -407,7 +433,7 @@ export type TableOption = {
   /** 表单分组 */
   group?: TableGroupInterface[]
   /* column 的 key， 如果需要使用 filter-change 事件，则需要此属性标识是哪个 column 的筛选条件 */
-  // filterChange: functionType<(filters: any) => void>()
+  // filterChange: functionType<(filters: AnyObject) => void>()
   /** 表格等待框的控制 */
   tableLoading?: boolean
   /** 是否要高亮当前行 */
@@ -508,12 +534,12 @@ export interface EmitFn {
   onDialogTabChange: (index: number) => void
 }
 
-export type PermissionMenBtnType = ComputedRef<boolean> | ((porps: Scope) => boolean)
+export type PermissionMenBtnType = boolean | ComputedRef<boolean> | ((porps: Scope) => boolean)
 
 /* 权限配置 */
 export interface CrudPermission {
   /** 新增按钮权限 */
-  addBtn?: ComputedRef<boolean>
+  addBtn?: boolean | ComputedRef<boolean>
   /** 编辑按钮权限 */
   editBtn?: PermissionMenBtnType
   /** 删除按钮权限 */
@@ -531,7 +557,7 @@ export interface CrudPermission {
 export const crudProps = () => ({
   onLoad: functionType<() => Promise<any>>(),
   /** 表格数据 */
-  data: arrayType<any[]>(),
+  data: arrayType<AnyObject[]>(),
   /** 表格配置 */
   option: objectType<TableOption | UnwrapRef<TableOption>>(),
   /** 分页的配置 */
@@ -550,12 +576,12 @@ export const crudProps = () => ({
   /** 自定义的合计计算方法 */
   summaryMethod: functionType(),
   /** 行的 className 的回调方法，也可以使用字符串为所有行设置一个固定的 className。 */
-  rowClassName: someType<(data: { row: any; rowIndex: number }) => string | CSSProperties>(),
+  rowClassName: someType<(data: { row: AnyObject; rowIndex: number }) => string | CSSProperties>(),
   /** 单元格的 className 的回调方法，也可以使用字符串为所有单元格设置一个固定的 className。 */
   cellClassName:
     someType<
       (data: {
-        row: any
+        row: AnyObject
         column: any
         rowIndex: number
         columnIndex: number

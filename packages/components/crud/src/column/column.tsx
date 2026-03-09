@@ -9,7 +9,7 @@ import crudConfig from '../config'
 import XColumnMenu from './column-menu'
 import type { ColumnProps, Scope } from '../../../crud/src/interface'
 import type { SetUpInterface } from '../context'
-import type { CustomSlotsType } from '../../../_util/type'
+import type { AnyObject, CustomSlotsType } from '../../../_util/type'
 
 const {
   defaultRowKey,
@@ -23,12 +23,8 @@ export type TableColumRef = {
 
 export const getValueByPath = (form: Record<string, any>, path: string) => {
   let value = form
-  if (!path) {
-    return
-  }
-  if (path?.indexOf('.') === -1) {
-    return value[path]
-  }
+  if (!path) return
+  if (path?.indexOf('.') === -1) return value[path]
 
   const pathArray = path.split('.')
   pathArray.forEach((prop, index) => {
@@ -48,9 +44,8 @@ const XTableColumn = defineComponent({
   },
   slots: Object as CustomSlotsType<{
     /* 操作栏插槽 */
-    menu?: any
+    menu?: () => void
   }>,
-  // expose: Object as ExtractDefaultPropTypes<{setRadioCurrent: () => void }>,
   emits: ['radioChange'],
   setup(props, { slots, emit, expose }) {
     const { t } = useLocale()
@@ -69,17 +64,16 @@ const XTableColumn = defineComponent({
     } = useCrudInjectKey().value.option.value
 
     const radioValue = ref<any>('')
-    const radioChange = (v: any, row: any) => {
+    const radioChange = (v: string | number | boolean, row: AnyObject) => {
       radioValue.value = v
       emit('radioChange', row)
     }
 
-    const setRadioCurrent = (id: any) => {
+    const setRadioCurrent = (id: string | number | boolean) => {
       radioValue.value = id
     }
 
-    const dicDataMap = ref<{ [key: string]: any }>({})
-    // console.log('dicDataMap', dicDataMap.value)
+    const dicDataMap = ref<AnyObject>({})
 
     expose({
       setRadioCurrent
@@ -104,7 +98,7 @@ const XTableColumn = defineComponent({
             align="center"
             width={selectionWidth}
             v-slots={{
-              default: ({ row }: any) => (
+              default: ({ row }: AnyObject) => (
                 <ElRadioGroup
                   v-model={radioValue.value}
                   class="w-100%"
@@ -149,7 +143,7 @@ const XTableColumn = defineComponent({
               <ElTableColumn
                 class-name={'font-size-14px'}
                 key={index}
-                formatter={(row: any) => {
+                formatter={(row: AnyObject) => {
                   return dicDataMap.value[item.prop]
                     ? translateStr(
                         getValueByPath(row, item.prop),
@@ -161,7 +155,10 @@ const XTableColumn = defineComponent({
                 v-slots={{
                   header: () => item.label,
                   default: (scope: Scope) =>
-                    (slots as any)[item.prop] && (slots as any)[item.prop](scope)
+                    (slots as CustomSlotsType<{ default?: (scope: Scope) => void }>)[item.prop] &&
+                    (slots as CustomSlotsType<{ default?: (scope: Scope) => void }>)[item.prop](
+                      scope
+                    )
                 }}
                 {...omit(item as ColumnProps, ['label'])}
               ></ElTableColumn>

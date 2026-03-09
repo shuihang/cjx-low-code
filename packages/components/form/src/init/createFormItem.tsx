@@ -8,6 +8,7 @@ import { tempForm } from '../tempform'
 import { componentPropsValues, formColumnValues } from '../interface'
 import { TipOutlined } from '../../../crud/src/icon'
 import formConfig from '../config'
+import type { ColumnProps } from '../../../crud'
 import type { SlotsValue } from '../tempform'
 import type { FormColumnProps, FormItemType, FormTypeProps } from '../interface'
 import type { FormRenderContext, FormRenderOptions } from './FormRenderDecorator'
@@ -77,13 +78,14 @@ function createFormItemComponent(
     }
   }
 
-  if (context._formatRules && !options.isSearch && (item.disabled as any)) {
-    baseProps.disabled = isFunction(item.disabled)
-      ? item.disabled({
+  if (context._formatRules && !options.isSearch && item.disabled) {
+    const disabled = item.disabled as ColumnProps['disabled']
+    baseProps.disabled = isFunction(disabled)
+      ? disabled({
           form: { ...context.newForm.value },
           column: context.column,
-          xBoxType: context.xBoxType?.value
-        } as any)
+          _xBoxType: context.xBoxType?.value
+        })
       : item.disabled
   }
 

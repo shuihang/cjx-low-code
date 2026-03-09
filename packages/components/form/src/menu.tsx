@@ -51,7 +51,7 @@ const XFromMenu = defineComponent({
   },
   slots: Object as CustomSlotsType<{
     /* 表单操作区域插槽 */
-    menu?: any
+    menu?: () => void
   }>,
   emits: ['reset', 'submit'],
   setup(props, { emit, slots }) {

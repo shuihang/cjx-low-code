@@ -20,19 +20,9 @@ const XDialogImport = (props: ImportProps, slots?: () => Promise<any>) => {
     const data = await downloadApi({ fileName: props?.fileName })
     const reader = new FileReader()
     reader.readAsText(data, 'utf-8')
-    reader.onload = function (e) {
-      // console.log(e, 'e')
-      // console.log(reader.result, 'result')
-      // const obj = JSON.parse(reader.result)
+    reader.onload = function () {
       download.excel(data, `${props?.downName}.xlsx`)
-      // if (obj.msg || obj.data === null) {
-      //   message.warning(obj.msg)
-      // }else {
-      //   download.excel(data,  `${props?.downName}.xls`);
-      // }
     }
-    //console.log(data, '3333')
-    //
   }
   const onSave = (done: () => void) => {
     if (fileList.value.length === 0) {
@@ -40,7 +30,7 @@ const XDialogImport = (props: ImportProps, slots?: () => Promise<any>) => {
       done()
       return
     }
-    // console.log(fileList.value, 'fileList')
+
     fileList.value.forEach(async (item) => {
       await importApi({ file: item.raw, ...importParams })
         .then(() => {
@@ -81,16 +71,9 @@ const XDialogImport = (props: ImportProps, slots?: () => Promise<any>) => {
     }
   }
 
-  const onRemove = (uploadFile: UploadFile, uploadFiles: UploadFiles) => {
+  const onRemove = (_uploadFile: UploadFile, uploadFiles: UploadFiles) => {
     fileList.value = uploadFiles
   }
-
-  // const toUploadImg = async (param: UploadRequestOptions) => {
-  //   const formData = new FormData()
-  //   formData.append('file', param.file)
-  //   console.log(param.file, formData)
-  //   await importApi({file: param.file})
-  // }
 
   return (
     <XDialog option={option.value}>
@@ -111,7 +94,6 @@ const XDialogImport = (props: ImportProps, slots?: () => Promise<any>) => {
         onChange={onChange}
         on-remove={onRemove}
         v-model:fileList={fileList.value}
-        // http-request={toUploadImg}
       >
         <el-icon class="el-icon--upload">
           <UploadFilled />

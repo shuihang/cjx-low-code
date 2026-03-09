@@ -8,8 +8,14 @@ import type { SearchFromProps } from '@cjx-low-code/components/form/src/interfac
 
 const XHeaderSearch = defineComponent({
   name: 'XHeaderSearch',
-  setup(_, { slots }) {
-    const { option, search, onSearchReset, onSearchChange } = useCrudInjectKey().value
+  props: {
+    form: {
+      type: Object,
+      default: () => ({})
+    }
+  },
+  setup(props, { slots }) {
+    const { option, onSearchReset, onSearchChange } = useCrudInjectKey().value
 
     const searchFormProps = computed<SearchFromProps>(() => {
       const newColumn = option.value.column
@@ -34,9 +40,7 @@ const XHeaderSearch = defineComponent({
           formSpan: option.value.searchSpan,
           labelWidth: option.value.searchLabelWidth,
           column: newColumn
-        },
-        form: search
-        // queryBtn: hasPermi(permission?.queryBtn) ,
+        }
       }
     })
 
@@ -44,6 +48,7 @@ const XHeaderSearch = defineComponent({
       <>
         <XSearchForm
           {...searchFormProps.value}
+          form={props.form}
           onReset={onSearchReset}
           onSubmit={onSearchChange}
           v-slots={{

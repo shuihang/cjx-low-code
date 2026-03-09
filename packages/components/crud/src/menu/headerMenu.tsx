@@ -41,7 +41,7 @@ const XHeaderMenu = defineComponent({
     }
   },
   slots: Object as CustomSlotsType<{
-    default?: () => any // 默认插槽
+    default?: () => void // 默认插槽
   }>,
   setup(props, { slots }) {
     const { t } = useLocale()

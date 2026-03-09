@@ -8,5 +8,5 @@ export function hasPermi(permission: PermissionMenBtnType | undefined, scope: Sc
 
   if (!permission) return true
 
-  return permission.value || true
+  return typeof permission === 'boolean' ? permission : permission.value || true
 }

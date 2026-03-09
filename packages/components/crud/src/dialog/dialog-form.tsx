@@ -35,7 +35,7 @@ const XDiaLogForm = defineComponent({
   },
   slots: Object as CustomSlotsType<{
     /* 表单插槽 */
-    form?: any
+    form?: () => void
   }>,
   setup(props, { slots, attrs }) {
     const { t } = useLocale() // 国际化

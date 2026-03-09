@@ -1,5 +1,6 @@
 import { defineComponent } from 'vue'
-import type { PropType } from 'vue'
+import type { CSSProperties, PropType } from 'vue'
+import type { AnyObject } from '../_util/type'
 
 export const tagColor = {
   primary: '#409eff',
@@ -20,7 +21,7 @@ export type DicDataInterface = Array<
     // label: string,
     // value: string | number,
     colorType?: ColorTypeInterface
-  } & { [key in string]: any }
+  } & AnyObject
 >
 
 export default defineComponent({
@@ -40,7 +41,7 @@ export default defineComponent({
   setup(props) {
     return () => (
       <>
-        <div style={{ display: 'flex', alignItems: 'center' } as any}>
+        <div style={{ display: 'flex', alignItems: 'center' } as CSSProperties}>
           <div
             style={
               {
@@ -49,10 +50,10 @@ export default defineComponent({
                 width: '0.4em',
                 height: '0.4em',
                 marginRight: '0.4em'
-              } as any
+              } as CSSProperties
             }
           ></div>
-          <div style={{ color: tagColor[props.colorType] } as any}>{props.label}</div>
+          <div style={{ color: tagColor[props.colorType] } as CSSProperties}>{props.label}</div>
         </div>
       </>
     )

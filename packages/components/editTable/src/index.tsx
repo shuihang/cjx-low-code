@@ -6,7 +6,7 @@ import XCrud from '../../crud'
 import pick from '../../_util/pick'
 import { withInstallVue } from '../../_util/type'
 import { editTableMapProps, editTableProps } from './interface'
-import type { CustomSlotsType } from '../../_util/type'
+import type { AnyObject, CustomSlotsType } from '../../_util/type'
 import type { ComputedRef, DefineComponent, VNode } from 'vue'
 import type { EditTableOption, Placement } from './interface'
 import type { SortableEvent } from 'sortablejs'
@@ -14,12 +14,12 @@ import type { Scope, TableOption } from '../../crud/src/interface'
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 const editTableEmits = {
-  'update:modelValue': (data: any[]) => true,
+  'update:modelValue': (data: AnyObject[]) => true,
   /** 点击新增按钮触发的事件 */
-  addChange: (row: any, index: number) => true,
-  delChange: (row: any, index: number) => true,
+  addChange: (row: AnyObject, index: number) => true,
+  delChange: (row: AnyObject, index: number) => true,
   /** 点击复制按钮触发的事件 */
-  copyChange: (row: any, index: number) => true,
+  copyChange: (row: AnyObject, index: number) => true,
   sortableChange: (sortable: SortableEvent) => true
 }
 /* eslint-enable @typescript-eslint/no-unused-vars */
@@ -37,7 +37,7 @@ export const XEditTable = withInstallVue(
       } & {
         [key: string]: {
           /** 表格行数据 */
-          row: any
+          row: AnyObject
           /** 表格行索引 */
           $index: number
         }
@@ -52,7 +52,7 @@ export const XEditTable = withInstallVue(
 
       // const data = ref<any[]>([...props.modelValue])
 
-      const keys: any = {}
+      const keys: AnyObject = {}
 
       const tableOption = ref<TableOption>({
         isCard: false,
@@ -66,13 +66,7 @@ export const XEditTable = withInstallVue(
         column: []
       })
 
-      const onUpdateModelValue = (v: any) => {
-        //data.value[index][key] = v
-        // emit('update:modelValue', data.value)
-      }
-
       const addChange = () => {
-        // data.value.push({...keys})
         if (props.modelValue) {
           emit('update:modelValue', [...props.modelValue, { ...keys }])
         } else {
@@ -178,7 +172,7 @@ export const XEditTable = withInstallVue(
                     )
 
                     rules?.forEach((rule) => {
-                      if ((rule as any).required) {
+                      if (rule.required) {
                         newLabel = getLabelNode(
                           tip,
                           <div class={'flex flex-items-center'}>
@@ -223,7 +217,6 @@ export const XEditTable = withInstallVue(
                   >
                     <Component
                       v-model={props.modelValue![$index]![prop]}
-                      onUpdate:modelValue={onUpdateModelValue}
                       placeholder={editTableMapProps[type].placeholder + label}
                       type={editTableMapProps[type].type}
                       {...editTableMapProps[type][type]}

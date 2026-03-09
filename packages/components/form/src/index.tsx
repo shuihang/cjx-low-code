@@ -88,7 +88,6 @@ export const XForm = withInstall(
       )
 
       const onUpdateModelValue = (prop: string, value: string) => {
-        // form && newForm.value && (newForm.value[prop] = value)
         form && newForm.value && (getValueByPath(newForm, prop).value = value)
       }
 
@@ -116,7 +115,6 @@ export const XForm = withInstall(
         }
 
         ruleFormRef.value?.validate((valid, fields) => {
-          console.log('submit', newForm.value)
           if (valid) {
             disabledForm.value = true
 

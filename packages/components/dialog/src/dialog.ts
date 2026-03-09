@@ -1,6 +1,7 @@
 import { createVNode, render } from 'vue'
 import { ErrorCodes, createError, defaultOnError as onError } from '../../_util/errors'
 import XDialogDirective, { type DialogDirectiveOption } from './dialogDirective'
+import type { AnyObject } from '../../_util/type'
 import type {
   AllowedComponentProps,
   AppContext,
@@ -59,7 +60,7 @@ type AsyncDialogDirectiveProps<
   T extends object | (abstract new (...args: any[]) => any),
   E extends object
 > = DialogDirectiveProps<
-  T extends Promise<Component> ? Record<string, any> : T,
+  T extends Promise<Component> ? AnyObject : T,
   EmitsAddArgs<E, [[close: () => void]]>
 >
 

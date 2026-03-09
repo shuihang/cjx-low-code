@@ -19,7 +19,7 @@ import type {
   FormItemType,
   FormTypeProps
 } from '../interface'
-import type { PickRequiredOptional } from '../../../_util/type'
+import type { AnyObject, PickRequiredOptional } from '../../../_util/type'
 import type { Column, TableColumnCtx } from 'element-plus'
 import type { Ref, VNode } from 'vue'
 
@@ -96,7 +96,7 @@ export class Common implements TemplateCommonProps {
    */
   @MeasurePerformance({ threshold: 100 })
   public _arraySort() {
-    return arraySort(this.column as FormColumnProps[], 'order', async (item) => {
+    return arraySort(this.column, 'order', async (item) => {
       if (item.dicAjaxResolve) {
         item.dicData = await item.dicAjaxResolve
       }
@@ -160,13 +160,13 @@ export class Common implements TemplateCommonProps {
     return this._computedCache[path]
   }
 
-  private _computedCache: Record<string, any> = {}
+  private _computedCache: AnyObject = {}
 
   /**
    * 获取表单项的除modeValue之外的值并进行双向绑定
    */
   public _getBindValue(col: FormColumnProps, itemType: FormItemType) {
-    const componentBindValues: any = {}
+    const componentBindValues: AnyObject = {}
     try {
       const componentBindKey = tempForm[itemType]?.componentBindKey || ''
       const componentBindValue = col.componentBind
@@ -391,7 +391,7 @@ export class RenderViewFormVNode extends Common implements RenderInterface {
     this.$index = data.$index
   }
 
-  public valueMap: Record<string, any> = {
+  public valueMap: AnyObject = {
     editTable: (column: ColumnProps) => {
       const value = this.newForm.value[column.prop] || []
       // @ts-ignore
@@ -413,7 +413,7 @@ export class RenderViewFormVNode extends Common implements RenderInterface {
   //   xBoxType: 'check'
   // })
   // 处理查看模式下的特殊情况
-  public _handleCheckValue(value: string | number | any[], column: ColumnProps) {
+  public _handleCheckValue(_value: string | number | AnyObject[], column: ColumnProps) {
     if (this.valueMap[getColumnFormType(column)])
       return this.valueMap[getColumnFormType(column)](column)
 

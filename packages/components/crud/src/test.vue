@@ -4,17 +4,17 @@
 
 <script setup lang="ts">
 defineOptions({
-  name: 'Test',
+  name: 'Test'
 })
 
 const props = defineProps({
   msg: {
     type: String,
-    default: 'test',
+    default: 'test'
   },
   count: {
     type: Number,
-    default: 0,
-  },
+    default: 0
+  }
 })
 </script>

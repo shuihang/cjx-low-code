@@ -1,9 +1,9 @@
 import { computed } from 'vue'
 import { isArray, isObject } from '../../_util/shared'
 import type { Ref } from 'vue'
-import type { DeepPartial } from '../../_util/type'
+import type { AnyObject, DeepPartial } from '../../_util/type'
 
-export const getValueByPath = (form: Ref<Record<string, any>>, path: string) => {
+export const getValueByPath = (form: Ref<AnyObject>, path: string) => {
   return computed({
     get() {
       let value = form.value
@@ -31,7 +31,7 @@ export const getValueByPath = (form: Ref<Record<string, any>>, path: string) => 
 
       const pathArray = path.split('.')
       const lastProp = pathArray.pop()
-      const obj = pathArray.reduce((accumulator: Record<string, any>, currentValue) => {
+      const obj = pathArray.reduce((accumulator: AnyObject, currentValue) => {
         return accumulator[currentValue] || { [currentValue]: '' }
       }, form.value)
       lastProp && (obj[lastProp] = newValue)
