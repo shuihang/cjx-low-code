@@ -2,15 +2,10 @@
   <!-- <div @click="onClickOutside">
     <el-icon><Warning /></el-icon>
   </div> -->
-  <ElPopover
-    popper-class="is-light"
-    ref="popoverRef"
-    trigger="click"
-    width="auto"
-  >
+  <ElPopover ref="popoverRef" popper-class="is-light" trigger="click" width="auto">
     <template #reference>
       <div class="popover-reference">
-        <slot></slot>
+        <slot />
         <el-icon class="popover-reference-icon"><Warning /></el-icon>
       </div>
     </template>
@@ -24,23 +19,21 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { ElPopover, ElIcon } from 'element-plus'
+import { ElIcon, ElPopover } from 'element-plus'
 import { Warning } from '@element-plus/icons-vue'
 
 const props = defineProps({
   content: {
     type: String,
     default: ''
-  },
+  }
 })
 
-
-const popoverRef = ref();
+const popoverRef = ref()
 const onClickOutside = () => {
   console.log('点击了外部')
   popoverRef.value?.hide()
 }
-
 </script>
 
 <style>

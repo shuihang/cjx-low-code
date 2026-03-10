@@ -1,23 +1,31 @@
 <template>
   <div>
-    <XForm ref="formRef" :form="form" :option="option" @submit="save" />
+    <XForm
+      ref="formRef"
+      v-model:form="form"
+      :option="option"
+      :schema-field="schemaField"
+      @submit="save"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import { XForm } from 'cjx-low-code'
-import type { FormOption } from 'cjx-low-code'
 import { ElMessage } from 'element-plus'
+import type { FormOption, SchemaProvideType } from 'cjx-low-code'
 
 const form = ref({
   reviewComments: '同意',
   result: '1'
 })
 
-
 const option = ref<FormOption>({
-  labelWidth: 120,
+  labelWidth: 120
+})
+
+const schemaField = ref<SchemaProvideType>({
   column: [
     {
       label: '审核结果',
@@ -34,13 +42,16 @@ const option = ref<FormOption>({
         }
       ],
       on: {
-      },
-      change: (value, column) => {
-        console.log(value, column)
-        column[0].label = value === '1' ? '审核结果1' : '不同意意见2'
+        radioEvent: {
+          onChange: (value, _helpers) => {
+            _helpers.updateColumns(['result'], {
+              label: value === '1' ? '审核结果1' : '不同意意见2'
+            })
+          }
+        }
       },
       rules: [{ required: true, message: '请选择审核结果' }],
-      span: 24,
+      span: 24
     },
     {
       label: '审核意见',
@@ -48,8 +59,7 @@ const option = ref<FormOption>({
       type: 'textarea',
       display: ({ form }) => form.result === '1',
       disabled: ({ form }) => form.result === '1',
-      span: 24,
-      
+      span: 24
     },
     {
       label: '不同意意见',
@@ -58,7 +68,7 @@ const option = ref<FormOption>({
       display: ({ form }) => form.result === '2',
       rules: [{ required: true, message: '请输入审核意见' }],
       span: 24
-    },
+    }
   ]
 })
 
@@ -72,5 +82,4 @@ const save = async (data: any, done) => {
     done()
   }, 500)
 }
-
 </script>

@@ -1,6 +1,12 @@
 <template>
   <div>
-    <XCrud v-model:form="form" :option="option" :data="data" @before-open="beforeOpen" @row-save="save" >
+    <XCrud
+      v-model:form="form"
+      :option="option"
+      :data="data"
+      @before-open="beforeOpen"
+      @row-save="save"
+    >
       <template #nameSearch>
         <el-input placeholder="请输入插槽姓名" />
       </template>
@@ -10,7 +16,9 @@
       </template>
 
       <template #menu="{ row, $index }">
-        <el-button type="primary" link @click="customizeMenuBtn(row, $index)">自定义按钮menu</el-button>
+        <el-button type="primary" link @click="customizeMenuBtn(row, $index)"
+          >自定义按钮menu</el-button
+        >
       </template>
 
       <template #name="{ row }">
@@ -19,7 +27,8 @@
 
       <template #nameForm="{ prop, _XBoxType }">
         <div v-if="_XBoxType === 'check'">
-           <el-tag>{{ form.name }}</el-tag>{{prop}}
+          <el-tag>{{ form.name }}</el-tag
+          >{{ prop }}
         </div>
 
         <div v-else>
@@ -27,17 +36,15 @@
         </div>
       </template>
 
-      <template #otherGroupForm>
-         1111
-      </template>
+      <template #otherGroupForm> 1111 </template>
     </XCrud>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import type { TableOption } from 'cjx-low-code'
 import { ElMessage } from 'element-plus'
+import type { TableOption } from 'cjx-low-code'
 
 const option = ref<TableOption>({
   menu: true,
@@ -46,7 +53,7 @@ const option = ref<TableOption>({
   viewBtn: true,
   addBtn: true,
   span: 12,
-  column: [ 
+  column: [
     {
       label: '姓名',
       prop: 'name',
@@ -102,11 +109,9 @@ const option = ref<TableOption>({
               value: '4'
             }
           ],
-          checkbox: {
-            
-          },
+          checkbox: {}
         },
-        
+
         {
           label: '职业',
           prop: 'job',
@@ -134,7 +139,7 @@ const option = ref<TableOption>({
     },
     {
       label: '其他信息',
-      prop: 'other',
+      prop: 'other'
     }
   ]
 })
@@ -146,7 +151,7 @@ const data = [
     address: '北京市',
     sex: '男',
     hobby: ['2', '4'],
-    job: '1',
+    job: '1'
   },
   {
     name: '小红',
@@ -154,7 +159,7 @@ const data = [
     address: '上海市',
     sex: '女',
     hobby: ['2'],
-    job: '4',
+    job: '4'
   }
 ]
 
@@ -163,18 +168,15 @@ const form = ref({
 })
 
 const beforeOpen: (...args: any[]) => void = (type, row, done) => {
-  console.log(type, row)
   done()
-
 }
 
 const customizeMenuBtn = (row: any, $index: number) => {
-  ElMessage.success('自定义按钮menu: row: ' + JSON.stringify(row) + ' $index: ' + $index)
+  ElMessage.success(`自定义按钮menu: row: ${JSON.stringify(row)} $index: ${$index}`)
 }
 
 const save = (row: any, done) => {
-  console.log(form.value)
-  ElMessage.success('保存成功:' + JSON.stringify(form.value))
+  ElMessage.success(`保存成功:${JSON.stringify(form.value)}`)
   done()
 }
 </script>

@@ -99,11 +99,6 @@ export interface ImportProps {
 }
 export type HandleImport = (importFn: (props: ImportProps) => void) => void
 
-export type ViewTabs = {
-  label: string
-  value: string
-}
-
 type RulesType = Array<Partial<FormItemRule>>
 
 export interface SpanMethodProps<T extends AnyObject> {
@@ -466,10 +461,6 @@ export type TableOption = {
   importBtn?: boolean
   /** 表格导出按钮 */
   excelBtn?: boolean
-  /** tabs查看 仅对查看弹窗有效 */
-  viewTabs?: ViewTabs[]
-  /** 当前tab */
-  viewTabsCurrent?: string | number
   /** 表格头部菜单栏右边是否显示 */
   menuHeaderRight?: boolean
   /** 是否卡片模式 */

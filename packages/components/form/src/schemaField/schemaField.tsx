@@ -1,20 +1,29 @@
-import { computed, defineComponent, ref } from 'vue'
+import { computed, defineComponent, onBeforeUpdate, ref } from 'vue'
 import { registerFieldTypes } from './fieldTypes'
 import { useFormProviderKey } from './context'
 import type { FieldInterface } from './context'
 
-export const SchemaField = defineComponent({
-  // 主容器组件
-  name: 'SchemaField',
+const SchemaField = defineComponent({
+  name: 'XSchemaField',
+  ...registerFieldTypes,
   setup(_, { slots }) {
-    const fields = ref<FieldInterface[]>([])
+    const fields = ref<FieldInterface<any>[]>([])
+
+    // 组件更新前清空字段数组
+    onBeforeUpdate(() => {
+      fields.value = []
+    })
 
     // 提供收集字段的方法
     useFormProviderKey(
       computed(() => ({
         addField: (field) => {
           fields.value.push(field)
-          console.log(fields.value)
+          console.log('addField', field, fields.value)
+        },
+        addGroupField: (field) => {
+          fields.value.push(field)
+          console.log('addGroupField', field, fields.value)
         }
       }))
     )
@@ -23,5 +32,4 @@ export const SchemaField = defineComponent({
   }
 })
 
-// 注册字段类型组件
-registerFieldTypes(SchemaField)
+export const XSchemaField = SchemaField as typeof SchemaField & typeof registerFieldTypes

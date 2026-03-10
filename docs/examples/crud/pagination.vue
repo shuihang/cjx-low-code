@@ -6,19 +6,19 @@
       v-model:page="page"
       :option="option"
       :data="data"
+      :on-load="onLoad"
       @before-open="beforeOpen"
       @row-del="rowDel"
       @row-save="addSave"
       @row-update="rowUpdate"
-      :on-load="onLoad"
     />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import type { TableOption, CrudPageProps } from 'cjx-low-code'
 import { ElMessage } from 'element-plus'
+import type { CrudPageProps, TableOption } from 'cjx-low-code'
 
 const option = ref<TableOption>({
   addBtn: true,
@@ -26,14 +26,12 @@ const option = ref<TableOption>({
   viewBtn: true,
   updateBtn: true,
   delBtn: true,
-  column: [ 
+  column: [
     {
       label: '姓名',
       prop: 'name',
       search: true,
-      rules:[
-        { required: true, message: '请输入姓名', trigger: 'blur' }
-      ]
+      rules: [{ required: true, message: '请输入姓名', trigger: 'blur' }]
     },
     {
       label: '年龄',
@@ -41,11 +39,9 @@ const option = ref<TableOption>({
       search: true,
       type: 'inputNumber',
       inputNumber: {
-        min: 1,
+        min: 1
       },
-      rules:[
-        { required: true, message: '请输入年龄', trigger: 'blur' }
-      ]
+      rules: [{ required: true, message: '请输入年龄', trigger: 'blur' }]
     },
     {
       label: '地址',
@@ -87,7 +83,6 @@ const data = [
 
 const form = ref({})
 
-
 const page = ref<CrudPageProps>({
   total: 20,
   pageSize: 10,
@@ -97,30 +92,29 @@ const page = ref<CrudPageProps>({
 const search = ref({})
 
 const beforeOpen: (...args: any[]) => void = (type, row, done) => {
- ElMessage.success(type)
+  ElMessage.success(type)
   done()
 }
 
 const onLoad = async () => {
   // 模拟异步请求
-  await new Promise<void>(resolve => {
+  await new Promise<void>((resolve) => {
     ElMessage.success(JSON.stringify(search.value))
     setTimeout(() => resolve(), 500)
   })
 }
 
-const addSave = (row: any, done: Function) => {
+const addSave = (row: any, done: () => void) => {
   ElMessage.success(JSON.stringify(row))
   done()
 }
 
-
-const rowUpdate = (row: any, done: Function) => {
+const rowUpdate = (row: any, done: () => void) => {
   ElMessage.success(JSON.stringify(row))
   done()
 }
 
-const rowDel = (row: any, index: number) => {
+const rowDel = (row: any, _index: number) => {
   ElMessage.success(JSON.stringify(row))
 }
 </script>

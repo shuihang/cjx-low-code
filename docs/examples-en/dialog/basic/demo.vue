@@ -1,7 +1,5 @@
 <template>
-  <div>
-    I am cjx low code component library command style pop-up example
-  </div>
+  <div> I am cjx low code component library command style pop-up example </div>
 </template>
 
 <script setup lang="ts">

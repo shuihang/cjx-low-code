@@ -1,5 +1,5 @@
 import { computed, defineComponent, ref } from 'vue'
-import { ElCol, ElForm, ElRow, ElTabs } from 'element-plus'
+import { ElCol, ElForm, ElRow } from 'element-plus'
 import { withInstall } from '../../_util/type'
 import { useDialogInjectKey } from '../../dialog/src/context'
 import { fromProps } from './interface'
@@ -10,16 +10,8 @@ import XGroupForm from './type/group-form'
 import XFromMenu from './menu'
 import { getValueByPath } from './utils'
 import type { FormInstance, FormItemProp, FormValidateCallback } from 'element-plus'
-import type { CSSProperties } from 'vue'
 import type { CustomSlotsType } from '../../_util/type'
-import type {
-  Arrayable,
-  DialogFormType,
-  FormColumnProps,
-  FormOption,
-  FormSlot,
-  FromProps
-} from './interface'
+import type { Arrayable, DialogFormType, FormColumnProps, FormSlot, FromProps } from './interface'
 
 const { span, labelWidth: defaultLabelWidth, menuBtn: defaultMenuBtn } = formConfig
 
@@ -41,8 +33,7 @@ export const XForm = withInstall(
     // 组件插槽，定义了默认插槽和表单操作栏插槽
     slots: Object as CustomSlotsType<
       {
-        /** 表单插槽 */
-        default?: void
+        default: void
         /** 表单操作栏插槽 */
         formMenu?: void
         /** 表单头部位置插槽 */
@@ -52,13 +43,13 @@ export const XForm = withInstall(
       } & FormSlot
     >,
     emits: formEmits,
-    setup(props, { slots, emit, expose }) {
+    setup(props, { emit, expose }) {
       const { form = {}, option, xBoxType, _slotSuffix: slotSuffix = '' } = props as FromProps
 
       const disabledForm = ref<boolean>(props.disabled || false)
-      const { formSpan = props.isView ? undefined : span, labelWidth = defaultLabelWidth } =
-        option as FormOption
 
+      const { formSpan = props.isView ? undefined : span, labelWidth = defaultLabelWidth } =
+        option || {}
       // 双向绑定数据 回调函数
       const newForm = computed(() => props.form)
 
@@ -79,21 +70,8 @@ export const XForm = withInstall(
 
       const ruleFormRef = ref<FormInstance>()
 
-      const tabsValue = ref<number | string>(
-        props.option?.viewTabsCurrent
-          ? props.option.viewTabsCurrent
-          : props.option?.viewTabs && props.option.viewTabs?.length > 0
-          ? props.option.viewTabs[0].value
-          : '0'
-      )
-
       const onUpdateModelValue = (prop: string, value: string) => {
         form && newForm.value && (getValueByPath(newForm, prop).value = value)
-      }
-
-      const formTabChange = (v: number | string) => {
-        tabsValue.value = v
-        emit('formTabChange', v)
       }
 
       // 重置表单
@@ -106,14 +84,6 @@ export const XForm = withInstall(
 
       // 提交表单
       const onSubmit = () => {
-        // form插槽 响应
-        if (slots.default) {
-          emit('submit', newForm.value, () => {
-            disabledForm.value = false
-          })
-          return
-        }
-
         ruleFormRef.value?.validate((valid, fields) => {
           if (valid) {
             disabledForm.value = true
@@ -193,9 +163,7 @@ export const XForm = withInstall(
         groupFormRef,
         disabledForm,
         onReset,
-        onSubmit,
-        formTabChange,
-        tabsValue
+        onSubmit
       }
     },
     render() {
@@ -204,87 +172,15 @@ export const XForm = withInstall(
         submitBtn = true,
         cancelBtn = true,
         submitBtnText,
-        cancelBtnText,
-        viewTabs,
-        viewTabsCurrent
-      } = this.$props.option
+        cancelBtnText
+      } = this.$props.option || {}
       const { class: $class } = this.$attrs
-      const Component = viewTabs ? ElTabs : ''
-
-      // 更新 tabsValue 如果 viewTabsCurrent 变化
-      if (viewTabsCurrent !== undefined && this.tabsValue !== viewTabsCurrent) {
-        this.tabsValue = viewTabsCurrent
-      } else if (
-        !viewTabsCurrent &&
-        viewTabs &&
-        viewTabs.length > 0 &&
-        this.tabsValue !== viewTabs[0].value
-      ) {
-        this.tabsValue = viewTabs[0].value
-      }
 
       return (
-        <ElRow class={['!position-initial cjx-form h-100%', $class]}>
-          <ElCol lg={24} md={24} xs={24} class="h-[calc(100%-50px)]">
-            {viewTabs &&
-            viewTabs.length > 0 &&
-            (this.$props.isView || this.xBoxType === 'check' || this.xBoxType == undefined) ? (
-              <Component
-                type="card"
-                class={'w-100% cjx-tab-form'}
-                style={
-                  {
-                    ...this.$props.contentStyle,
-                    overflow: 'hidden'
-                  } as CSSProperties
-                }
-                onTabChange={this.formTabChange}
-                v-model:modelValue={this.tabsValue}
-              >
-                {viewTabs.map((item, index) => {
-                  return (
-                    <>
-                      {(this.$slots[`${item.value}TabForm`] || index === 0) && (
-                        <el-tab-pane
-                          key={index}
-                          name={item.value || index}
-                          label={item.label}
-                          class={[
-                            'w-100% of-y-auto of-x-hidden',
-                            this.isFullscreen
-                              ? 'h-[calc(100vh-136px-var(--el-tabs-header-height))]'
-                              : 'max-h-[calc(90vh-166px-var(--el-tabs-header-height))]'
-                          ]}
-                        >
-                          {this.$slots[`${item.value}TabForm`]
-                            ? this.$slots[`${item.value}TabForm`]!()
-                            : index === 0 && (
-                                <ElForm
-                                  ref="ruleFormRef"
-                                  model={this.newForm}
-                                  disabled={this.disabledForm}
-                                  class={[this.isFullscreen && 'h-[calc(100vh-180px)]']}
-                                >
-                                  <XFormColumn
-                                    column={this.$props.option?.column as FormColumnProps[]}
-                                    v-slots={this.$slots}
-                                  ></XFormColumn>
-
-                                  {/*分组*/}
-                                  <XGroupForm
-                                    ref="groupFormRef"
-                                    group={this.$props.option?.group}
-                                    v-slots={this.$slots}
-                                  />
-                                </ElForm>
-                              )}
-                        </el-tab-pane>
-                      )}
-                    </>
-                  )
-                })}
-              </Component>
-            ) : (
+        <>
+          {this.$slots.default?.()}
+          <ElRow class={['!position-initial cjx-form h-100%', $class]}>
+            <ElCol lg={24} md={24} xs={24} class="h-[calc(100%-50px)]">
               <ElForm
                 ref="ruleFormRef"
                 model={this.newForm}
@@ -297,14 +193,7 @@ export const XForm = withInstall(
                   style={this.$props.contentStyle}
                   class={`cjx-Form-row w-100%`}
                 >
-                  {(this.$slots.default && !this.$props.isView && (
-                    <div
-                      class={['w-100%', this.isFullscreen && 'h-[calc(100vh-140px)]']}
-                      style={this.$props.contentStyle}
-                    >
-                      {this.$slots.default()}
-                    </div>
-                  )) || (
+                  {
                     <>
                       <div class="cjx-form-header w-100%">
                         {this.$slots?.formHeader &&
@@ -314,14 +203,14 @@ export const XForm = withInstall(
                       </div>
 
                       <XFormColumn
-                        column={this.$props.option?.column as FormColumnProps[]}
+                        column={this.$props.schemaField?.column as FormColumnProps[]}
                         v-slots={this.$slots}
                       ></XFormColumn>
 
                       {/*分组*/}
                       <XGroupForm
                         ref="groupFormRef"
-                        group={this.$props.option?.group}
+                        group={this.$props.schemaField?.group}
                         xBoxType={this.xBoxType}
                         v-slots={this.$slots}
                       />
@@ -333,28 +222,28 @@ export const XForm = withInstall(
                           })}
                       </div>
                     </>
-                  )}
+                  }
                 </ElRow>
               </ElForm>
-            )}
-          </ElCol>
+            </ElCol>
 
-          {/* 搜索栏操作区域 */}
-          {menuBtn && (
-            <XFromMenu
-              onReset={this.onReset}
-              onSubmit={this.onSubmit}
-              v-slots={{ menu: this.$slots.formMenu }}
-              menuStyle={this.$props.menuStyle}
-              loading={this.disabledForm}
-              disabled={this.$props.disabled}
-              cancelBtn={cancelBtn}
-              submitBtn={submitBtn}
-              cancelBtnText={cancelBtnText}
-              submitBtnText={submitBtnText}
-            ></XFromMenu>
-          )}
-        </ElRow>
+            {/* 搜索栏操作区域 */}
+            {menuBtn && (
+              <XFromMenu
+                onReset={this.onReset}
+                onSubmit={this.onSubmit}
+                v-slots={{ menu: this.$slots.formMenu }}
+                menuStyle={this.$props.menuStyle}
+                loading={this.disabledForm}
+                disabled={this.$props.disabled}
+                cancelBtn={cancelBtn}
+                submitBtn={submitBtn}
+                cancelBtnText={cancelBtnText}
+                submitBtnText={submitBtnText}
+              ></XFromMenu>
+            )}
+          </ElRow>
+        </>
       )
     }
   })

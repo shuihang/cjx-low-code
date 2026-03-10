@@ -25,7 +25,10 @@
 | submitBtnText | Submit button text | `string` | Submit |
 | cancelBtn | Whether to display the cancel button | `boolean` | true |
 | cancelBtnText | Cancel button text | `string` | Cancel |
-| viewTabs | Tab | `ViewTabs[]` | - |
+
+## SchemaField
+| Parameter | Description | Type | Default Value |
+| ------------- | ------------- | :---: | :---:  |
 | column | Form item configurations | `FormColumnProps[]` | - |
 | group | Form grouping configuration | `GroupInterface[]` | - |
 

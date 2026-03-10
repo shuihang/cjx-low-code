@@ -119,18 +119,18 @@ const XDiaLogForm = defineComponent({
 
       return {
         option: {
-          column: newColumn,
-          group: newGroup,
           labelWidth: boxType.value !== 'check' ? labelWidth : checkLabelWidth || labelWidth,
           formSpan: span,
-          viewTabsCurrent: option.value.viewTabsCurrent,
-          viewTabs: option.value.viewTabs,
           menuBtn,
           cancelBtn,
           cancelBtnText,
           submitBtn: newSubmitBtn,
           submitBtnText: option.value.submitBtnText,
           checkColumnSpan
+        },
+        schemaField: {
+          column: newColumn,
+          group: newGroup
         },
         xBoxType: boxType
       }
@@ -144,8 +144,7 @@ const XDiaLogForm = defineComponent({
           form={props.form}
           ref={formRef}
           v-slots={{
-            ...omit(slots, ['form']),
-            default: slots.form
+            ...omit(slots, ['form'])
           }}
           _slotSuffix="Form"
           isView={isView.value}

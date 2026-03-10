@@ -1,14 +1,14 @@
 <template>
   <div>
-    <XCrud :form="form" :option="option" :data="data" @before-open="beforeOpen" />
+    <XCrud :form="form" :schema-field="schemaField" :data="data" @before-open="beforeOpen" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import type { TableOption } from 'cjx-low-code'
-const option = ref<TableOption>({
-  column: [ 
+import type { SchemaProvideType } from 'cjx-low-code'
+const schemaField = ref<SchemaProvideType>({
+  column: [
     {
       label: 'Name',
       prop: 'name'
@@ -48,6 +48,5 @@ const form = ref({})
 const beforeOpen: (...args: any[]) => void = (type, row, done) => {
   console.log(type, row)
   done()
-
 }
 </script>

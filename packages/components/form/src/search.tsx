@@ -12,7 +12,7 @@ import { InitSearchFormVNode } from './init'
 import { searchFromProps } from './interface'
 import searchConfig from './searchConfig'
 import type { CustomSlotsType } from '../../_util/type'
-import type { FormColumnProps, FormOption, FromProps } from './interface'
+import type { FormColumnProps, FormOption } from './interface'
 import type { FormInstance } from 'element-plus'
 import type { CSSProperties } from 'vue'
 
@@ -49,7 +49,7 @@ const XFormSearch = defineComponent({
   setup(props, { attrs, slots, emit }) {
     const { t } = useLocale()
 
-    const { option } = props as FromProps
+    const { option, schemaField } = props
     const disabledForm = ref<boolean>(false)
     const formRef = ref<FormInstance>()
 
@@ -84,7 +84,7 @@ const XFormSearch = defineComponent({
         searchSpan.value = getColSpan({
           width: isExpand.value ? boxRef.value?.offsetWidth - 180 : boxRef?.value.offsetWidth,
           searchSpan: formSpan,
-          cloumnLength: option?.column?.length || 0
+          cloumnLength: schemaField?.length || 0
         })
 
         const showExpand = (isExpand.value ? rowLength : rowLength + 1) / (24 / searchSpan.value)
@@ -152,7 +152,7 @@ const XFormSearch = defineComponent({
       const formData = newForm.value
       const propsFormData = props.form.value
 
-      ;(option?.column as FormColumnProps[])
+      ;(schemaField as FormColumnProps[])
         ?.filter((item) => slots[`${item.prop}Search` as keyof typeof slots])
         .forEach((item) => {
           formData[item.prop] = propsFormData[item.prop]
@@ -195,7 +195,7 @@ const XFormSearch = defineComponent({
                   ref={formRowRef}
                 >
                   {InitSearchFormVNode({
-                    column: option?.column as FormColumnProps[],
+                    column: schemaField as FormColumnProps[],
                     formSpan: searchSpan.value,
                     labelWidth,
                     newForm,
@@ -295,8 +295,8 @@ const XFormSearch = defineComponent({
             )}
 
             <ElButton
-              type={'primary'}
               plain
+              type="primary"
               onClick={resetChang}
               v-slots={{ icon: () => <Refresh /> }}
             >

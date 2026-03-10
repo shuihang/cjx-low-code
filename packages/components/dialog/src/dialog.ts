@@ -34,7 +34,7 @@ export type IsEmptyToNeverObj<T> = T extends object
   : never
 
 type RemoveFunctions<T> = {
-  [K in keyof T as T[K] extends (...args: any[]) => any | undefined ? never : K]-?: T[K]
+  [K in keyof T as T[K] extends ((...args: any[]) => any) | undefined ? never : K]-?: T[K]
 }
 
 type PropsAndEmits<T> = Omit<T, keyof (VNodeProps & AllowedComponentProps & ComponentCustomProps)>

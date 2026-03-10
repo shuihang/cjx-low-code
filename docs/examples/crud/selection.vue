@@ -1,19 +1,25 @@
 <template>
   <div>
-    <XCrud ref="crudRef" :form="form" :option="option" :data="data" @selection-change="selectionChange" />
+    <XCrud
+      ref="crudRef"
+      :form="form"
+      :option="option"
+      :data="data"
+      @selection-change="selectionChange"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, nextTick } from 'vue'
+import { nextTick, onMounted, ref } from 'vue'
 import { XCrud } from 'cjx-low-code'
-import type { TableOption } from 'cjx-low-code'
 import { ElMessage } from 'element-plus'
+import type { TableOption } from 'cjx-low-code'
 
 const option = ref<TableOption>({
   selection: true,
   rowKey: 'id',
-  column: [ 
+  column: [
     {
       label: '姓名',
       prop: 'name'

@@ -18,12 +18,12 @@ const option = ref<EditTableOption>({
     {
       label: '姓名',
       prop: 'name',
-      type: 'input',
+      type: 'input'
     },
     {
       label: '年龄',
       prop: 'age',
-      type: 'inputNumber',
+      type: 'inputNumber'
     },
     {
       label: '性别',
@@ -42,5 +42,4 @@ const option = ref<EditTableOption>({
     }
   ]
 })
-
 </script>

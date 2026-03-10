@@ -76,7 +76,6 @@ app.use(XCrud)
 | updateBtn | Update button | `boolean` | false |
 | importBtn | Table import button | `boolean` | false |
 | excelBtn | Table export button | `boolean` | false |
-| viewTabs | Tabs for view | `ViewTabs[]` | - |
 | isCard | Whether to display as card | `boolean` | true |
 | menuBtn | Whether to display the form operation bar | `boolean` | true |
 | cancelBtn | Table dialog cancel button | `boolean` | true |
@@ -232,7 +231,6 @@ app.use(XCrud)
 | `propSearch` | Search bar slot, using the prop from [Column](#Column) concatenated with `Search` as the slot name, for example, if column: [{prop: 'test'}], the slot name is `#testSearch` | `{ row }` |
 | `propForm` | Form slot, using the prop from [Column](#Column) concatenated with `Form` as the slot name, for example, if column: [{prop: 'test'}], the slot name is `#testForm` scope parameter is | - |  <popover content="FormColumnProps & { _XBoxType: 'check' | 'create' | 'update' }">`Object`</popover> |
 | `propGroupForm` | Form grouping slot, using the prop from [Group](#Group) concatenated with `Group` as the slot name, for example, if group: [{prop: 'test'}], the slot name is `#testGroupForm` | `{ _XBoxType?: 'check' \| 'create' \| 'update' }`  |
-| `propTabForm` | Form tab slot, using the value from ViewTabs concatenated with `TabForm` as the slot name, for example, if viewTabs: [{value: 'test'}], the slot name is `#testTabForm` | `{ _XBoxType?: 'check' \| 'create' \| 'update' }`  |
 | importHeader | Import file header slot | - |
 | formHeader | Form dialog header position slot | `{ _XBoxType?: 'check' \| 'create' \| 'update' }` |
 | formFooter | Form dialog footer position slot | `{ _XBoxType?: 'check' \| 'create' \| 'update' }` |

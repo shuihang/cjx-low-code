@@ -1,29 +1,31 @@
 <template>
   <div>
-    <XForm ref="formRef" :form="form" :option="option" @submit="save" />
+    <XForm ref="formRef" :form="form" :option="option" :schema-field="schemaField" @submit="save" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import { XForm } from 'cjx-low-code'
-import type { FormOption } from 'cjx-low-code'
 import { ElMessage } from 'element-plus'
+import type { FormOption, SchemaProvideType } from 'cjx-low-code'
 
 const form = ref({
   name: '',
   年龄: '1'
 })
 
-
 const option = ref<FormOption>({
-  labelWidth: 120,
+  labelWidth: 120
+})
+
+const schemaField = ref<SchemaProvideType>({
   column: [
     {
       label: '姓名',
-      prop: 'name',
+      prop: 'name'
     },
-    
+
     {
       label: '年龄',
       prop: 'age',
@@ -52,7 +54,7 @@ const option = ref<FormOption>({
               label: '绿',
               value: '3'
             }
-          ],
+          ]
         },
         {
           label: '苹果',
@@ -97,7 +99,7 @@ const option = ref<FormOption>({
               value: '3'
             }
           ]
-        },
+        }
       ]
     }
   ]
@@ -113,5 +115,4 @@ const save = async (data: any, done) => {
     done()
   }, 500)
 }
-
 </script>

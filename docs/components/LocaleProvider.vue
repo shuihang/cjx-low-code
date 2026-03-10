@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-import { useData, inBrowser } from 'vitepress'
+import { inBrowser, useData } from 'vitepress'
 import { XConfigProvider } from 'cjx-low-code'
 
 // 1. 导入所需的 Element Plus 语言包
@@ -18,8 +18,8 @@ const locale = ref()
 
 // 3. 创建语言映射表
 const localeMap: Record<string, any> = {
-  'zh': zhCn, // 确保这里的键与 Vitepress 配置中的 `lang` 字段匹配
-  'en': en,
+  zh: zhCn, // 确保这里的键与 Vitepress 配置中的 `lang` 字段匹配
+  en
   // ... 添加其他语言映射
 }
 
@@ -29,11 +29,11 @@ watchEffect(() => {
     // 根据 Vitepress 的当前语言，设置对应的 Element Plus 语言包
     console.log('当前语言', lang.value)
     if (catchLang !== lang.value) {
-      window.history.go(0);
+      window.history.go(0)
     }
     catchLang = lang.value
     locale.value = localeMap[lang.value] || zhCn // 默认回退到英文
-   
+
     // window.history.go(0);
   }
 })

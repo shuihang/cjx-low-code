@@ -40,7 +40,8 @@ const XHeaderSearch = defineComponent({
           formSpan: option.value.searchSpan,
           labelWidth: option.value.searchLabelWidth,
           column: newColumn
-        }
+        },
+        schemaField: newColumn
       }
     })
 

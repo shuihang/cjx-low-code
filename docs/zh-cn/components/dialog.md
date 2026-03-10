@@ -7,7 +7,7 @@
 ### 注册方法
 
 ```ts
-import { createApp , type App } from 'vue'
+import { type App , createApp } from 'vue'
 import { $XDialog } from 'cjx-low-code'
 const app: App = createApp()
 app.config.globalProperties.$XDialog = $XDialog(app._context)

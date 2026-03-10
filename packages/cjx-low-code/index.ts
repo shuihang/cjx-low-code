@@ -4,6 +4,7 @@ export {
   XCrud,
   XDialog,
   XForm,
+  XSchemaField,
   XEditTable,
   $XDialog
 } from '@cjx-low-code/components'
@@ -14,6 +15,7 @@ export type {
   BeforeOpen,
   CrudPermission,
   FormOption,
+  SchemaProvideType,
   FormColumnProps,
   FormItemType,
   FormTypeProps,

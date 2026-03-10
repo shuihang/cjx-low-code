@@ -1,14 +1,14 @@
 <template>
   <div>
-    <XForm ref="formRef" :form="form" :option="option" @submit="save" />
+    <XForm ref="formRef" :form="form" :schema-field="schemaField" @submit="save" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import { XForm } from 'cjx-low-code'
-import type { FormOption } from 'cjx-low-code'
 import { ElMessage } from 'element-plus'
+import type { SchemaProvideType } from 'cjx-low-code'
 
 const form = ref({
   name: '',
@@ -16,7 +16,7 @@ const form = ref({
   sex: '1'
 })
 
-const option = ref<FormOption>({
+const schemaField = ref<SchemaProvideType>({
   column: [
     {
       label: 'Name',
@@ -28,7 +28,7 @@ const option = ref<FormOption>({
       prop: 'age',
       type: 'inputNumber',
       inputNumber: {
-        min: 0,
+        min: 0
       }
     },
     {
@@ -59,5 +59,4 @@ const save = async (data: any, done) => {
     done()
   }, 500)
 }
-
 </script>

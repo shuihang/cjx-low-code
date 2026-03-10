@@ -7,7 +7,7 @@
     "docs"
   ],
   "scripts": {
-    "dev": "vite",
+    "dev": "pnpm run -C play dev",
     "build": "pnpm run -C internal/build start",
     "docs:dev": "pnpm run -C docs dev",
     "docs:build": "pnpm run -C docs build",
@@ -38,7 +38,7 @@
     "@vueuse/core": "9.1.0",
     "chalk": "5.0.1",
     "consola": "2.15.3",
-    "element-plus": "2.13.0",
+    "element-plus": "2.13.5",
     "lodash-es": "4.17.21",
     "lodash-unified": "1.0.3",
     "reflect-metadata": "0.2.2",

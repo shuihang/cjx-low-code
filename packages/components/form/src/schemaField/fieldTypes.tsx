@@ -1,9 +1,12 @@
-import { inputProps, selectProps } from 'element-plus'
 import registerBaseField from './registerBaseField'
+import GroupField from './groupField'
 
-export const registerFieldTypes = (SchemaField: any) => {
-  // 字段类型组件
-  SchemaField.Input = registerBaseField(inputProps, 'input')
-
-  SchemaField.Select = registerBaseField(selectProps, 'select')
+const registerFieldTypesFn = () => {
+  return {
+    Input: registerBaseField('input'),
+    Select: registerBaseField('select'),
+    Group: GroupField
+  }
 }
+
+export const registerFieldTypes = registerFieldTypesFn()

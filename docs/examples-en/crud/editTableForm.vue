@@ -5,25 +5,25 @@
       v-model:search="search"
       :option="option"
       :data="data"
+      :on-load="onLoad"
       @before-open="beforeOpen"
       @row-save="addSave"
       @row-update="rowUpdate"
-      :on-load="onLoad"
     />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import type { TableOption } from 'cjx-low-code'
 import { ElMessage } from 'element-plus'
+import type { SchemaProvideType, TableOption } from 'cjx-low-code'
 
 const option = ref<TableOption>({
   addBtn: true,
   menu: true,
   viewBtn: true,
   updateBtn: true,
-  column: [ 
+  column: [
     {
       label: 'Name',
       prop: 'name',
@@ -76,9 +76,7 @@ const option = ref<TableOption>({
               label: 'Name',
               prop: 'name',
               type: 'input',
-              rules: [
-                { required: true, message: 'Please enter name', trigger: 'blur' }
-              ]
+              rules: [{ required: true, message: 'Please enter name', trigger: 'blur' }]
             },
             {
               label: 'Age',
@@ -87,17 +85,16 @@ const option = ref<TableOption>({
               inputNumber: {
                 min: 1
               },
-              rules: [
-                { required: true, message: 'Please enter age', trigger: 'blur' }
-              ]
-
+              rules: [{ required: true, message: 'Please enter age', trigger: 'blur' }]
             }
           ]
         }
       }
     }
-  ],
+  ]
 })
+
+const schemaField = ref<SchemaProvideType>({})
 
 const data = [
   {
@@ -121,37 +118,34 @@ const data = [
       {
         name: "Xiaohong's daughter",
         age: 6
-      },
+      }
     ]
   }
 ]
 
-const form = ref({
- 
-})
+const form = ref({})
 
 const search = ref({})
 
 const beforeOpen: (...args: any[]) => void = (type, row, done) => {
- ElMessage.success(type)
+  ElMessage.success(type)
   done()
 }
 
 const onLoad = async () => {
   // 模拟异步请求
-  await new Promise<void>(resolve => {
+  await new Promise<void>((resolve) => {
     ElMessage.success(JSON.stringify(search.value))
     setTimeout(() => resolve(), 500)
   })
 }
 
-const addSave = (row: any, done: Function) => {
+const addSave = (row: any, done: () => void) => {
   ElMessage.success(JSON.stringify(row))
   done()
 }
 
-
-const rowUpdate = (row: any, done: Function) => {
+const rowUpdate = (row: any, done: () => void) => {
   ElMessage.success(JSON.stringify(row))
   done()
 }

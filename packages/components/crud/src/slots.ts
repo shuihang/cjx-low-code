@@ -67,8 +67,6 @@ export type CrudSlotType = CustomSlotsType<
     searchMenu?: () => void
     /** 分页器插槽 */
     page?: () => void
-    /** 表单插槽 如果用了该插槽，弹窗内容都只显示该插槽里的内容 */
-    form?: () => void
     /** 表格插槽 */
     table?: () => void
     /** 导入弹窗头部插槽 */

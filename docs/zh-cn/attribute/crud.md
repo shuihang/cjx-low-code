@@ -76,7 +76,6 @@ app.use(XCrud)
 | updateBtn | 修改按钮 | `boolean` | false |
 | importBtn | 表格导入按钮 | `boolean` | false |
 | excelBtn | 表格导出按钮 | `boolean` | false |
-| viewTabs | tabs查看 | `ViewTabs[]` | - |
 | isCard | 是否卡片 | `boolean` | true |
 | menuBtn | 表单操作栏是否显示 | `boolean` | true |
 | cancelBtn | 表格弹窗取消按钮 | `boolean` | true |
@@ -227,12 +226,10 @@ app.use(XCrud)
 | headerMenu | 表格头部操作栏插槽 | - |
 | menu | 操作栏插槽 | - |
 | page | 分页器插槽 | - |
-| form | 表单插槽 | - |
 | `prop` | 表格插槽,以[Column](#Column)里的prop做插槽名，例如column: [{prop: 'test'}]则插槽名为`#test` | `{ row, $index }` |
 | `propSearch` | 搜索栏插槽,以[Column](#Column)里的prop拼接`Search`做插槽名，例如column: [{prop: 'test'}]则插槽名为`#testSearch` | `{ row }` |
 | `propForm` | 表单插槽,以[Column](#Column)里的prop拼接`Form`做插槽名，例如column: [{prop: 'test'}]则插槽名为`#testForm` 作用域参数为 | - |  <popover content="FormColumnProps & { _XBoxType: 'check' | 'create' | 'update' }">`Object`</popover> |
 | `propGroupForm` | 表单分组插槽,以[Group](#Group)里的prop拼接`Group`做插槽名，例如group: [{prop: 'test'}]则插槽名为`#testGroupForm` | `{ _XBoxType?: 'check' \| 'create' \| 'update' }`  |
-| `propTabForm` | 表单tab插槽,以ViewTabs里的value拼接`TabForm`做插槽名，例如viewTabs: [{value: 'test'}]则插槽名为`#testTabForm` | `{ _XBoxType?: 'check' \| 'create' \| 'update' }`  |
 | importHeader | 导入文件头部插槽 | - |
 | formHeader | 表单弹窗头部位置插槽 | `{ _XBoxType?: 'check' \| 'create' \| 'update' }` |
 | formFooter | 表单弹窗底部位置插槽 | `{ _XBoxType?: 'check' \| 'create' \| 'update' }` |

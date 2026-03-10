@@ -10,7 +10,6 @@ import type { DialogFormType, GroupInterface } from '../interface'
 const XGroupForm = defineComponent({
   name: 'XGroupForm',
   props: {
-    // form: objectType<Ref<object>>(),
     group: objectType<GroupInterface[]>(),
     xBoxType: someType<DialogFormType>()
   },

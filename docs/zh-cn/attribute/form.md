@@ -25,7 +25,10 @@
 | submitBtnText | 确定按钮文本 | `string` | 确定 |
 | cancelBtn | 取消按钮是否显示 | `boolean` | true |
 | cancelBtnText | 取消按钮文本 | `string` | 取消 |
-| viewTabs | tab | `ViewTabs[]` | - |
+
+## SchemaField
+| 参数  | 说明 | 类型 | 默认值 |
+| ------------- | ------------- | :---: | :---:  |
 | column | 表单的各项配置 | `FormColumnProps[]` | - |
 | group | 表单分组的配置 | `GroupInterface[]` | - |
 

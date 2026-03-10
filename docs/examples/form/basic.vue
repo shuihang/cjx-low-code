@@ -1,6 +1,6 @@
 <template>
   <div>
-    <XForm ref="formRef" :form="form" :option="option" @submit="save" />
+    <XForm ref="formRef" :form="form" :schema-field="schemaField" @submit="save" />
   </div>
 </template>
 
@@ -8,7 +8,7 @@
 import { ref } from 'vue'
 import { XForm } from 'cjx-low-code'
 import { ElMessage } from 'element-plus'
-import type { FormOption } from 'cjx-low-code'
+import type { SchemaProvideType } from 'cjx-low-code'
 
 const form = ref({
   name: '',
@@ -16,7 +16,7 @@ const form = ref({
   sex: '1'
 })
 
-const option = ref<FormOption>({
+const schemaField = ref<SchemaProvideType>({
   column: [
     {
       label: '姓名',

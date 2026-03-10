@@ -33,12 +33,12 @@ import type {
   UnwrapRef,
   VNode
 } from 'vue'
-import type { ColumnProps, DialogFormType, ViewTabs } from '../../crud/src/interface'
+import type { ColumnProps, DialogFormType } from '../../crud/src/interface'
 import type { FormHelper } from './helpers'
 import type XEditTable from '../../editTable/src/index'
 import type { EditTableProps } from '../../editTable'
 import type { EmitsAddArgs, ExtractComponentsEmits } from '../../dialog/src/dialog'
-import type { ElDatePickerEmitType, ElTreeSelectType } from './elComponentType'
+import type { ElDatePickerEmitType, ElSelectType, ElTreeSelectType } from './elComponentType'
 import type { FORM_ON_EVENT_SUFFIX } from '../../_util/env'
 
 export type { ColumnProps }
@@ -84,7 +84,7 @@ export type TabFormSlot = Record<CustomStr<'TabForm'>, never>
 
 export type GroupLabelSlot = Record<CustomStr<'GroupLabel'>, never>
 
-export type { DialogFormType, ViewTabs }
+export type { DialogFormType }
 
 type OmitStr = 'modelValue'
 
@@ -111,8 +111,8 @@ export interface FormTypePropsAndEmit<F extends object = FormModelValueType> {
   /** select组件的配置项 具体参考element-plus官网 */
   select: {
     props: SelectProps
-    emit: InferComponentEmitType<typeof ElSelect>
-    // emit: Partial<EmitsAddHelpers<ElSelectType, F>>
+    // emit: InferComponentEmitType<typeof ElSelect>
+    emit: Partial<EmitsAddHelpers<ElSelectType, F>>
   }
   /** checkbox组件的配置项 具体参考element-plus官网 */
   checkbox: {
@@ -191,7 +191,7 @@ export type InferFormTypePropsType<
 
 /**
  * 表单控件类型枚举
- * @type {'input' | 'textarea' | 'inputNumber' | 'select' | 'checkbox' | 'datePicker' | 'radio' | 'radioButton' | 'cascader' | 'switch' | 'treeSelect' | 'colorPicker' | 'upload' | 'sign' | 'editTable' | 'selectPeople' | 'dateTimeRange'}
+ * @type {'input' | 'textarea' | 'inputNumber' | 'select' | 'checkbox' | 'datePicker' | 'radio' | 'radioButton' | 'cascader' | 'switch' | 'treeSelect' | 'colorPicker' | 'editTable'}
  *
  * @description 定义了所有可用的表单控件类型：
  * - input: 文本输入框
@@ -206,19 +206,13 @@ export type InferFormTypePropsType<
  * - switch: 开关
  * - treeSelect: 树形选择器
  * - colorPicker: 颜色选择器
- * - upload: 文件上传
- * - sign: 签名
- * - regionalGrid: 区域网格选择
- * - deptSelect: 部门选择
  * - editTable: 可编辑表格
- * - selectPeople: 人员选择
- * - dateTimeRange: 日期时间范围选择器
  */
 export type FormItemType = keyof FormTypePropsAndEmit
 
 // export type FormItemType =
 //   'input' | 'textarea' | 'inputNumber' | 'select' | 'checkbox' | 'datePicker' | 'radio'  | 'radioButton' |
-//   'cascader' | 'switch' | 'treeSelect' | 'upload'   | 'sign' | 'regionalGrid' | 'deptSelect' | 'editTable' | 'selectPeople'
+//   'cascader' | 'switch' | 'treeSelect' | 'editTable'
 export const componentPropsValues: FormItemType[] = [
   'input',
   'textarea',
@@ -278,7 +272,7 @@ export type FormColumnProps<F extends object = FormModelValueType> = Omit<
   // labelWidth?: number
   /**
    * 表单项的类型枚举
-   * @type {'input' | 'textarea' | 'inputNumber' | 'select' | 'checkbox' | 'datePicker' | 'radio' | 'radioButton' | 'cascader' | 'switch' | 'treeSelect' | 'colorPicker' | 'upload' | 'sign' | 'editTable' | 'selectPeople' | 'dateTimeRange'}
+   * @type {'input' | 'textarea' | 'inputNumber' | 'select' | 'checkbox' | 'datePicker' | 'radio' | 'radioButton' | 'cascader' | 'switch' | 'treeSelect' | 'colorPicker' | 'editTable'}
    * @description 定义了表单组件支持的所有输入类型
    * @default 'input'
    *
@@ -295,13 +289,7 @@ export type FormColumnProps<F extends object = FormModelValueType> = Omit<
    * - switch: 开关
    * - treeSelect: 树形选择器
    * - colorPicker: 颜色选择器
-   * - upload: 文件上传
-   * - sign: 签名
-   * - regionalGrid: 区域网格选择
-   * - deptSelect: 部门选择
    * - editTable: 可编辑表格
-   * - selectPeople: 人员选择
-   * - dateTimeRange: 日期时间范围选择器
    *
    * @example
    * ```typescript
@@ -453,7 +441,7 @@ export type GroupInterface<F extends object = FormModelValueType> = {
   column?: FormColumnProps<F>[]
 }
 
-export interface FormOption<F extends object = FormModelValueType> {
+export interface FormOption {
   /** 标题宽度 */
   labelWidth?: number
   /** 栅格占据的列数 */
@@ -470,10 +458,9 @@ export interface FormOption<F extends object = FormModelValueType> {
   cancelBtnText?: string
   /** 表单查看模式的 一行 Descriptions Item 的数量  */
   checkColumnSpan?: number
-  /** tab */
-  viewTabs?: ViewTabs[]
-  /** 当前tab */
-  viewTabsCurrent?: string | number
+}
+
+export type SchemaProvideType<F extends object = FormModelValueType> = {
   /** 表单的各项 */
   column?: FormColumnProps<F>[]
   /** 分组 */
@@ -483,6 +470,8 @@ export interface FormOption<F extends object = FormModelValueType> {
 export const searchFromProps = () => ({
   /** 配置项 */
   option: objectType<FormOption | UnwrapRef<FormOption>>(),
+  /** 表单的各json schema配置 */
+  schemaField: objectType<SchemaProvideType['column'] | UnwrapRef<SchemaProvideType['column']>>(),
   /**  绑定的值 */
   form: {
     type: Object as PropType<ComputedRef>,
@@ -498,6 +487,8 @@ export type SearchFromProps = Partial<ExtractPropTypes<ReturnType<typeof searchF
 export const fromProps = () => ({
   /** 配置项 */
   option: objectType<FormOption | UnwrapRef<FormOption>>(),
+  /** 表单的各json schema配置 */
+  schemaField: objectType<SchemaProvideType | UnwrapRef<SchemaProvideType>>(),
   /** 绑定的值 */
   form: {
     type: Object,

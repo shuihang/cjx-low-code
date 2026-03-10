@@ -8,7 +8,7 @@
 import { ref } from 'vue'
 import type { TableOption } from 'cjx-low-code'
 const option = ref<TableOption>({
-  column: [ 
+  column: [
     {
       label: '姓名',
       prop: 'name'
@@ -48,6 +48,5 @@ const form = ref({})
 const beforeOpen: (...args: any[]) => void = (type, row, done) => {
   console.log(type, row)
   done()
-
 }
 </script>

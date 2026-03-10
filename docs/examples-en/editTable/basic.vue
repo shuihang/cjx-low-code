@@ -20,12 +20,12 @@ const option = ref<EditTableOption>({
     {
       label: 'Name',
       prop: 'name',
-      type: 'input',
+      type: 'input'
     },
     {
       label: 'Age',
       prop: 'age',
-      type: 'inputNumber',
+      type: 'inputNumber'
     },
     {
       label: 'Sex',
@@ -44,5 +44,4 @@ const option = ref<EditTableOption>({
     }
   ]
 })
-
 </script>

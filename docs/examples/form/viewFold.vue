@@ -1,14 +1,21 @@
 <template>
   <div>
-    <XForm ref="formRef" :form="form" :option="option" @submit="save"  is-view/>
+    <XForm
+      ref="formRef"
+      :form="form"
+      :option="option"
+      :schema-field="schemaField"
+      is-view
+      @submit="save"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import { XForm } from 'cjx-low-code'
-import type { FormOption } from 'cjx-low-code'
 import { ElMessage } from 'element-plus'
+import type { FormOption, SchemaProvideType } from 'cjx-low-code'
 
 const form = ref({
   name: '小明',
@@ -16,12 +23,15 @@ const form = ref({
   sex: '1',
   address: '北京市/朝阳区',
   hobby: ['2', '4'],
-  favoriteMusic: ['1', '4'],
+  favoriteMusic: ['1', '4']
 })
 
 const option = ref<FormOption>({
   menuBtn: false,
-  labelWidth: 170,
+  labelWidth: 170
+})
+
+const schemaField = ref<SchemaProvideType>({
   group: [
     {
       label: '基本信息',
@@ -29,18 +39,18 @@ const option = ref<FormOption>({
       collapse: true,
       column: [
         {
-        label: '姓名',
-        prop: 'name',
-        checkSpan: 12,
-        collapseShow: true
-      },
-      {
-        label: '年龄',
-        prop: 'age',
-        collapseShow: true,
-        checkSpan: 12,
-      },
-      {
+          label: '姓名',
+          prop: 'name',
+          checkSpan: 12,
+          collapseShow: true
+        },
+        {
+          label: '年龄',
+          prop: 'age',
+          collapseShow: true,
+          checkSpan: 12
+        },
+        {
           label: '性别',
           prop: 'sex',
           type: 'select',
@@ -59,13 +69,12 @@ const option = ref<FormOption>({
         {
           label: '住址',
           prop: 'address',
-          type: 'input',
+          type: 'input'
         },
         {
           label: '个人介绍',
           prop: 'introduce',
-          type: 'textarea',
-
+          type: 'textarea'
         },
         {
           label: '爱好的运动',
@@ -113,11 +122,11 @@ const option = ref<FormOption>({
             }
           ]
         },
-        
+
         {
           label: '备注',
           prop: 'remark',
-          type: 'textarea',
+          type: 'textarea'
         }
       ]
     }
@@ -134,5 +143,4 @@ const save = async (data: any, done) => {
     done()
   }, 500)
 }
-
 </script>

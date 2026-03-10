@@ -5,15 +5,15 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, nextTick } from 'vue'
+import { nextTick, onMounted, ref } from 'vue'
 import { XCrud } from 'cjx-low-code'
-import type { TableOption } from 'cjx-low-code'
 import { ElMessage } from 'element-plus'
+import type { TableOption } from 'cjx-low-code'
 
 const option = ref<TableOption>({
   radio: true,
   rowKey: 'id',
-  column: [ 
+  column: [
     {
       label: '姓名',
       prop: 'name'
@@ -67,7 +67,6 @@ const data = [
 const form = ref({})
 
 const crudRef = ref<InstanceType<typeof XCrud>>()
-
 
 onMounted(async () => {
   await nextTick()
