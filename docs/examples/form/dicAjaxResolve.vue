@@ -8,7 +8,7 @@
 import { ref } from 'vue'
 import { XForm } from 'cjx-low-code'
 import { ElMessage } from 'element-plus'
-import type { FormOption, SchemaProvideType } from 'cjx-low-code'
+import type { FormOption, SchemaItemArray } from 'cjx-low-code'
 
 const form = ref({
   dict: '',
@@ -36,34 +36,32 @@ const option = ref<FormOption>({
   labelWidth: 120
 })
 
-const schemaField = ref<SchemaProvideType>({
-  column: [
-    {
-      label: '审核结果',
-      prop: 'result',
-      type: 'radio',
-      dicData: [
-        {
-          label: '通过',
-          value: '1'
-        },
-        {
-          label: '不通过',
-          value: '2'
-        }
-      ],
-      on: {
-        radioEvent: {
-          onChange: (value, _helpers) => {
-            _helpers.updateColumns(['result'], {
-              label: value === '1' ? '审核结果1' : '不同意意见2'
-            })
-          }
+const schemaField = ref<SchemaItemArray>([
+  {
+    label: '审核结果',
+    prop: 'result',
+    type: 'radio',
+    dicData: [
+      {
+        label: '通过',
+        value: '1'
+      },
+      {
+        label: '不通过',
+        value: '2'
+      }
+    ],
+    on: {
+      radioEvent: {
+        onChange: (value, _helpers) => {
+          _helpers.updateSchemaField(['result'], {
+            label: value === '1' ? '审核结果1' : '不同意意见2'
+          })
         }
       }
     }
-  ]
-})
+  }
+])
 
 const formRef = ref<InstanceType<typeof XForm>>()
 

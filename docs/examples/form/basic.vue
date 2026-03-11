@@ -8,7 +8,7 @@
 import { ref } from 'vue'
 import { XForm } from 'cjx-low-code'
 import { ElMessage } from 'element-plus'
-import type { SchemaProvideType } from 'cjx-low-code'
+import type { SchemaItemArray } from 'cjx-low-code'
 
 const form = ref({
   name: '',
@@ -16,35 +16,34 @@ const form = ref({
   sex: '1'
 })
 
-const schemaField = ref<SchemaProvideType>({
-  column: [
-    {
-      label: '姓名',
-      prop: 'name',
-      rules: [{ required: true, message: '请输入姓名' }]
-    },
-    {
-      label: '年龄',
-      prop: 'age',
-      type: 'inputNumber'
-    },
-    {
-      label: '性别',
-      prop: 'sex',
-      type: 'select',
-      dicData: [
-        {
-          label: '男',
-          value: '1'
-        },
-        {
-          label: '女',
-          value: '2'
-        }
-      ]
-    }
-  ]
-})
+const schemaField = ref<SchemaItemArray>([
+  {
+    label: '姓名',
+    prop: 'name',
+    type: 'input',
+    rules: [{ required: true, message: '请输入姓名' }]
+  },
+  {
+    label: '年龄',
+    prop: 'age',
+    type: 'inputNumber'
+  },
+  {
+    label: '性别',
+    prop: 'sex',
+    type: 'select',
+    dicData: [
+      {
+        label: '男',
+        value: '1'
+      },
+      {
+        label: '女',
+        value: '2'
+      }
+    ]
+  }
+])
 
 const formRef = ref<InstanceType<typeof XForm>>()
 
