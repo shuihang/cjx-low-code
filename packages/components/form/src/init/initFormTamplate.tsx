@@ -11,33 +11,35 @@ import { MeasurePerformance } from '../../../_util/decorator/PerformanceDecorato
 import { tempForm } from '../tempform'
 import helpers from '../helpers'
 import formConfig from '../config'
+import { schemaLayoutValues } from '../interface'
 import { FormRender } from './FormRenderDecorator'
 import type {
   ColumnProps,
   DialogFormType,
-  FormColumnProps,
   FormItemType,
-  FormTypeProps
+  SchemaItemArray,
+  SchemaLayoutType,
+  SchemaProvide
 } from '../interface'
 import type { AnyObject, PickRequiredOptional } from '../../../_util/type'
 import type { Column, TableColumnCtx } from 'element-plus'
 import type { Ref, VNode } from 'vue'
 
 const {
-  checkColumnSpan: defaultCheckColumnSpan,
-  span,
-  labelWidth: defaultLabelWidth,
-  tipPlacement,
-  labelTipPlacement,
+  CHECK_COLUMN_SPAN,
+  SPAN,
+  LABEL_WIDTH,
+  TIP_PLACEMENT,
+  LABEL_TIP_PLACEMENT,
   getColumnFormType,
-  EMPTY_STRINGFORM_ITEMS,
+  EMPTY_STRING_FORM_ITEMS,
   FULLSCREEN_COL_SPAN_24_FORM_ITEMS,
   VIEW_FORM_COL_SPAN_24_FORM_ITEMS,
   CHECK_LABEL_ALIGN
 } = formConfig
 
 export interface TemplateProps {
-  column?: FormColumnProps[]
+  schemaField?: SchemaItemArray
   formSpan?: number
   labelWidth: number
   newForm: Ref<object>
@@ -56,7 +58,13 @@ export interface TemplateProps {
 
 export type TemplateCommonProps = PickRequiredOptional<
   TemplateProps,
-  'column' | 'formSpan' | 'labelWidth' | 'newForm' | 'slotSuffix' | 'slots' | 'onUpdateModelValue',
+  | 'schemaField'
+  | 'formSpan'
+  | 'labelWidth'
+  | 'newForm'
+  | 'slotSuffix'
+  | 'slots'
+  | 'onUpdateModelValue',
   'xBoxType'
 >
 
@@ -70,7 +78,7 @@ export interface RenderContext {
 }
 
 export class Common implements TemplateCommonProps {
-  column: TemplateCommonProps['column']
+  schemaField: TemplateCommonProps['schemaField']
   formSpan: TemplateCommonProps['formSpan']
   labelWidth: TemplateCommonProps['labelWidth']
   newForm: TemplateCommonProps['newForm']
@@ -78,13 +86,13 @@ export class Common implements TemplateCommonProps {
   public readonly slots: TemplateCommonProps['slots']
 
   onUpdateModelValue: TemplateCommonProps['onUpdateModelValue']
-  public readonly labelTipPlacement = labelTipPlacement
-  public readonly tipPlacement = tipPlacement
+  public readonly labelTipPlacement = LABEL_TIP_PLACEMENT
+  public readonly tipPlacement = TIP_PLACEMENT
 
   constructor(data: TemplateCommonProps) {
-    this.column = data.column || []
-    this.formSpan = data.formSpan || span
-    this.labelWidth = data.labelWidth || defaultLabelWidth
+    this.schemaField = data.schemaField || []
+    this.formSpan = data.formSpan || SPAN
+    this.labelWidth = data.labelWidth || LABEL_WIDTH
     this.newForm = data.newForm
     this.slotSuffix = data.slotSuffix
     this.slots = data.slots
@@ -93,12 +101,22 @@ export class Common implements TemplateCommonProps {
 
   /**
    * 表单排序
+   * 异步数据请求会在后台并行执行，不阻塞排序过程
    */
   @MeasurePerformance({ threshold: 100 })
   public _arraySort() {
-    return arraySort(this.column, 'order', async (item) => {
-      if (item.dicAjaxResolve) {
-        item.dicData = await item.dicAjaxResolve
+    return arraySort(this.schemaField, 'order', (item) => {
+      if (schemaLayoutValues.includes(item.type as SchemaLayoutType)) return
+
+      const schemaItem = item as SchemaProvide
+      if (schemaItem?.dicAjaxResolve) {
+        Promise.resolve(schemaItem.dicAjaxResolve)
+          .then((data) => {
+            schemaItem.dicData = data
+          })
+          .catch((error) => {
+            onError(createError(ErrorCodes.DIC_AJAX_RESOLVE_ERROR, String(error)))
+          })
       }
     })
   }
@@ -165,9 +183,10 @@ export class Common implements TemplateCommonProps {
   /**
    * 获取表单项的除modeValue之外的值并进行双向绑定
    */
-  public _getBindValue(col: FormColumnProps, itemType: FormItemType) {
+  public _getBindValue(col: SchemaProvide, itemType: FormItemType) {
     const componentBindValues: AnyObject = {}
     try {
+      if (col.type === 'group') return componentBindValues
       const componentBindKey = tempForm[itemType]?.componentBindKey || ''
       const componentBindValue = col.componentBind
 
@@ -197,12 +216,12 @@ export class Common implements TemplateCommonProps {
    * @returns Boolean
    */
   public _handelColumnDisPlay(data: {
-    col: FormColumnProps
+    col: SchemaProvide
     form: object
-    column: FormColumnProps[]
+    schemaField: SchemaItemArray
     xBoxType?: DialogFormType
   }) {
-    const { col, column, xBoxType } = data
+    const { col, schemaField, xBoxType } = data
 
     const display = col.display as ColumnProps['display']
 
@@ -212,7 +231,7 @@ export class Common implements TemplateCommonProps {
       display &&
       display({
         form: { ...this.newForm.value },
-        column,
+        schemaField,
         _xBoxType: xBoxType
       })
     )
@@ -228,7 +247,7 @@ export class Common implements TemplateCommonProps {
     const inputPlaceholder = t('common.inputText')
     const selectPlaceholder = t('common.selectText')
     const designPlaceholder = t('common.pleaseAddText')
-    const formTypeI18nMap: { [key in keyof FormTypeProps]-?: string } = {
+    const formTypeI18nMap: { [key in FormItemType]-?: string } = {
       input: inputPlaceholder,
       textarea: inputPlaceholder,
       inputNumber: inputPlaceholder,
@@ -240,9 +259,10 @@ export class Common implements TemplateCommonProps {
       cascader: selectPlaceholder,
       datePicker: selectPlaceholder,
       treeSelect: selectPlaceholder,
-      // upload: uploadPlaceholder,
       editTable: designPlaceholder,
-      colorPicker: selectPlaceholder
+      colorPicker: selectPlaceholder,
+      group: designPlaceholder,
+      collapse: designPlaceholder
     }
     return formTypeI18nMap[type] || ''
   }
@@ -268,7 +288,7 @@ export class RenderSearchFormVNode extends Common implements SearchFormProps {
   @MeasurePerformance({ threshold: 100, prefix: 'Search Form Render Performance' })
   @FormRender({ isSearch: true })
   init() {
-    if (!this.column || this.column?.length === 0) return
+    if (!this.schemaField || this.schemaField?.length === 0) return
     return this._arraySort()
   }
 }
@@ -300,7 +320,7 @@ export class RenderFormVNode extends Common implements RenderInterface {
    * @param span 栅格的默认span
    * @returns
    */
-  public _getColSpan(col: FormColumnProps, span: number): number {
+  public _getColSpan(col: SchemaProvide, span: number): number {
     if (this.isFullscreen.value) {
       if (
         FULLSCREEN_COL_SPAN_24_FORM_ITEMS.includes(getColumnFormType(col)) ||
@@ -317,12 +337,12 @@ export class RenderFormVNode extends Common implements RenderInterface {
    * @param col 表单列配置
    * @returns
    */
-  public _formatRules(col: FormColumnProps) {
+  public _formatRules(col: SchemaProvide) {
     if (!col?.rules) return []
     const rules = JSON.parse(JSON.stringify(col.rules))
     if (
       !this.slots[col.prop + this.slotSuffix] &&
-      EMPTY_STRINGFORM_ITEMS.includes(getColumnFormType(col))
+      EMPTY_STRING_FORM_ITEMS.includes(getColumnFormType(col))
     ) {
       rules.forEach((item) => {
         if (item.required) {
@@ -335,22 +355,22 @@ export class RenderFormVNode extends Common implements RenderInterface {
     return rules
   }
 
-  public _handleOnEvent(row: FormColumnProps, type: FormItemType) {
+  public _handleOnEvent(row: SchemaProvide, type: FormItemType) {
     const { on } = row
     const onType = type + FORM_ON_EVENT_SUFFIX
     if (!on || !on![onType]) {
       return {}
     }
-    const onObj: FormColumnProps['on'] = {}
+    const onObj: SchemaProvide['on'] = {}
     Object.keys(on[onType]).forEach((key) => {
       if (isFunction(on[onType][key])) {
         onObj[key] = (...args: any[]) => {
           on[onType][key](
             ...args,
             helpers({
-              columns: this.column,
+              schemaField: this.schemaField,
               onUpdateModelValue: this.onUpdateModelValue,
-              currentColumn: { ...row }
+              currentField: { ...row }
             })
           )
         }
@@ -362,7 +382,7 @@ export class RenderFormVNode extends Common implements RenderInterface {
   @MeasurePerformance({ threshold: 100, prefix: 'Form Render Performance' })
   @FormRender({ useComponentPropsValues: true })
   init(): (VNode | undefined)[] | VNode | undefined {
-    if (!this.column || this.column?.length === 0) return
+    if (!this.schemaField || this.schemaField?.length === 0) return
     return super._arraySort() as unknown as (VNode | undefined)[] | VNode | undefined
   }
 }
@@ -387,7 +407,7 @@ export class RenderViewFormVNode extends Common implements RenderInterface {
   constructor(data: TemplateCommonProps & RenderViewFormVNodeProps) {
     super(data)
     this.collapseStatus = data.collapseStatus || ref(false)
-    this.checkColumnSpan = data.checkColumnSpan || defaultCheckColumnSpan
+    this.checkColumnSpan = data.checkColumnSpan || CHECK_COLUMN_SPAN
     this.$index = data.$index
   }
 
@@ -413,20 +433,19 @@ export class RenderViewFormVNode extends Common implements RenderInterface {
   //   xBoxType: 'check'
   // })
   // 处理查看模式下的特殊情况
-  public _handleCheckValue(_value: string | number | AnyObject[], column: ColumnProps) {
-    if (this.valueMap[getColumnFormType(column)])
-      return this.valueMap[getColumnFormType(column)](column)
+  public _handleCheckValue(_value: string | number | AnyObject[], col: SchemaProvide) {
+    if (this.valueMap[getColumnFormType(col)]) return this.valueMap[getColumnFormType(col)](col)
 
-    return column.dicData
+    return col.dicData
       ? translateCheckFormStr(
-          this._getValueByPath(column.prop).value,
-          column.dicData,
-          column.props
+          this._getValueByPath(col.prop).value,
+          col.dicData,
+          col.props
         )?.toString()
-      : this._getValueByPath(column.prop).value
+      : this._getValueByPath(col.prop).value
   }
 
-  public _judgeViewFormSpan(col: FormColumnProps): number {
+  public _judgeViewFormSpan(col: SchemaProvide): number {
     if (VIEW_FORM_COL_SPAN_24_FORM_ITEMS.includes(getColumnFormType(col)))
       return col?.checkSpan || col?.span || 2
     return col?.checkSpan || col?.span || 1
@@ -434,9 +453,9 @@ export class RenderViewFormVNode extends Common implements RenderInterface {
 
   @MeasurePerformance({ threshold: 150, prefix: 'Check Form Render Performance' })
   init() {
-    if (!this.column || this.column?.length === 0) return
+    if (!this.schemaField || this.schemaField?.length === 0) return
     const columns = clone(super._arraySort())
-    const column = clone(columns)
+    const schemaField = clone(columns)
     const form = clone(this.newForm.value)
 
     return (
@@ -445,8 +464,12 @@ export class RenderViewFormVNode extends Common implements RenderInterface {
         border
         column={this.checkColumnSpan}
       >
-        {columns.map((item, index) => {
-          if (!this._handelColumnDisPlay({ col: item, column, form, xBoxType: 'check' }))
+        {columns.map((temp, index) => {
+          // 临时处理 group 这次布局容器等后续处理
+          if (schemaLayoutValues.includes(temp.type as SchemaLayoutType)) return null
+
+          const item = temp as SchemaProvide
+          if (!this._handelColumnDisPlay({ col: item, schemaField, form, xBoxType: 'check' }))
             return null
 
           const descriptionsItemName =
@@ -455,7 +478,7 @@ export class RenderViewFormVNode extends Common implements RenderInterface {
             (isFunction(item?.collapseShow) &&
               item?.collapseShow!({
                 form: { ...this._getValueByPath(item.prop).value },
-                column: columns
+                schemaField
               }))
               ? 'cjx-view-descriptions-item'
               : 'cjx-view-descriptions-item-none'

@@ -1,34 +1,37 @@
-import { computed, defineComponent, onBeforeUpdate, ref } from 'vue'
+import { defineComponent, ref } from 'vue'
+import { InitFormTemplate } from '../init'
+import { useFormInjectKey } from '../context'
 import { registerFieldTypes } from './fieldTypes'
-import { useFormProviderKey } from './context'
-import type { FieldInterface } from './context'
+import { collectFields } from './context'
+import type { SchemaItemArray } from './interface'
 
 const SchemaField = defineComponent({
   name: 'XSchemaField',
   ...registerFieldTypes,
-  setup(_, { slots }) {
-    const fields = ref<FieldInterface<any>[]>([])
+  setup() {
+    // 使用 ref 存储字段数组
+    const schemaFields = ref<SchemaItemArray>([])
 
-    // 组件更新前清空字段数组
-    onBeforeUpdate(() => {
-      fields.value = []
-    })
+    return {
+      schemaFields
+    }
+  },
+  render() {
+    const { isView, ...otherProps } = useFormInjectKey().value
 
-    // 提供收集字段的方法
-    useFormProviderKey(
-      computed(() => ({
-        addField: (field) => {
-          fields.value.push(field)
-          console.log('addField', field, fields.value)
-        },
-        addGroupField: (field) => {
-          fields.value.push(field)
-          console.log('addGroupField', field, fields.value)
-        }
-      }))
+    const defaultSlot = this.$slots.default?.()
+
+    return (
+      <>
+        {defaultSlot}
+        {InitFormTemplate({
+          schemaField: collectFields(defaultSlot),
+          ...otherProps,
+          isView: isView.value,
+          slots: this.$slots
+        })}
+      </>
     )
-
-    return () => <>{slots.default?.()}</>
   }
 })
 

@@ -11,7 +11,8 @@ export type { DialogProps, DialogDirectiveInterface } from './dialog'
 export type { EditTableProps, EditTableOption } from './editTable'
 export type {
   FormOption,
-  SchemaProvideType,
+  SchemaItem,
+  SchemaItemArray,
   FormColumnProps,
   FormItemType,
   FormTypeProps

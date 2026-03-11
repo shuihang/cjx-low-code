@@ -81,7 +81,9 @@ export default {
       subitem: '子项',
       formValidation: '表单验证',
       verifyReset: '验证重置',
-      remark: '备注'
+      remark: '备注',
+      expand: '展开',
+      collapse: '折叠'
     },
     table: {
       table: '表格',

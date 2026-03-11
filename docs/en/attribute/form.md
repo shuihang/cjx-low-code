@@ -7,7 +7,7 @@
 ## Form
 
 | Parameter | Description | Type | Default Value |
-| ------------- | ------------- | :---: | :---:  |
+| ------------- | ------------- | :---: | :---: |
 | form | Bound form value | `object` | - |
 | option | Form configuration options, refer to Option configuration | `TableOption` | - |
 | isView | Whether to view mode | `boolean` | false |
@@ -17,7 +17,7 @@
 ## Option
 
 | Parameter | Description | Type | Default Value |
-| ------------- | ------------- | :---: | :---:  |
+| ------------- | ------------- | :---: | :---: |
 | labelWidth | Form item label width | `string` | 90px |
 | formSpan | Number of grid columns occupied | `number` | 12 |
 | menuBtn | Whether to display the form operation bar | `boolean` | true |
@@ -25,12 +25,6 @@
 | submitBtnText | Submit button text | `string` | Submit |
 | cancelBtn | Whether to display the cancel button | `boolean` | true |
 | cancelBtnText | Cancel button text | `string` | Cancel |
-
-## SchemaField
-| Parameter | Description | Type | Default Value |
-| ------------- | ------------- | :---: | :---:  |
-| column | Form item configurations | `FormColumnProps[]` | - |
-| group | Form grouping configuration | `GroupInterface[]` | - |
 
 ## Column - Common Properties {#column}
 
@@ -47,3 +41,10 @@
 | tip | Helper text for content | `string \| VNode` | - |
 | tipPlacement | Position of helper text | <popover content="top \| top-start \| top-end \| bottom \| bottom-start \| bottom-end \| left \| left-start \| left-end \| right \| right-start \| right-end">`enum`</popover> | right-start |
 | style | Form item style | `CSSProperties` | - |
+
+## SchemaField-Gloup Group Properties
+
+| 参数 | 说明 | 类型 | 默认值 |
+| ------------- | ------------- | :---: | :---: |
+| type | Group type | `group` | group |
+| column | Sub-items | `SchemaItemArray` | - |

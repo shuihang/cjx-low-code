@@ -1,7 +1,9 @@
 import { ErrorCodes, createError, defaultOnError as onError } from '../../../_util/errors'
+import { schemaLayoutValues } from '../interface'
+import createLayoutForm from './createLayoutForm'
 import createFormItem from './createFormItem'
 import type { VNode } from 'vue'
-import type { FormColumnProps } from '../interface'
+import type { SchemaItemArray, SchemaLayout, SchemaLayoutType } from '../interface'
 import type { Common, RenderFormVNode, RenderSearchFormVNode } from './initFormTamplate'
 
 export interface FormRenderOptions {
@@ -37,12 +39,28 @@ export function FormRender(options: FormRenderOptions = {}) {
           onSubmit: instance.onSubmit ?? options.onSubmit
         }
 
-        const sortedColumns = originalMethod.apply(this, args) as FormColumnProps[]
+        const sortedColumns = originalMethod.apply(this, args) as SchemaItemArray
 
         if (!sortedColumns) return
 
         const result = sortedColumns
-          .map((item, index) => createFormItem(item, index, instance, actualOptions))
+          .map((item, index) => {
+            if (schemaLayoutValues.includes(item.type as SchemaLayoutType)) {
+              const layoutItem = item as SchemaLayout
+              const laypuyDefaultSlot = layoutItem.column.map((col, colIndex) =>
+                createFormItem(col, colIndex, instance, actualOptions)
+              )
+              const layoutForm = createLayoutForm(
+                layoutItem,
+                index,
+                instance,
+                actualOptions,
+                laypuyDefaultSlot
+              )
+              return layoutForm
+            }
+            return createFormItem(item, index, instance, actualOptions)
+          })
           .filter(Boolean)
 
         return result.length > 0 ? result : undefined

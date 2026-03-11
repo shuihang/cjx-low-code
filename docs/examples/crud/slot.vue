@@ -35,8 +35,6 @@
           <el-input v-model="form.name" placeholder="请输入姓名" /> {{ _XBoxType }}
         </div>
       </template>
-
-      <template #otherGroupForm> 1111 </template>
     </XCrud>
   </div>
 </template>
@@ -81,10 +79,11 @@ const option = ref<TableOption>({
       }
     }
   ],
-  group: [
+  formSchemaField: [
     {
       label: '详细信息',
       prop: 'info',
+      type: 'group',
       column: [
         {
           label: '爱好',
@@ -136,10 +135,6 @@ const option = ref<TableOption>({
           ]
         }
       ]
-    },
-    {
-      label: '其他信息',
-      prop: 'other'
     }
   ]
 })

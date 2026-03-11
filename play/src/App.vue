@@ -1,58 +1,62 @@
 <template>
-  <div class="play-container">
-    <h1>CJX Low Code Play</h1>
-    <XForm v-model:form="form" :schema-field="schemaField">
-      <!-- <XSchemaField>
-        <XSchemaField.Input
-          label="姓名"
-          prop="name"
-          :rules="[{ required: true, message: '请输入姓名' }]"
-          :input="{
-            rows: 2
-          }"
-          :input-event="{
-            onChange: (val: string) => console.log(val)
-          }"
-        />
-        <XSchemaField.Select
-          label="性别"
-          prop="sex"
-          :dic-data="[
-            { label: '男', value: 'male' },
-            { label: '女', value: 'female' }
-          ]"
-          :select-event="{
-            onBlur: (event) => console.log(event)
-          }"
-        />
-      </XSchemaField>
+  <div>
+    <XCrud
+      v-model:form="form"
+      :option="option"
+      :data="data"
+      @before-open="beforeOpen"
+      @row-save="save"
+    >
+      <template #nameSearch>
+        <el-input placeholder="请输入插槽姓名" />
+      </template>
 
-      <XSchemaField.Group label="分组" prop="group">
-        <XSchemaField.Input
-          label="年龄"
-          prop="age"
-          :rules="[{ required: true, message: '请输入年龄' }]"
-        />
-        <XSchemaField.Input
-          label="地址"
-          prop="address"
-          :rules="[{ required: true, message: '请输入地址' }]"
-        />
-      </XSchemaField.Group> -->
-    </XForm>
+      <template #headerMenu>
+        <el-button type="primary">自定义按钮headerMenu</el-button>
+      </template>
+
+      <template #menu="{ row, $index }">
+        <el-button type="primary" link @click="customizeMenuBtn(row, $index)"
+          >自定义按钮menu</el-button
+        >
+      </template>
+
+      <template #name="{ row }">
+        <el-tag>{{ row.name }}</el-tag>
+      </template>
+
+      <template #nameForm="{ prop, _XBoxType }">
+        <div v-if="_XBoxType === 'check'">
+          <el-tag>{{ form.name }}</el-tag
+          >{{ prop }}
+        </div>
+
+        <div v-else>
+          <el-input v-model="form.name" placeholder="请输入姓名" /> {{ _XBoxType }}
+        </div>
+      </template>
+    </XCrud>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { XForm, XSchemaField } from '@cjx-low-code/components'
-import type { SchemaProvideType } from '@cjx-low-code/components'
+import { ElMessage } from 'element-plus'
+import { XCrud } from '@cjx-low-code/components'
+import type { TableOption } from '@cjx-low-code/components'
 
-const schemaField = ref<SchemaProvideType>({
+const option = ref<TableOption>({
+  menu: true,
+  menuWidth: 220,
+  updateBtn: true,
+  viewBtn: true,
+  addBtn: true,
+  span: 12,
   column: [
     {
       label: '姓名',
-      prop: 'name'
+      prop: 'name',
+      search: true
     },
     {
       label: '年龄',
@@ -65,20 +69,110 @@ const schemaField = ref<SchemaProvideType>({
     {
       label: '性别',
       prop: 'sex'
+    },
+    {
+      label: '时间组件',
+      prop: 'obj.objSon.time',
+      type: 'datePicker',
+      datePicker: {
+        type: 'year',
+        valueFormat: 'YYYY-MM-DD'
+      }
+    }
+  ],
+  formSchemaField: [
+    {
+      label: '详细信息',
+      prop: 'info',
+      type: 'group',
+      column: [
+        {
+          label: '爱好',
+          prop: 'hobby',
+          type: 'checkbox',
+          span: 12,
+          dicData: [
+            {
+              label: '篮球',
+              value: '1'
+            },
+            {
+              label: '足球',
+              value: '2'
+            },
+            {
+              label: '羽毛球',
+              value: '3'
+            },
+            {
+              label: '乒乓球',
+              value: '4'
+            }
+          ],
+          checkbox: {}
+        },
+
+        {
+          label: '职业',
+          prop: 'job',
+          type: 'radio',
+          dicData: [
+            {
+              label: '教师',
+              value: '1'
+            },
+            {
+              label: '医生',
+              value: '2'
+            },
+            {
+              label: '工程师',
+              value: '3'
+            },
+            {
+              label: '学生',
+              value: '4'
+            }
+          ]
+        }
+      ]
     }
   ]
 })
 
-const form = ref({})
+const data = [
+  {
+    name: '张三',
+    age: 18,
+    address: '北京市',
+    sex: '男',
+    hobby: ['2', '4'],
+    job: '1'
+  },
+  {
+    name: '小红',
+    age: 20,
+    address: '上海市',
+    sex: '女',
+    hobby: ['2'],
+    job: '4'
+  }
+]
+
+const form = ref({
+  name: ''
+})
+
+const beforeOpen: (...args: any[]) => void = (type, row, done) => {
+  done()
+}
+
+const customizeMenuBtn = (row: any, $index: number) => {
+  ElMessage.success(`自定义按钮menu: row: ${JSON.stringify(row)} $index: ${$index}`)
+}
+
+const save = (row: any, done: (...args: any[]) => void) => {
+  ElMessage.success(`保存成功:${JSON.stringify(form.value)}`)
+  done()
+}
 </script>
-
-<style scoped>
-.play-container {
-  padding: 20px;
-}
-
-h1 {
-  margin-bottom: 20px;
-  color: #409eff;
-}
-</style>

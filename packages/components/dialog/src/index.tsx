@@ -52,7 +52,7 @@ export default defineComponent({
     contentStyle: {
       type: Object as PropType<CSSProperties>,
       default: () => ({
-        marginLeft: '-20px',
+        marginLeft: '-16px',
         marginRight: '-16px',
         maxHeight: 'calc(-150px + 90vh)',
         overflowY: 'auto',

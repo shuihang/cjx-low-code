@@ -8,7 +8,8 @@ export enum ErrorCodes {
   ASYNCHRONOUS_COMPONENT_LOADING_FAILED,
   FAILED_TO_RENDER_DIALOG,
   FORM_RENDER_DECORATOR_ERROR,
-  FORM_ITEM_RENDER_GETBIND_VALUE_ERROR
+  FORM_ITEM_RENDER_GETBIND_VALUE_ERROR,
+  DIC_AJAX_RESOLVE_ERROR
 }
 
 export const errorMessages: Record<ErrorCodes, string> = {
@@ -21,7 +22,8 @@ export const errorMessages: Record<ErrorCodes, string> = {
   [ErrorCodes.ASYNCHRONOUS_COMPONENT_LOADING_FAILED]: 'Asynchronous component loading failed',
   [ErrorCodes.FAILED_TO_RENDER_DIALOG]: 'Failed to render dialog',
   [ErrorCodes.FORM_RENDER_DECORATOR_ERROR]: 'Form render decorator error',
-  [ErrorCodes.FORM_ITEM_RENDER_GETBIND_VALUE_ERROR]: 'Form item render getBindValue error'
+  [ErrorCodes.FORM_ITEM_RENDER_GETBIND_VALUE_ERROR]: 'Form item render getBindValue error',
+  [ErrorCodes.DIC_AJAX_RESOLVE_ERROR]: 'Dic ajax resolve error'
 }
 
 export interface CompilerError extends SyntaxError {

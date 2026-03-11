@@ -81,7 +81,9 @@ export default {
       subitem: 'Subitem',
       formValidation: 'Form validation',
       verifyReset: 'Verify reset',
-      remark: 'Remark'
+      remark: 'Remark',
+      expand: 'Expand',
+      collapse: 'Collapse'
     },
     table: {
       table: 'Table',

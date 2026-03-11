@@ -13,6 +13,7 @@ import type {
   FormItemType,
   FormTypeProps,
   GroupInterface,
+  SchemaItemArray,
   formColumnValues
 } from '../../form/src/interface'
 import type { PropsToForm, SlotNodesInterface } from '../../form/src/tempform'
@@ -110,13 +111,17 @@ export interface SpanMethodProps<T extends AnyObject> {
 
 /**
  * @param {AnyObject} form 表单绑定的form
- * @param {TableColumnCtx<Column>} column 列数据
+ * @param {SchemaItemArray} schemaField 列数据
  * @param {DialogFormType} _xBoxType 弹窗类型 cjx-crud组件才有 cjx-form为undefined
  * @returns {boolean} 是否显示
  */
 export type DisplayInterface =
   | boolean
-  | ((props: { form: AnyObject; column: FormColumnProps[]; _xBoxType?: DialogFormType }) => boolean)
+  | ((props: {
+      form: AnyObject
+      schemaField: SchemaItemArray
+      _xBoxType?: DialogFormType
+    }) => boolean)
 
 export type ColumnProps = Pick<PropsToForm, 'change'> &
   FormTypeProps & {
@@ -128,7 +133,7 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
     prop: string
     /** 搜索时要绑定的属性名称 默认为prop  */
     searchProp?: string
-    /** 表单项的需要绑定的其他值 type为selectPeople/regionalGrid 的时候该参数必填 */
+    /** 表单项的需要绑定的其他值 */
     componentBind?: string
     /**
     * 表单项的类型 默认input
@@ -215,7 +220,7 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
      * 表单当前项是否显示。可以是布尔类型或函数表达式。
      * 如果未使用此参数，则取 `display` 参数的值，默认为 `true`。
      * @param {AnyObject} form 表单绑定的form
-     * @param {FormColumnProps[]} column 列数据
+     * @param {SchemaItemArray} schemaField 列数据
      * @param {DialogFormType} _xBoxType 弹窗类型
      * @returns {boolean} 是否显示
      */
@@ -223,14 +228,14 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
       | boolean
       | ((props: {
           form: AnyObject
-          column: FormColumnProps[]
+          schemaField: SchemaItemArray
           _xBoxType?: DialogFormType
         }) => boolean)
     /**
      * 表单新增时当前项是否显示。可以是布尔类型或函数表达式。
      * 如果未使用此参数，则取 `display` 参数的值，默认为 `true`。
      * @param {AnyObject} form 表单绑定的form
-     * @param {FormColumnProps[]} column 列数据
+     * @param {SchemaItemArray} schemaField 列数据
      * @param {DialogFormType} _xBoxType 弹窗类型
      * @returns {boolean} 是否显示
      */
@@ -239,7 +244,7 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
      * 表单编辑时当前项是否显示。可以是布尔类型或函数表达式。
      * 如果未使用此参数，则取 `display` 参数的值，默认为 `true`。
      * @param {AnyObject} form 表单绑定的form
-     * @param {FormColumnProps[]} column 列数据
+     * @param {SchemaItemArray} schemaField 列数据
      * @param {DialogFormType} _xBoxType 弹窗类型
      * @returns {boolean} 是否显示
      */
@@ -249,7 +254,7 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
      * 如果未使用此参数，则取 `display` 参数的值，默认为 `true`。
      * @type {DisplayInterface = boolean | ((props: {form: AnyObject, column: FormColumnProps[], index: number, _xBoxType?: DialogFormType }) => boolean)}
      * @param {AnyObject} form 表单绑定的form
-     * @param {FormColumnProps[]} column 列数据
+     * @param {SchemaItemArray} schemaField 列数据
      * @param {DialogFormType} _xBoxType 弹窗类型
      * @returns {boolean} 是否显示
      */
@@ -258,7 +263,7 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
      * 表单当前项是否显示。可以是布尔类型或函数表达式。
      * 如果未使用此参数，则取 `display` 参数的值，默认为 `true`。
      * @param {AnyObject} form 表单绑定的form
-     * @param {FormColumnProps[]} column 列数据
+     * @param {SchemaItemArray} schemaField 列数据
      * @param {DialogFormType} _xBoxType 弹窗类型
      * @returns {boolean} 是否可以编辑
      * */
@@ -266,14 +271,14 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
       | boolean
       | ((props: {
           form: AnyObject
-          column: FormColumnProps[]
+          schemaField: SchemaItemArray
           _xBoxType?: DialogFormType
         }) => boolean)
     /**
      * 表单新增时当前项是否显示。可以是布尔类型或函数表达式。
      * 如果未使用此参数，则取 `disabled` 参数的值，默认为 `false`。
      * @param {AnyObject} form 表单绑定的form
-     * @param {FormColumnProps[]} column 列数据
+     * @param {SchemaItemArray} schemaField 列数据
      * @param {DialogFormType} _xBoxType 弹窗类型
      * @returns {boolean} 是否可以编辑
      * */
@@ -281,7 +286,7 @@ export type ColumnProps = Pick<PropsToForm, 'change'> &
       | boolean
       | ((props: {
           form: AnyObject
-          column: FormColumnProps[]
+          schemaField: SchemaItemArray
           index: number
           _xBoxType?: DialogFormType
         }) => boolean)
@@ -425,8 +430,10 @@ export type TableOption = {
   sortable?: boolean
   /** 表头配置 */
   column: ColumnProps[]
-  /** 表单分组 */
-  group?: TableGroupInterface[]
+  /**
+   * 表单配置 JSON Schema 格式
+   */
+  formSchemaField?: SchemaItemArray
   /* column 的 key， 如果需要使用 filter-change 事件，则需要此属性标识是哪个 column 的筛选条件 */
   // filterChange: functionType<(filters: AnyObject) => void>()
   /** 表格等待框的控制 */

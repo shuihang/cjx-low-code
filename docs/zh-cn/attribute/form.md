@@ -6,8 +6,8 @@
 
 ## Form
 
-| 参数  | 说明 | 类型 | 默认值 |
-| ------------- | ------------- | :---: | :---:  |
+| 参数 | 说明 | 类型 | 默认值 |
+| ------------- | ------------- | :---: | :---: |
 | form | 绑定表单值 | `object` | - |
 | option | 表单配置项参考Option配置 | `TableOption` | - |
 | isView | 是否查看模式 | `boolean` | false |
@@ -16,7 +16,7 @@
 
 ## Option
 
-| 参数  | 说明 | 类型 | 默认值 |
+| 参数 | 说明 | 类型 | 默认值 |
 | ------------- | ------------- | :---: | :---:  |
 | labelWidth | 表单项label宽度 | `string` | 90px |
 | formSpan | 栅格占据的列数 | `number` | 12 |
@@ -26,15 +26,9 @@
 | cancelBtn | 取消按钮是否显示 | `boolean` | true |
 | cancelBtnText | 取消按钮文本 | `string` | 取消 |
 
-## SchemaField
-| 参数  | 说明 | 类型 | 默认值 |
-| ------------- | ------------- | :---: | :---:  |
-| column | 表单的各项配置 | `FormColumnProps[]` | - |
-| group | 表单分组的配置 | `GroupInterface[]` | - |
+## SchemaField-共用属性 {#column}
 
-## Column-共用属性 {#column}
-
-| 参数  | 说明 | 类型 | 默认值 |
+| 参数 | 说明 | 类型 | 默认值 |
 | ------------- | ------------- | :---: | :---: |
 | label | 表单项的label | `string \| VNode` | - |
 | prop | 表单项的属性名称 | `string` | - |
@@ -47,3 +41,10 @@
 | tip | 内容提示辅助语 | `string \| VNode` | - |
 | tipPlacement | 内容提示辅助语位置 | <popover content="top \| top-start \| top-end \| bottom \| bottom-start \| bottom-end \| left \| left-start \| left-end \| right \| right-start \| right-end">`enum`</popover> | right-start |
 | style | 表单项的样式 | `CSSProperties` | - |
+
+## SchemaField-Gloup 分组属性
+
+| 参数 | 说明 | 类型 | 默认值 |
+| ------------- | ------------- | :---: | :---: |
+| type | 分组类型 | `group` | group |
+| column | 子项 | `SchemaItemArray` | - |

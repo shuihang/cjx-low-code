@@ -10,7 +10,7 @@ export function InitFormTemplate(argv: TemplateProps) {
   const { isView, xBoxType } = argv
   const argvWithColumn = {
     ...argv,
-    column: argv.column || [],
+    schemaField: argv.schemaField || [],
     formSpan: argv.formSpan as number,
     collapseStatus: argv.collapseStatus || ref(false)
   }

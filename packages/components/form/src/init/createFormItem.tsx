@@ -10,7 +10,7 @@ import { TipOutlined } from '../../../crud/src/icon'
 import formConfig from '../config'
 import type { ColumnProps } from '../../../crud'
 import type { SlotsValue } from '../tempform'
-import type { FormColumnProps, FormItemType, FormTypeProps } from '../interface'
+import type { FormItemType, FormTypeProps, SchemaProvide } from '../interface'
 import type { FormRenderContext, FormRenderOptions } from './FormRenderDecorator'
 import type { CSSProperties, Slot, VNode } from 'vue'
 
@@ -19,7 +19,7 @@ const { LABEL_POSITION, getColumnFormType } = formConfig
 const needHandelLabelComponentArr = ['checkbox', 'radioButton', 'radio']
 
 function createFormItemComponent(
-  item: FormColumnProps,
+  item: SchemaProvide,
   itemType: FormItemType,
   context: FormRenderContext,
   options: FormRenderOptions
@@ -83,7 +83,7 @@ function createFormItemComponent(
     baseProps.disabled = isFunction(disabled)
       ? disabled({
           form: { ...context.newForm.value },
-          column: context.column,
+          schemaField: context.schemaField,
           _xBoxType: context.xBoxType?.value
         })
       : item.disabled
@@ -125,7 +125,7 @@ function createFormItemComponent(
 }
 
 export default function createFormItem(
-  item: FormColumnProps,
+  item: SchemaProvide,
   index: number,
   context: FormRenderContext,
   options: FormRenderOptions
@@ -137,7 +137,7 @@ export default function createFormItem(
     context._handelColumnDisPlay &&
     !context._handelColumnDisPlay({
       col: item,
-      column: context.column,
+      schemaField: context.schemaField,
       form: context.newForm.value,
       xBoxType: context.xBoxType?.value
     })

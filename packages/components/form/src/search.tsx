@@ -12,7 +12,7 @@ import { InitSearchFormVNode } from './init'
 import { searchFromProps } from './interface'
 import searchConfig from './searchConfig'
 import type { CustomSlotsType } from '../../_util/type'
-import type { FormColumnProps, FormOption } from './interface'
+import type { FormColumnProps, FormOption, NormalField } from './interface'
 import type { FormInstance } from 'element-plus'
 import type { CSSProperties } from 'vue'
 
@@ -195,7 +195,7 @@ const XFormSearch = defineComponent({
                   ref={formRowRef}
                 >
                   {InitSearchFormVNode({
-                    column: schemaField as FormColumnProps[],
+                    schemaField: schemaField as NormalField[],
                     formSpan: searchSpan.value,
                     labelWidth,
                     newForm,

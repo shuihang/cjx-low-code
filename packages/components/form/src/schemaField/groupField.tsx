@@ -1,21 +1,17 @@
 import { withInstall } from '../../../_util/type'
-import { useFormInjectKey } from './context'
-import type { GroupFieldProps } from './context'
+import type { GroupField } from './interface'
 import type { FunctionalComponent } from 'vue'
+
+export type GroupFieldProps = Omit<GroupField, 'column' | 'order' | 'type'>
 
 export type GroupFieldFC = FunctionalComponent<GroupFieldProps> & {
   isSchemaField: boolean
 }
 
-const GroupField: GroupFieldFC = (props) => {
-  const schemaField = useFormInjectKey()
-  console.log('schemaField', schemaField)
-  schemaField.value.addGroupField({
-    ...props
-  })
+const GroupFieldComponent: GroupFieldFC = () => {
   return null
 }
 
-GroupField.isSchemaField = true
-GroupField.displayName = 'XSchemaField.Group'
-export default withInstall(GroupField)
+GroupFieldComponent.isSchemaField = true
+GroupFieldComponent.displayName = 'XSchemaField.Group'
+export default withInstall(GroupFieldComponent)

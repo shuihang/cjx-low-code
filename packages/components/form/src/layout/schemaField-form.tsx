@@ -3,12 +3,12 @@ import { useFormInjectKey } from '../context'
 import { InitFormTemplate } from '../init'
 import { arrayType } from '../../../_util/type'
 import type { CustomSlotsType } from '../../../_util/type'
-import type { FormColumnProps } from '../interface'
+import type { SchemaItemArray } from '../interface'
 
 export default defineComponent({
   name: 'XFormColumn',
   props: {
-    column: arrayType<FormColumnProps[]>()
+    schemaField: arrayType<SchemaItemArray>()
   },
   slots: Object as CustomSlotsType<object>,
   render() {

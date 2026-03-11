@@ -59,7 +59,7 @@ app.use(XCrud)
 | sortable | Whether to enable drag-and-drop sorting | `boolean` | false |
 | menuHeaderRight | Whether to display the right side of the table header menu bar | `boolean` | true |
 | column | Header configuration | `ColumnProps[]`[Details](#Column) | - |
-| group | Form grouping | `TableGroupInterface[]` | - |
+| formSchemaField | Form JSON Schema | `SchemaItemArray` | - |
 | tableLoading | Control of the table loading indicator | `boolean` | false |
 | highlightCurrentRow | Whether to highlight the current row | `boolean` | false |
 | searchLabelWidth | Search item title width | `number` | 90 |
@@ -184,14 +184,13 @@ app.use(XCrud)
 
 `type` equals editTable's effective configuration items, refer to [editTable][editTable] for details
 
-## Group {#Group}
+## FormSchemaField {#FormSchemaField}
 
 | Parameter | Description | Type | Optional Values | Default Value |
 | ------------- | ------------- | :---: | :---: | :---: |
-| label | Group title | `string \| VNode` | - | - |
-| prop | Property name for form grouping | `string` | - | - |
-| slot | Whether is a slot | `boolean` | - | - |
-| column | Form items | `FormColumnProps[]`[Details][form-column] | - | - |
+| label | title | `string \| VNode` | - | - |
+| prop | Property name for form | `string` | - | - |
+| column | Form items | `SchemaItemArray`[Details][form-column] | - | - |
 
 ## Events
 
@@ -229,7 +228,6 @@ app.use(XCrud)
 | `prop` | Table slot, using the prop from [Column](#Column) as the slot name, for example, if column: [{prop: 'test'}], the slot name is `#test` | `{ row, $index }` |
 | `propSearch` | Search bar slot, using the prop from [Column](#Column) concatenated with `Search` as the slot name, for example, if column: [{prop: 'test'}], the slot name is `#testSearch` | `{ row }` |
 | `propForm` | Form slot, using the prop from [Column](#Column) concatenated with `Form` as the slot name, for example, if column: [{prop: 'test'}], the slot name is `#testForm` scope parameter is | - |  <popover content="FormColumnProps & { _XBoxType: 'check' | 'create' | 'update' }">`Object`</popover> |
-| `propGroupForm` | Form grouping slot, using the prop from [Group](#Group) concatenated with `Group` as the slot name, for example, if group: [{prop: 'test'}], the slot name is `#testGroupForm` | `{ _XBoxType?: 'check' \| 'create' \| 'update' }`  |
 | importHeader | Import file header slot | - |
 | formHeader | Form dialog header position slot | `{ _XBoxType?: 'check' \| 'create' \| 'update' }` |
 | formFooter | Form dialog footer position slot | `{ _XBoxType?: 'check' \| 'create' \| 'update' }` |

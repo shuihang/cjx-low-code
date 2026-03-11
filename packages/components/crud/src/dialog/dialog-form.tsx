@@ -2,7 +2,7 @@ import { computed, defineComponent, ref } from 'vue'
 import { cloneDeep } from 'lodash-unified'
 import { useLocale } from '@cjx-low-code/hooks'
 import XForm from '../../../form'
-import { formColumnValues } from '../../../form/src/interface'
+import { formColumnValues, schemaLayoutValues } from '../../../form/src/interface'
 import pick from '../../../_util/pick'
 import omit from '../../../_util/omit'
 import { useDialogProviderKey } from '../../../dialog/src/context'
@@ -12,7 +12,12 @@ import { useCrudInjectKey } from '../context'
 import type { DialogProps } from '../../../dialog/src/index'
 import type { ComputedRef } from 'vue'
 import type { CustomSlotsType } from '../../../_util/type'
-import type { FromProps } from '../../../form/src/interface'
+import type {
+  FromProps,
+  SchemaItemArray,
+  SchemaLayout,
+  SchemaLayoutType
+} from '../../../form/src/interface'
 import type { DialogFormType } from '../interface'
 
 const { dialogWidth: defaultDialogWidth } = crudConfig
@@ -104,16 +109,19 @@ const XDiaLogForm = defineComponent({
           display: item[`${boxType.value}Display`] ?? item.display,
           disabled: item[`${boxType.value}Disabled`] ?? item.disabled
         }
-      })
+      }) as SchemaItemArray
 
-      const newGroup = cloneDeep(option.value.group)?.map((item) => {
-        item.column = item?.column?.map((x) => {
-          return {
-            ...x,
-            display: x[`${boxType.value}Display`] ?? x.display,
-            disabled: x[`${boxType.value}Disabled`] ?? x.disabled
-          }
-        })
+      const schemaField = cloneDeep(option.value.formSchemaField)?.map((item) => {
+        if (schemaLayoutValues.includes(item.type as SchemaLayoutType)) {
+          const layoutItem = item as SchemaLayout
+          layoutItem.column = layoutItem?.column?.map((x) => {
+            return {
+              ...x,
+              display: x[`${boxType.value}Display`] ?? x.display,
+              disabled: x[`${boxType.value}Disabled`] ?? x.disabled
+            }
+          })
+        }
         return item
       })
 
@@ -128,10 +136,7 @@ const XDiaLogForm = defineComponent({
           submitBtnText: option.value.submitBtnText,
           checkColumnSpan
         },
-        schemaField: {
-          column: newColumn,
-          group: newGroup
-        },
+        schemaField: newColumn.concat(schemaField || []),
         xBoxType: boxType
       }
     })

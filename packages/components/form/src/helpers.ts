@@ -1,5 +1,5 @@
 import { clone } from 'lodash-unified'
-import type { FormColumnProps, FormModelValueType } from './interface'
+import type { FormModelValueType, PropKey, SchemaItemArray, SchemaProvide } from './interface'
 import type { TemplateCommonProps } from './init/initFormTamplate'
 
 type IgnoreKeys = 'on' | 'prop'
@@ -12,21 +12,24 @@ const IGNORE_KEYS: IgnoreKeys[] = ['on', 'prop']
  * @param columns 表单列配置
  * @param form 表单数据
  */
-export default function helpers<F extends object = FormModelValueType>(data: {
-  columns: FormColumnProps<F>[]
-  currentColumn: FormColumnProps<F>
+export default function helpers<
+  F extends object = FormModelValueType,
+  P extends PropKey<F> = PropKey<F>
+>(data: {
+  schemaField: SchemaItemArray<F, P>
+  currentField: SchemaProvide<F, P>
   onUpdateModelValue: TemplateCommonProps['onUpdateModelValue']
 }) {
-  const { columns, currentColumn, onUpdateModelValue } = data
+  const { schemaField, currentField, onUpdateModelValue } = data
   return {
     /**
      * 更新表单列配置
-     * @param fields 需要更新的表单列 column.prop updateColumns(['name', 'age'], { label: '姓名' })
+     * @param fields 需要更新的表单列 column.prop updateSchemaField(['name', 'age'], { label: '姓名' })
      * @param column 更新的表单列配置
      */
-    updateColumns: (fields: string[], column: Partial<Omit<FormColumnProps<F>, IgnoreKeys>>) => {
-      columns.forEach((item, index) => {
-        if (fields.includes(item.prop)) {
+    updateSchemaField: (fields: P[], column: Partial<Omit<SchemaProvide<F>, IgnoreKeys>>) => {
+      schemaField.forEach((item, index) => {
+        if (fields.includes(item.prop as P)) {
           // 使用IGNORE_KEYS动态保留需要忽略的属性
           const preservedProps = IGNORE_KEYS.reduce((acc, key) => {
             const typedKey = key
@@ -34,9 +37,9 @@ export default function helpers<F extends object = FormModelValueType>(data: {
               acc[key as IgnoreKeys] = item[typedKey] as any
             }
             return acc
-          }, {} as Pick<FormColumnProps<F>, IgnoreKeys>)
+          }, {} as Pick<SchemaProvide<F>, IgnoreKeys>)
 
-          columns[index] = {
+          schemaField[index] = {
             ...item,
             ...column,
             ...preservedProps
@@ -56,8 +59,11 @@ export default function helpers<F extends object = FormModelValueType>(data: {
     /**
      * 当前列配置
      */
-    currentColumn: clone(currentColumn)
+    currentField: clone(currentField)
   }
 }
 
-export type FormHelper<F extends object = FormModelValueType> = ReturnType<typeof helpers<F>>
+export type FormHelper<
+  F extends object = FormModelValueType,
+  P extends PropKey<F> = PropKey<F>
+> = ReturnType<typeof helpers<F, P>>

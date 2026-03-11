@@ -59,7 +59,7 @@ app.use(XCrud)
 | sortable |是否开启拖拽排序 | `boolean` | false |
 | menuHeaderRight | 表格头部菜单栏右边是否显示 | `boolean` | true |
 | column |表头配置 | `ColumnProps[]`[详情](#Column) | - |
-| group |表单分组 | `TableGroupInterface[]` | - |
+| formSchemaField | 表单JSON Schema | `SchemaItemArray` | - |
 | tableLoading |表格等待框的控制 | `boolean` | false |
 | highlightCurrentRow |是否要高亮当前行 | `boolean` | false |
 | searchLabelWidth | 搜索项标题宽度 | `number` | 90 |
@@ -184,14 +184,13 @@ app.use(XCrud)
 
 `type`等于editTable的生效的配置项 具体参考[editTable][editTable]
 
-## Group {#Group}
+## FormSchemaField {#FormSchemaField}
 
 | 参数  | 说明 | 类型 | 可选值 | 默认值 |
 | ------------- | ------------- | :---: | :---: | :---: |
-| label | 分组标题 | `string \| VNode` | - | - |
-| prop | 表单分组的属性名称 | `string` | - | - |
-| slot | 是否插槽 | `boolean` | - | - |
-| column | 表单的各项 | `FormColumnProps[]`[详情][form-column] | - | - |
+| label | 标题 | `string \| VNode` | - | - |
+| prop | 表单的属性名称 | `string` | - | - |
+| column | 表单的各项 | `SchemaItemArray`[详情][form-column] | - | - |
 
 ## Events
 
@@ -229,7 +228,6 @@ app.use(XCrud)
 | `prop` | 表格插槽,以[Column](#Column)里的prop做插槽名，例如column: [{prop: 'test'}]则插槽名为`#test` | `{ row, $index }` |
 | `propSearch` | 搜索栏插槽,以[Column](#Column)里的prop拼接`Search`做插槽名，例如column: [{prop: 'test'}]则插槽名为`#testSearch` | `{ row }` |
 | `propForm` | 表单插槽,以[Column](#Column)里的prop拼接`Form`做插槽名，例如column: [{prop: 'test'}]则插槽名为`#testForm` 作用域参数为 | - |  <popover content="FormColumnProps & { _XBoxType: 'check' | 'create' | 'update' }">`Object`</popover> |
-| `propGroupForm` | 表单分组插槽,以[Group](#Group)里的prop拼接`Group`做插槽名，例如group: [{prop: 'test'}]则插槽名为`#testGroupForm` | `{ _XBoxType?: 'check' \| 'create' \| 'update' }`  |
 | importHeader | 导入文件头部插槽 | - |
 | formHeader | 表单弹窗头部位置插槽 | `{ _XBoxType?: 'check' \| 'create' \| 'update' }` |
 | formFooter | 表单弹窗底部位置插槽 | `{ _XBoxType?: 'check' \| 'create' \| 'update' }` |

@@ -5,15 +5,15 @@ import { useDialogInjectKey } from '../../dialog/src/context'
 import { fromProps } from './interface'
 import { useFormProviderKey } from './context'
 import formConfig from './config'
-import XFormColumn from './type/column-form'
-import XGroupForm from './type/group-form'
+import XFormSchemaField from './layout/schemaField-form'
 import XFromMenu from './menu'
 import { getValueByPath } from './utils'
 import type { FormInstance, FormItemProp, FormValidateCallback } from 'element-plus'
 import type { CustomSlotsType } from '../../_util/type'
-import type { Arrayable, DialogFormType, FormColumnProps, FormSlot, FromProps } from './interface'
+import type { Arrayable, DialogFormType, FormSlot, FromProps } from './interface'
+import type { VNode } from 'vue'
 
-const { span, labelWidth: defaultLabelWidth, menuBtn: defaultMenuBtn } = formConfig
+const { SPAN, LABEL_WIDTH, MENU_BTN } = formConfig
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 const formEmits = {
@@ -37,9 +37,9 @@ export const XForm = withInstall(
         /** 表单操作栏插槽 */
         formMenu?: void
         /** 表单头部位置插槽 */
-        formHeader?: (props: { _XBoxType?: DialogFormType }) => any
+        formHeader?: (props: { _XBoxType?: DialogFormType }) => VNode | undefined
         /** 表单底部位置插槽 */
-        formFooter?: (props: { _XBoxType?: DialogFormType }) => any
+        formFooter?: (props: { _XBoxType?: DialogFormType }) => VNode | undefined
       } & FormSlot
     >,
     emits: formEmits,
@@ -48,8 +48,7 @@ export const XForm = withInstall(
 
       const disabledForm = ref<boolean>(props.disabled || false)
 
-      const { formSpan = props.isView ? undefined : span, labelWidth = defaultLabelWidth } =
-        option || {}
+      const { formSpan = props.isView ? undefined : SPAN, labelWidth = LABEL_WIDTH } = option || {}
       // 双向绑定数据 回调函数
       const newForm = computed(() => props.form)
 
@@ -107,8 +106,6 @@ export const XForm = withInstall(
         })
       }
 
-      const groupFormRef = ref<any>()
-
       const exposeFn = {
         ...ruleFormRef.value,
         scrollToField: (prop: FormItemProp) => ruleFormRef.value?.scrollToField(prop),
@@ -141,11 +138,6 @@ export const XForm = withInstall(
             })
           }) as Promise<[form: any, done: (isClear?: boolean) => void]>
         },
-        /**
-         * 展开或收起所有表单项 isView=true时有用
-         * @param v true/全部展开 false/全部折叠
-         * */
-        collapseAllChange: (v: boolean) => groupFormRef.value.collapseAllChange(v),
         /** 手动设置表单不可编辑 */
         setFormDisabled: () => (disabledForm.value = true),
         /** 手动设置表单可编辑 */
@@ -160,7 +152,6 @@ export const XForm = withInstall(
         isFullscreen,
         newForm,
         ruleFormRef,
-        groupFormRef,
         disabledForm,
         onReset,
         onSubmit
@@ -168,7 +159,7 @@ export const XForm = withInstall(
     },
     render() {
       const {
-        menuBtn = defaultMenuBtn,
+        menuBtn = MENU_BTN,
         submitBtn = true,
         cancelBtn = true,
         submitBtnText,
@@ -178,7 +169,6 @@ export const XForm = withInstall(
 
       return (
         <>
-          {this.$slots.default?.()}
           <ElRow class={['!position-initial cjx-form h-100%', $class]}>
             <ElCol lg={24} md={24} xs={24} class="h-[calc(100%-50px)]">
               <ElForm
@@ -193,36 +183,28 @@ export const XForm = withInstall(
                   style={this.$props.contentStyle}
                   class={`cjx-Form-row w-100%`}
                 >
-                  {
-                    <>
-                      <div class="cjx-form-header w-100%">
-                        {this.$slots?.formHeader &&
-                          this.$slots.formHeader({
-                            _XBoxType: this.xBoxType
-                          })}
-                      </div>
+                  <div class="cjx-form-header w-100%">
+                    {this.$slots?.formHeader &&
+                      this.$slots.formHeader({
+                        _XBoxType: this.xBoxType
+                      })}
+                  </div>
 
-                      <XFormColumn
-                        column={this.$props.schemaField?.column as FormColumnProps[]}
-                        v-slots={this.$slots}
-                      ></XFormColumn>
+                  {this.$slots.default ? (
+                    this.$slots.default()
+                  ) : (
+                    <XFormSchemaField
+                      schemaField={this.$props.schemaField}
+                      v-slots={this.$slots}
+                    ></XFormSchemaField>
+                  )}
 
-                      {/*分组*/}
-                      <XGroupForm
-                        ref="groupFormRef"
-                        group={this.$props.schemaField?.group}
-                        xBoxType={this.xBoxType}
-                        v-slots={this.$slots}
-                      />
-
-                      <div class="cjx-form-footer w-100%">
-                        {this.$slots?.formFooter &&
-                          this.$slots?.formFooter({
-                            _XBoxType: this.xBoxType
-                          })}
-                      </div>
-                    </>
-                  }
+                  <div class="cjx-form-footer w-100%">
+                    {this.$slots?.formFooter &&
+                      this.$slots?.formFooter({
+                        _XBoxType: this.xBoxType
+                      })}
+                  </div>
                 </ElRow>
               </ElForm>
             </ElCol>

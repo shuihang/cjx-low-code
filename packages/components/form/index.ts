@@ -4,7 +4,8 @@ export { XSchemaField } from './src/schemaField'
 
 export type {
   FormOption,
-  SchemaProvideType,
+  SchemaItem,
+  SchemaItemArray,
   FormItemType,
   FormTypeProps,
   FormColumnProps
