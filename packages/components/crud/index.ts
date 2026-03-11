@@ -5,9 +5,5 @@ export type {
   ColumnProps,
   CrudPageProps,
   CrudPermission,
-  BeforeOpen,
+  BeforeOpen
 } from './src/interface'
-
-
-
-
