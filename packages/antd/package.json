@@ -1,0 +1,15 @@
+{
+  "name": "@cjx-low-code/antd",
+  "version": "1.0.0",
+  "description": "Ant Design React adapter for cjx-low-code",
+  "license": "MIT",
+  "main": "index.ts",
+  "module": "index.ts",
+  "unpkg": "index.js",
+  "jsdelivr": "index.js",
+  "types": "index.d.ts",
+  "dependencies": {
+    "@cjx-low-code/react": "workspace:*",
+    "antd": "^6.3.5"
+  }
+}

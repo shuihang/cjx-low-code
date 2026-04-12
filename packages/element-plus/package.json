@@ -1,0 +1,15 @@
+{
+  "name": "@cjx-low-code/element-plus",
+  "version": "1.0.0",
+  "description": "Element Plus adapter for cjx-low-code",
+  "license": "MIT",
+  "main": "index.ts",
+  "module": "index.ts",
+  "unpkg": "index.js",
+  "jsdelivr": "index.js",
+  "types": "index.d.ts",
+  "dependencies": {
+    "@element-plus/icons-vue": "2.2.1",
+    "element-plus": "2.13.5"
+  }
+}

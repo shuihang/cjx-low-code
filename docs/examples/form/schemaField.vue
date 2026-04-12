@@ -46,7 +46,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { XForm, XSchemaField } from 'cjx-low-code'
-import type { SchemaItem } from 'cjx-low-code'
 
 const form = ref({})
 

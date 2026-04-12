@@ -1,0 +1,11 @@
+{
+  "name": "@cjx-low-code/compiler-core",
+  "version": "1.0.0",
+  "description": "Low Code Compiler Core",
+  "license": "MIT",
+  "main": "index.ts",
+  "module": "index.ts",
+  "unpkg": "index.js",
+  "jsdelivr": "index.js",
+  "types": "index.d.ts"
+}

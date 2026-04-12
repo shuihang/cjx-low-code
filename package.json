@@ -7,7 +7,8 @@
     "docs"
   ],
   "scripts": {
-    "dev": "pnpm run -C play dev",
+    "dev": "pnpm run -C play/vue dev",
+    "dev:react": "pnpm run -C play/react dev",
     "build": "pnpm run -C internal/build start",
     "docs:dev": "pnpm run -C docs dev",
     "docs:build": "pnpm run -C docs build",
@@ -26,11 +27,21 @@
     "vue": "^3.5.4"
   },
   "dependencies": {
+    "@cjx-low-code/antd": "workspace:^",
     "@cjx-low-code/components": "workspace:*",
+    "@cjx-low-code/core": "workspace:*",
     "@cjx-low-code/eslint-config": "workspace:*",
     "@cjx-low-code/hooks": "workspace:*",
+    "@cjx-low-code/json-schema": "workspace:*",
     "@cjx-low-code/locale": "workspace:*",
+    "@cjx-low-code/react": "workspace:^",
+    "@cjx-low-code/reactivity": "workspace:*",
+    "@cjx-low-code/reactivity-react": "workspace:^",
+    "@cjx-low-code/reactivity-vue": "workspace:^",
+    "@cjx-low-code/shared": "workspace:*",
     "@cjx-low-code/theme-chalk": "workspace:*",
+    "@cjx-low-code/vue": "workspace:*",
+    "@formily/shared": "^2.3.7",
     "@pnpm/types": "8.4.0",
     "@types/gulp": "4.0.9",
     "@vue/runtime-core": "^3.5.4",
@@ -38,7 +49,6 @@
     "@vueuse/core": "9.1.0",
     "chalk": "5.0.1",
     "consola": "2.15.3",
-    "element-plus": "2.13.5",
     "lodash-es": "4.17.21",
     "lodash-unified": "1.0.3",
     "reflect-metadata": "0.2.2",
@@ -53,7 +63,6 @@
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "7.18.6",
     "@babel/plugin-proposal-decorators": "7.24.1",
-    "@element-plus/icons-vue": "2.1.0",
     "@esbuild-kit/cjs-loader": "2.2.1",
     "@rushstack/eslint-patch": "^1.3.2",
     "@storybook/addon-essentials": "^7.0.0",

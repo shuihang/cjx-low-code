@@ -5,12 +5,12 @@ import { resolve } from 'path';
 
 export default defineConfig({
   plugins: [
-    vue(),
+    vue() as any,
   ],
   test: {
     globals: true,
     environment: 'jsdom',
-    include: ['packages/**/*.test.{js,ts,jsx,tsx}'],
+    include:  ['packages/**/*.{test,spec}.{js,ts,jsx,tsx}'],
     coverage: {
       reporter: ['text', 'json', 'html'],
       exclude: [

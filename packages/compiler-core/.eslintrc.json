@@ -1,0 +1,5 @@
+{
+  "rules": {
+    "unicorn/number-literal-case": "off"
+  }
+}

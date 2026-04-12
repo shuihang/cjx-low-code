@@ -1,0 +1,13 @@
+{
+  "name": "@cjx-low-code/shared",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "module": "index.ts",
+  "unpkg": "index.js",
+  "jsdelivr": "index.js",
+  "types": "index.d.ts",
+  "dependencies": {
+    "@cjx-low-code/path": "workspace:*"
+  }
+}

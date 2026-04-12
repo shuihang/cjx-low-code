@@ -1,0 +1,272 @@
+import { computed, defineComponent, ref } from 'vue'
+import { Plus, QuestionFilled } from '@element-plus/icons-vue'
+import { ElButton, ElFormItem, ElIcon, ElTooltip } from 'element-plus'
+import { pick, withInstallVue } from '@cjx-low-code/shared'
+import { useLocale } from '../../../hooks'
+import XCrud from '../../crud'
+import { editTableMapProps, editTableProps } from './interface'
+import type { AnyObject, CustomSlotsType } from '@cjx-low-code/shared'
+import type { ComputedRef, DefineComponent, VNode } from 'vue'
+import type { EditTableOption, Placement } from './interface'
+import type { SortableEvent } from 'sortablejs'
+import type { Scope, TableOption } from '../../crud/src/interface'
+
+/* eslint-disable @typescript-eslint/no-unused-vars */
+const editTableEmits = {
+  'update:modelValue': (data: AnyObject[]) => true,
+  /** 点击新增按钮触发的事件 */
+  addChange: (row: AnyObject, index: number) => true,
+  delChange: (row: AnyObject, index: number) => true,
+  /** 点击复制按钮触发的事件 */
+  copyChange: (row: AnyObject, index: number) => true,
+  sortableChange: (sortable: SortableEvent) => true
+}
+/* eslint-enable @typescript-eslint/no-unused-vars */
+
+export const XEditTable = withInstallVue(
+  defineComponent({
+    name: 'XEditTable',
+    inheritAttrs: false,
+    props: editTableProps(),
+    emits: editTableEmits,
+    slots: Object as CustomSlotsType<
+      {
+        /** 操作栏插槽 */
+        menu?: Scope
+      } & {
+        [key: string]: {
+          /** 表格行数据 */
+          row: AnyObject
+          /** 表格行索引 */
+          $index: number
+        }
+      }
+    >,
+    setup: (props, { slots, emit }) => {
+      const { t } = useLocale()
+
+      const { isView = false } = props
+      const option = props.option
+      const { sortable = false, delBtn = false, border = false, index = false } = option
+
+      // const data = ref<any[]>([...props.modelValue])
+
+      const keys: AnyObject = {}
+
+      const tableOption = ref<TableOption>({
+        isCard: false,
+        menuHeaderRight: false,
+        menu: !isView,
+        menuWidth: 150,
+        sortable,
+        delBtn,
+        border,
+        index,
+        column: []
+      })
+
+      const addChange = () => {
+        if (props.modelValue) {
+          emit('update:modelValue', [...props.modelValue, { ...keys }])
+        } else {
+          emit('update:modelValue', [{ ...keys }])
+        }
+
+        emit('addChange', { ...keys }, props.modelValue?.length || 1)
+      }
+
+      const rowDel = (row: typeof keys, index: number) => {
+        // data.value.splice(index, 1)
+        const newModelValue = props.modelValue?.filter((_, i) => i !== index)
+        emit('update:modelValue', newModelValue)
+
+        emit('delChange', row, index)
+      }
+
+      const copyChange = (row: typeof keys, index: number) => {
+        const newRow = JSON.parse(JSON.stringify(row))
+        delete newRow[props.option.rowKey || 'id']
+        // console.log(newRow, props.option.rowKey)
+
+        const newModelValue = props.modelValue
+
+        newModelValue.splice(index + 1, 0, newRow)
+        emit('update:modelValue', newModelValue)
+
+        emit('copyChange', row, index)
+      }
+
+      const getLabelNode = (
+        tip: string | undefined,
+        label: string | VNode,
+        placement: Placement
+      ): VNode => {
+        if (tip) {
+          return (
+            <ElTooltip placement={placement} content={tip}>
+              {label}
+            </ElTooltip>
+          )
+        } else {
+          return <div>{label}</div>
+        }
+      }
+
+      const getSlots: ComputedRef<{ [x: string]: (...args: any[]) => VNode }> = computed(() => {
+        const vNode: { [k in string]: (data: Scope) => VNode } = {}
+
+        if (option?.copyBtn) {
+          vNode['menu'] = ({ row, $index }) => (
+            <>
+              {slots.menu?.({ row, $index })}
+              <ElButton type="primary" link onClick={() => copyChange(row, $index)}>
+                {t('common.copy')}
+              </ElButton>
+            </>
+          )
+        } else {
+          vNode['menu'] = ({ row, $index }) => <>{slots.menu?.({ row, $index })}</>
+        }
+
+        ;[''].forEach(() => {
+          tableOption.value.column = []
+        })
+
+        // tableOption.value.column = []
+        const opt = props.option as EditTableOption
+        // @ts-ignore
+        opt?.column?.forEach((item) => {
+          const {
+            label,
+            prop,
+            type,
+            rules,
+            hide = false,
+            dicData,
+            tip,
+            tipPlacement = 'top'
+          } = item
+
+          keys[prop] = editTableMapProps[type]?.defaultValue
+
+          const hideFn = typeof hide === 'boolean' ? computed(() => hide) : hide
+
+          !hideFn.value &&
+            tableOption.value.column?.push({
+              prop,
+              label: isView
+                ? label
+                : (() => {
+                    let newLabel: VNode = getLabelNode(
+                      tip,
+                      <>
+                        {label}
+                        {tip && (
+                          <ElIcon size={14} style={{ marginLeft: '5px' }}>
+                            <QuestionFilled />
+                          </ElIcon>
+                        )}
+                      </>,
+                      tipPlacement
+                    )
+
+                    rules?.forEach((rule) => {
+                      if (rule.required) {
+                        newLabel = getLabelNode(
+                          tip,
+                          <div class={'flex flex-items-center'}>
+                            <span class={'color-red m-r-3px h-9px line-height-100%'}>*</span>
+                            {label}
+                            {tip && (
+                              <ElIcon size={14} style={{ marginLeft: '5px' }}>
+                                <QuestionFilled />
+                              </ElIcon>
+                            )}
+                          </div>,
+                          tipPlacement
+                        )
+                      }
+                    })
+                    return newLabel
+                  })(),
+              ...pick(item, ['width', 'minWidth', 'dicData']),
+              // 不能放在pick中，formatter为undefined时 会导致 x-crud内部的 formatter 函数被覆盖
+              ...(item.formatter ? { formatter: item.formatter } : {})
+            })
+
+          if (type === 'text') return
+
+          if (isView && !slots[prop]) return
+
+          const Component = editTableMapProps[type].components as DefineComponent
+          const SubComponents = editTableMapProps[type]?.subComponents as DefineComponent
+
+          vNode[prop] = ({ $index, row }) => {
+            if (isView) {
+              return slots[prop]?.({ $index, row }) ?? null
+            }
+
+            return (
+              <div>
+                {!slots[prop] ? (
+                  <ElFormItem
+                    prop={`${props.prop}.${$index}.${prop}`}
+                    rules={rules}
+                    class={'p-t-13px p-b-13px'}
+                  >
+                    <Component
+                      v-model={props.modelValue![$index]![prop]}
+                      placeholder={editTableMapProps[type].placeholder + label}
+                      type={editTableMapProps[type].type}
+                      {...editTableMapProps[type][type]}
+                      {...item[type]}
+                      {...item?.on}
+                    >
+                      {dicData &&
+                        SubComponents &&
+                        dicData.map((item) => (
+                          <SubComponents key={item.value} label={item.label} value={item.value} />
+                        ))}
+                    </Component>
+                  </ElFormItem>
+                ) : (
+                  slots[prop]?.({ $index, row })
+                )}
+              </div>
+            )
+          }
+        })
+        return vNode
+      })
+
+      return () => {
+        return (
+          <div class={'cjx-edit-table w-100%'}>
+            <XCrud
+              class={'w-100%'}
+              option={tableOption.value}
+              data={props.modelValue}
+              onRowDel={rowDel}
+              v-slots={getSlots.value}
+              onSortableChange={(sortable: SortableEvent) => emit('sortableChange', sortable)}
+              cellClassName={() => 'handle'}
+            />
+
+            {!props.isView && (
+              <div class={['w-100% flex justify-center mt-10px']}>
+                <ElButton onClick={addChange} type="primary" link>
+                  <ElIcon>
+                    <Plus />
+                  </ElIcon>
+                  {t('table.add_a_row')}
+                </ElButton>
+              </div>
+            )}
+          </div>
+        )
+      }
+    }
+  })
+)
+
+export default XEditTable

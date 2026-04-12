@@ -1,0 +1,64 @@
+import { computed, defineComponent } from 'vue'
+import { omit, pick } from '@cjx-low-code/shared'
+import { formColumnValues } from '../../../form-design/src/interface'
+import XSearchForm from '../../../form-design/src/search'
+import { useCrudInjectKey } from '../context'
+import type { SearchFromProps } from '../../../form-design/src/interface'
+
+const XHeaderSearch = defineComponent({
+  name: 'XHeaderSearch',
+  props: {
+    form: {
+      type: Object,
+      default: () => ({})
+    }
+  },
+  setup(props, { slots }) {
+    const { option, onSearchReset, onSearchChange } = useCrudInjectKey().value
+
+    const searchFormProps = computed<SearchFromProps>(() => {
+      const newColumn = option.value.column
+        ?.filter((item) => {
+          return item.search || false
+        })
+        .map((item) => {
+          return {
+            ...omit(pick(item, formColumnValues), ['tip', 'labelTip']),
+            span: item.searchSpan,
+            placeholder: item.searchPlaceholder,
+            clearable: item.searchClearable ?? true,
+            type: item.searchType || item.type,
+            prop: item.searchProp || item.prop,
+            order: item.searchOrder,
+            labelWidth: item.searchLabelWidth
+          }
+        })
+
+      return {
+        option: {
+          formSpan: option.value.searchSpan,
+          labelWidth: option.value.searchLabelWidth,
+          column: newColumn
+        },
+        schemaField: newColumn
+      }
+    })
+
+    return () => (
+      <>
+        <XSearchForm
+          {...searchFormProps.value}
+          form={props.form}
+          onReset={onSearchReset}
+          onSubmit={onSearchChange}
+          v-slots={{
+            ...slots,
+            menu: slots.searchMenu
+          }}
+        ></XSearchForm>
+      </>
+    )
+  }
+})
+
+export default XHeaderSearch

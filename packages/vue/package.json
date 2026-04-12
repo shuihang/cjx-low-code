@@ -1,0 +1,19 @@
+{
+  "name": "@cjx-low-code/vue",
+  "version": "1.0.0",
+  "license": "MIT",
+  "main": "index.ts",
+  "module": "index.ts",
+  "unpkg": "index.js",
+  "jsdelivr": "index.js",
+  "types": "index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "vue": "^3.5.0"
+  },
+  "dependencies": {
+    "@cjx-low-code/reactivity-vue": "workspace:*"
+  }
+}

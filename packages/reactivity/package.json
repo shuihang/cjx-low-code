@@ -1,0 +1,11 @@
+{
+  "name": "@cjx-low-code/reactivity",
+  "version": "1.0.0",
+  "description": "",
+  "license": "MIT",
+  "main": "index.ts",
+  "module": "index.ts",
+  "unpkg": "index.js",
+  "jsdelivr": "index.js",
+  "types": "index.d.ts"
+}

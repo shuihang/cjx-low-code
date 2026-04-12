@@ -1,0 +1,14 @@
+{
+  "name": "@cjx-low-code/antdv",
+  "version": "1.0.0",
+  "description": "Ant Design Vue adapter for cjx-low-code",
+  "license": "MIT",
+  "main": "index.ts",
+  "module": "index.ts",
+  "unpkg": "index.js",
+  "jsdelivr": "index.js",
+  "types": "index.d.ts",
+  "dependencies": {
+    "ant-design-vue": "^4.2.6"
+  }
+}

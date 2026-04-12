@@ -34,5 +34,5 @@
     "typeRoots": ["./node_modules/@types/", "./types"]
   },
   "exclude": ["dist", "target", "node_modules"],
-  "include": ["packages", "internal", "types/**/*.d.ts", "packages/types/auto-imports.d.ts"]
+  "include": ["packages", "internal", "types/**/*.d.ts"]
 }
