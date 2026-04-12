@@ -2,21 +2,48 @@
   "name": "@cjx-low-code/react",
   "version": "1.0.0",
   "license": "MIT",
-  "main": "index.ts",
-  "module": "index.ts",
-  "unpkg": "index.js",
-  "jsdelivr": "index.js",
-  "types": "index.d.ts",
+  "main": "lib",
+  "module": "esm",
+  "umd:main": "dist/cjx-low-code.react.umd.production.js",
+  "unpkg": "dist/cjx-low-code.react.umd.production.js",
+  "jsdelivr": "dist/cjx-low-code.react.umd.production.js",
+  "jsnext:main": "esm",
+  "types": "esm/index.d.ts",
   "publishConfig": {
     "access": "public"
   },
+  "scripts": {
+    "start": "dumi dev",
+    "build": "rimraf -rf lib esm dist && npm run build:cjs && npm run build:esm && npm run build:umd",
+    "build:cjs": "tsc --project tsconfig.build.json",
+    "build:esm": "tsc --project tsconfig.build.json --module es2015 --outDir esm",
+    "build:umd": "rollup --config",
+    "build:docs": "dumi build"
+  },
   "peerDependencies": {
-    "react": "^18.2.0"
+    "@types/react": ">=16.8.0",
+    "@types/react-dom": ">=16.8.0",
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0",
+    "react-is": ">=16.8.0"
+  },
+  "peerDependenciesMeta": {
+    "@types/react": {
+      "optional": true
+    },
+    "@types/react-dom": {
+      "optional": true
+    }
   },
   "dependencies": {
+    "@cjx-low-code/core": "workspace:*",
+    "@cjx-low-code/json-schema": "workspace:*",
+    "@cjx-low-code/reactivity": "workspace:*",
+    "@cjx-low-code/reactivity-react": "workspace:*",
+    "@cjx-low-code/shared": "workspace:*",
     "hoist-non-react-statics": "^3.3.2"
   },
-  "devDependencies": {
-    "@types/react": "^19.2.14"
+  "engines": {
+    "npm": ">=3.0.0"
   }
 }

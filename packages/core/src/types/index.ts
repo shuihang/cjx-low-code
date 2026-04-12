@@ -1,4 +1,4 @@
-import type { FormPath } from '@formily/shared'
+import type { FormPath } from '@cjx-low-code/shared'
 import type { Form } from '../models/Form'
 import type { Field } from '../models/Field'
 import type { SchemaEnum, SchemaReaction, SchemaTypes } from '@cjx-low-code/json-schema'

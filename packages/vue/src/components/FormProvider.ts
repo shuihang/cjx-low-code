@@ -1,5 +1,5 @@
 import { defineComponent, onMounted, onUnmounted, provide, toRef } from 'vue'
-import { objectType } from '@cjx-low-code/shared'
+import { objectType } from '../shared'
 import { FormSymbol } from '../shared/context'
 import h from '../shared/h'
 import { Fragment } from '../shared/fragment'

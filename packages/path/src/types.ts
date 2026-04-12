@@ -1,4 +1,4 @@
-import type { Path } from './path'
+import type { Path } from './index'
 
 export type Segments = Array<string | number>
 

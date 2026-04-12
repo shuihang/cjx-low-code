@@ -31,5 +31,5 @@ export const transformComponent = <T extends VueComponent>(
         return h(tag, data, slots)
       }
     }
-  }) as T
+  }) as unknown as T
 }

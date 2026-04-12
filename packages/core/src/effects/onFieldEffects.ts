@@ -7,14 +7,17 @@ import type { Form } from '../models'
 
 function matchFieldPath(pattern: FormPathPattern, field: GeneralField): boolean {
   if (typeof pattern === 'string') {
-    return pattern === field.name || pattern === field.address || pattern === field.path
+    // pattern === field.name || pattern === field.address || pattern === field.path
+    return pattern === field.name || pattern === field.path
   }
   if (pattern instanceof RegExp) {
-    return pattern.test(field.name) || pattern.test(field.address) || pattern.test(field.path)
+    // pattern.test(field.name) || pattern.test(field.address) || pattern.test(field.path)
+    return pattern.test(field.name) || pattern.test(field.path)
   }
   if (Array.isArray(pattern)) {
+    // pathStr === field.name || pathStr === field.address || pathStr === field.path
     const pathStr = pattern.join('.')
-    return pathStr === field.name || pathStr === field.address || pathStr === field.path
+    return pathStr === field.name || pathStr === field.path
   }
   return false
 }

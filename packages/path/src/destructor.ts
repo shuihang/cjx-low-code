@@ -1,4 +1,6 @@
-import { isNumber, isValid } from '@cjx-low-code/shared'
+// 内联实现需要的工具函数，避免循环依赖
+const isNumber = (val: any) => typeof val === 'number'
+const isValid = (val: any) => val !== undefined && val !== null
 import type { DestructorRules, Segments } from './types'
 
 type Mutators = {

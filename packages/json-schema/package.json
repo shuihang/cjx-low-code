@@ -2,9 +2,31 @@
   "name": "@cjx-low-code/json-schema",
   "version": "1.0.0",
   "license": "MIT",
-  "main": "index.ts",
-  "module": "index.ts",
-  "unpkg": "index.js",
-  "jsdelivr": "index.js",
-  "types": "index.d.ts"
+  "main": "lib",
+  "module": "esm",
+  "umd:main": "dist/cjx-low-code.json-schema.umd.production.js",
+  "unpkg": "dist/cjx-low-code.json-schema.umd.production.js",
+  "jsdelivr": "dist/cjx-low-code.json-schema.umd.production.js",
+  "jsnext:main": "esm",
+  "types": "esm/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "rimraf -rf lib esm dist && npm run build:cjs && npm run build:esm && npm run build:umd",
+    "build:cjs": "tsc --project tsconfig.build.json",
+    "build:esm": "tsc --project tsconfig.build.json --module es2015 --outDir esm",
+    "build:umd": "rollup --config"
+  },
+  "peerDependencies": {
+    "typescript": ">4.1.5"
+  },
+  "dependencies": {
+    "@cjx-low-code/core": "workspace:*",
+    "@cjx-low-code/reactivity": "workspace:*",
+    "@cjx-low-code/shared": "workspace:*"
+  },
+  "engines": {
+    "npm": ">=3.0.0"
+  }
 }

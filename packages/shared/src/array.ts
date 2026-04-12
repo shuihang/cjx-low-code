@@ -1,4 +1,5 @@
 import { isArray, isObject, isString } from './shared'
+
 type EachArrayIterator<T> = (currentValue: T, key: number) => void | boolean
 type EachStringIterator = (currentValue: string, key: number) => void | boolean
 type EachObjectIterator<T = any> = (currentValue: T, key: string) => void | boolean

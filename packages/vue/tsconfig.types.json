@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./type-artefacts",
+    "paths": {
+      "@cjx-low-code/*": ["packages/*"]
+    },
+    "declaration": true,
+    "sourceMap": false,
+    "inlineSources": false
+  }
+}

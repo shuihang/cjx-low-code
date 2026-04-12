@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "@cjx-low-code/antdv": "workspace:*",
-    "@cjx-low-code/components": "workspace:*",
     "@cjx-low-code/element-plus": "workspace:*",
     "@cjx-low-code/reactivity": "workspace:*",
     "@cjx-low-code/reactivity-vue": "workspace:*",

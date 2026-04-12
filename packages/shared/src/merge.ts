@@ -57,7 +57,7 @@ function getMergeFunction(key: string, options: Options) {
 function getEnumerableOwnPropertySymbols(target: any): any {
   return Object.getOwnPropertySymbols
     ? Object.getOwnPropertySymbols(target).filter((symbol) => {
-        return target.propertyIsEnumerable(symbol)
+        return target.propertyIsEnumerable!(symbol)
       })
     : []
 }
@@ -146,8 +146,11 @@ function deepmerge(target: any, source: any, options?: Options) {
   }
 }
 
-export const lazyMerge = <T extends object | Function>(target: T, ...args: T[]): any => {
-  const _lazyMerge = <T extends object | Function>(target: T, source: T): {} => {
+export const lazyMerge = <T extends object | ((...args: any[]) => any)>(
+  target: T,
+  ...args: T[]
+): T => {
+  const _lazyMerge = <T extends object | ((...args: any[]) => any)>(target: T, source: T): T => {
     if (!isValid(source)) return target
     if (!isValid(target)) return source
     const isTargetObject = typeof target === 'object'
@@ -209,9 +212,9 @@ export const lazyMerge = <T extends object | Function>(target: T, ...args: T[]):
       getPrototypeOf,
       getOwnPropertyDescriptor,
       has
-    }) as any
+    }) as unknown as T
   }
-  return args.reduce<{}>((buf, arg) => _lazyMerge(buf, arg), target)
+  return args.reduce<T>((buf, arg) => _lazyMerge(buf, arg), target)
 }
 
 export const merge = deepmerge

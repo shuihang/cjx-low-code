@@ -84,7 +84,7 @@ export function connect<T extends VueComponent>(target: T, ...args: IComponentMa
     }
   })
 
-  return markRaw(functionalComponent) as T
+  return markRaw(functionalComponent) as unknown as T
 }
 
 export function composeExport<T0 extends VueComponent, T1 extends VueComponent>(
@@ -106,5 +106,5 @@ export function connectFormModel<T extends VueComponent>(
     }
   })
 
-  return functionalComponent as T
+  return functionalComponent as unknown as T
 }

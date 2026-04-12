@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./lib",
+    "paths": {
+      "@cjx-low-code/*": ["packages/*", "devtools/*"]
+    },
+    "declaration": true,
+    "types": []
+  }
+}

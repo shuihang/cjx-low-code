@@ -5,7 +5,7 @@ import { useSchemaMarkup } from '../hooks'
 import { SchemaMarkupSymbol, SchemaOptionsSymbol } from '../shared/context'
 import _h from '../shared/h'
 import RecursionField from './RecursionField'
-import type { PropType, VNode } from 'vue'
+import type { DefineComponent, PropType, VNode } from 'vue'
 import type {
   ComponentClass,
   ComponentKeys,
@@ -77,13 +77,42 @@ const markupProps = {
   }
 }
 
+// 显式定义 createTypedSchemaField 的返回类型，避免 TS2742
+type TypedSchemaField<K extends SchemaFieldProps['component']> = <
+  P extends ComponentKeys<K> | ComponentClass,
+  D extends ComponentKeys<K> | ComponentClass
+>(
+  props: SchemaFieldConfig<K, P, D>,
+  ctx: { slots: any }
+) => any
+
+// 显式定义 createSchemaField 的返回类型，避免 TS2742 推断类型错误
+type CreateSchemaFieldReturn<K extends SchemaFieldProps['component']> = {
+  SchemaField: DefineComponent<{
+    schema: ISchema[]
+    components: K
+    name?: string | number
+  }> & {
+    [P in ComponentKeys<K>]: FlattenedComponents<K>[P] extends ComponentClass
+      ? VueComponentPath<FlattenedComponents<K>[P], FlattenedComponents<K>>
+      : never
+  }
+  StringSchemaField: TypedSchemaField<K>
+  NumberSchemaField: TypedSchemaField<K>
+  BooleanSchemaField: TypedSchemaField<K>
+  ObjectSchemaField: TypedSchemaField<K>
+  ArraySchemaField: TypedSchemaField<K>
+  VoidSchemaField: TypedSchemaField<K>
+  DataSchemaField: TypedSchemaField<K>
+}
+
 export const createSchemaField = <T extends SchemaFieldProps, K extends T['component']>(options: {
   components: K extends {
     [K: Capitalize<string>]: abstract new (...args: unknown[]) => any
   }
     ? { [K: Capitalize<string>]: abstract new (...args: unknown[]) => any }
     : K
-}) => {
+}): CreateSchemaFieldReturn<K> => {
   const SchemaField = defineComponent({
     name: 'SchemaField',
     props: {
@@ -191,7 +220,7 @@ export const createSchemaField = <T extends SchemaFieldProps, K extends T['compo
       D extends ComponentKeys<K> | ComponentClass
     >(
       props: SchemaFieldConfig<K, P, D>,
-      ctx
+      ctx: { slots: any }
     ) => {
       return _h(
         MarkupField,
@@ -216,7 +245,11 @@ export const createSchemaField = <T extends SchemaFieldProps, K extends T['compo
   const DataSchemaField = createTypedSchemaField('data')
 
   return {
-    SchemaField: SchemaField as unknown as typeof SchemaField & {
+    SchemaField: SchemaField as unknown as DefineComponent<{
+      schema: ISchema[]
+      components: K
+      name?: string | number
+    }> & {
       [P in ComponentKeys<K>]: FlattenedComponents<K>[P] extends ComponentClass
         ? VueComponentPath<FlattenedComponents<K>[P], FlattenedComponents<K>>
         : never
