@@ -3,6 +3,8 @@
 node_modules
 
 dist
+lib
+esm
 
 .pnpm-debug.log*
 
@@ -11,3 +13,4 @@ pnpm-lock.yaml
 packages/cjx-low-code/version.ts
 
 docs/.vitepress/cache
+
