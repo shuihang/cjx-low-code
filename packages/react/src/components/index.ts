@@ -1,2 +1,2 @@
 export * from './FormProvider'
-export * from './SchemaField.tsx'
+export * from './SchemaField'

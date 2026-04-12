@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { copy, readFile, writeFile, existsSync } from 'fs-extra'
+import { copy, existsSync, readFile, writeFile } from 'fs-extra'
 import glob from 'glob'
 
 export type CopyBaseOptions = Record<'esStr' | 'libStr', string>
@@ -7,7 +7,7 @@ export type CopyBaseOptions = Record<'esStr' | 'libStr', string>
 const importLibToEs = async ({
   libStr,
   esStr,
-  filename,
+  filename
 }: CopyBaseOptions & { filename: string }) => {
   if (!existsSync(filename)) {
     return Promise.resolve()
@@ -15,10 +15,7 @@ const importLibToEs = async ({
 
   const fileContent: string = (await readFile(filename)).toString()
 
-  return writeFile(
-    filename,
-    fileContent.replace(new RegExp(libStr, 'g'), esStr)
-  )
+  return writeFile(filename, fileContent.replace(new RegExp(libStr, 'g'), esStr))
 }
 
 export const runCopy = ({
@@ -33,9 +30,7 @@ export const runCopy = ({
 
       const all = [] as Promise<unknown>[]
 
-      for (let i = 0; i < files.length; i += 1) {
-        const filename = files[i]
-
+      for (const filename of files) {
         resolveForItem?.(filename)
 
         if (/\.(less|scss)$/.test(filename)) {
@@ -48,7 +43,7 @@ export const runCopy = ({
         if (/\/style.ts$/.test(filename)) {
           importLibToEs({
             ...lastOpts,
-            filename: filename.replace(/src\//, 'esm/').replace(/\.ts$/, '.js'),
+            filename: filename.replace(/src\//, 'esm/').replace(/\.ts$/, '.js')
           })
 
           continue

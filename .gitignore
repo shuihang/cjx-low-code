@@ -5,6 +5,7 @@ node_modules
 dist
 lib
 esm
+type-artefacts
 
 .pnpm-debug.log*
 

@@ -76,7 +76,7 @@ export const RecursionField: ReactFC<IRecursionFieldProps> = (props) => {
           {
             key: `${index}-${schema.name}`,
             ...schema
-          },
+          } as any,
           {
             ...schema.slots
           }

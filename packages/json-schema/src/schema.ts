@@ -129,9 +129,9 @@ export class Schema<
       component: schema['component'],
       componentProps: schema['componentProps'] || {},
       decorator: schema['decorator'],
-      decoratorProps: schema['decoratorProps'] || {},
-      reactions: schema['reactions'],
-      enum: schema.enum
+      decoratorProps: schema['decoratorProps'] || {}
+      // reactions: schema['reactions'],
+      // enum: schema.enum
     }
 
     return fieldProps

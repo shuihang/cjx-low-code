@@ -21,6 +21,9 @@
     "build:docs": "dumi build",
     "benchmark": "ts-node ./benchmark"
   },
+  "dependencies": {
+    "@cjx-low-code/shared": "workspace:*"
+  },
   "devDependencies": {
     "@vue/reactivity": "^3.0.11",
     "lodash": "^4.17.21"

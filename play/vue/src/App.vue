@@ -170,6 +170,7 @@ import {
 import ATestComp from './testComp.vue'
 
 import type { ISchema } from '@cjx-low-code/vue'
+import '@cjx-low-code/element-plus/dist/e'
 
 const { SchemaField } = createSchemaField({
   components: {

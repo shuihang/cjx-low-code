@@ -1,21 +1,21 @@
-export * from './components/input'
+export * from './input'
 
-export * from './components/form-Item'
+export * from './form-Item'
 
-export * from './components/form'
+export * from './form'
 
-export * from './components/select'
+export * from './select'
 
-export * from './components/cascader'
+export * from './cascader'
 
-export * from './components/radio'
+export * from './radio'
 
-export * from './components/checkbox'
+export * from './checkbox'
 
-export * from './components/switch'
+export * from './switch'
 
-export * from './components/time-picker'
+export * from './time-picker'
 
-export * from './components/time-select'
+export * from './time-select'
 
-export * from './components/rate'
+export * from './rate'

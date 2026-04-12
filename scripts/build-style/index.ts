@@ -1,5 +1,6 @@
-import { runCopy, CopyBaseOptions } from './copy'
+import { runCopy } from './copy'
 import { buildAllStyles } from './buildAllStyles'
+import type { CopyBaseOptions } from './copy'
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function build({

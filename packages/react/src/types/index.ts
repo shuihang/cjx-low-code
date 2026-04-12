@@ -11,6 +11,10 @@ import type {
   IFieldFactoryProps
 } from '@cjx-low-code/core'
 
+export type IProviderProps = {
+  form: Form
+}
+
 export { ReactFC }
 
 export type JSXComponent = keyof JSX.IntrinsicElements | React.JSXElementConstructor<any>

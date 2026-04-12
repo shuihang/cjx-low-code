@@ -18,11 +18,11 @@ const presets = () => {
     'element-plus': 'ElementPlus',
     'ant-design-vue': 'AntDesignVue',
     '@ant-design/icons': 'icons',
+    '@cjx-low-code/path': 'CJXLowCode.Path',
+    '@cjx-low-code/shared': 'CJXLowCode.Shared',
     '@cjx-low-code/reactivity-react': 'CJXLowCode.ReactivityReact',
     '@cjx-low-code/reactivity-vue': 'CJXLowCode.ReactivityVue',
     '@cjx-low-code/reactivity': 'CJXLowCode.Reactivity',
-    '@cjx-low-code/path': 'CJXLowCode.Path',
-    '@cjx-low-code/shared': 'CJXLowCode.Shared',
     '@cjx-low-code/core': 'CJXLowCode.Core',
     '@cjx-low-code/json-schema': 'CJXLowCode.JSONSchema',
     '@cjx-low-code/react': 'CJXLowCode.React',
@@ -58,9 +58,9 @@ const createEnvPlugin = (env) => {
 const inputFilePath = path.join(process.cwd(), 'src/index.ts')
 
 const noUIDtsPackages = [
-  'cjx-low-code.core',
   'cjx-low-code.shared',
   'cjx-low-code.path',
+  'cjx-low-code.core',
   'cjx-low-code.json-schema',
   'cjx-low-code.reactivity'
 ]

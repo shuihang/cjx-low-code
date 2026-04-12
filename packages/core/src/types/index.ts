@@ -1,9 +1,19 @@
 import type { FormPath } from '@cjx-low-code/shared'
 import type { Form } from '../models/Form'
 import type { Field } from '../models/Field'
-import type { SchemaEnum, SchemaReaction, SchemaTypes } from '@cjx-low-code/json-schema'
 
 export type AnyFunction = (...args: any[]) => any
+
+export type SchemaTypes =
+  | 'string'
+  | 'object'
+  | 'array'
+  | 'number'
+  | 'boolean'
+  | 'void'
+  | 'date'
+  | 'datetime'
+  | (string & Record<string, unknown>)
 
 export type FormPathPattern =
   | string
@@ -100,6 +110,8 @@ export type FieldDecorator<Decorator extends JSXComponent, ComponentProps = any>
   | boolean
   | any[]
 
+export type FieldReaction = (field: Field) => void
+
 export interface IFieldProps<
   Decorator extends JSXComponent = any,
   Component extends JSXComponent = any,
@@ -141,8 +153,7 @@ export interface IFieldProps<
   // 组件属性
   componentProps?: Record<string, unknown>
   // 组件响应器
-  reactions?: SchemaReaction<ReactionField>
-  enum?: SchemaEnum<Message>
+  reactions?: FieldReaction[] | FieldReaction // SchemaReaction<ReactionField>
   // 组件槽位
   slots?: any
   // 其他属性

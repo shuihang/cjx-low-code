@@ -1,6 +1,9 @@
 {
   "name": "@cjx-low-code/reactivity-vue",
   "version": "1.0.0",
+  "dependencies": {
+    "@cjx-low-code/shared": "workspace:*"
+  },
   "license": "MIT",
   "main": "lib",
   "module": "esm",

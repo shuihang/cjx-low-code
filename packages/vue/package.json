@@ -4,9 +4,9 @@
   "license": "MIT",
   "main": "lib",
   "module": "esm",
-  "umd:main": "dist/formily.vue.umd.production.js",
-  "unpkg": "dist/formily.vue.umd.production.js",
-  "jsdelivr": "dist/formily.vue.umd.production.js",
+  "umd:main": "dist/cjx-low-code.vue.umd.production.js",
+  "unpkg": "dist/cjx-low-code.vue.umd.production.js",
+  "jsdelivr": "dist/cjx-low-code.vue.umd.production.js",
   "jsnext:main": "esm",
   "types": "type-artefacts/cur/index.d.ts",
   "publishConfig": {

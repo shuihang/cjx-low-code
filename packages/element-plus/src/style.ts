@@ -1,0 +1,12 @@
+// auto generated code
+import './cascader/style'
+import './checkbox/style'
+import './form-Item/style'
+import './form/style'
+import './input/style'
+import './radio/style'
+import './rate/style'
+import './select/style'
+import './switch/style'
+import './time-picker/style'
+import './time-select/style'

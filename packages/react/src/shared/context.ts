@@ -3,7 +3,7 @@ import type { Form, GeneralField } from '@cjx-low-code/core'
 import type { Schema } from '@cjx-low-code/json-schema'
 import type { ISchemaFieldReactFactoryOptions, SchemaReactComponents } from '../types'
 
-const createContextCleaner = <T>(...contexts: React.Context<T>[]) => {
+const createContextCleaner = (...contexts: React.Context<any>[]) => {
   return ({ children }) => {
     return contexts.reduce((buf, ctx) => {
       return React.createElement(ctx.Provider, { value: undefined }, buf)
