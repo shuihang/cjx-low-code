@@ -12,7 +12,12 @@ export default defineConfig({
     }),],
   resolve: {
     alias: {
-      '@': resolve(__dirname, 'src')
+      '@': resolve(__dirname, 'src'),
+      '@cjx-low-code/antdv': resolve(__dirname, '../../packages/antdv/src'),
+      '@cjx-low-code/element-plus': resolve(__dirname, '../../packages/element-plus/src'),
+      '@cjx-low-code/reactivity': resolve(__dirname, '../../packages/reactivity/src'),
+      '@cjx-low-code/reactivity-vue': resolve(__dirname, '../../packages/reactivity-vue/src'),
+      '@cjx-low-code/vue': resolve(__dirname, '../../packages/vue/src')
     }
   },
   esbuild: {

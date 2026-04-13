@@ -5,6 +5,8 @@
     "paths": {
       "@cjx-low-code/*": ["packages/*"]
     },
-    "declaration": false
+    "declaration": true,
+    "sourceMap": false,
+    "inlineSources": false
   }
 }

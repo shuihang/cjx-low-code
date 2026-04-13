@@ -10,6 +10,7 @@
   "dependencies": {
     "@cjx-low-code/antdv": "workspace:*",
     "@cjx-low-code/element-plus": "workspace:*",
+    "@cjx-low-code/eslint-config": "workspace:*",
     "@cjx-low-code/reactivity": "workspace:*",
     "@cjx-low-code/reactivity-vue": "workspace:*",
     "@cjx-low-code/vue": "workspace:*",

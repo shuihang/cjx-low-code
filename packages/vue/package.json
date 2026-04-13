@@ -8,17 +8,16 @@
   "unpkg": "dist/cjx-low-code.vue.umd.production.js",
   "jsdelivr": "dist/cjx-low-code.vue.umd.production.js",
   "jsnext:main": "esm",
-  "types": "type-artefacts/cur/index.d.ts",
+  "types": "src/index.ts",
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
     "start": "vuepress dev docs",
-    "build": "rimraf -rf lib esm dist type-artefacts && npm run build:cjs && npm run build:esm && npm run build:umd && npm run build:types",
+    "build": "rimraf -rf lib esm dist  && npm run build:cjs && npm run build:esm && npm run build:umd",
     "build:cjs": "tsc --project tsconfig.build.json",
     "build:esm": "tsc --project tsconfig.build.json --module es2015 --outDir esm",
     "build:umd": "rollup --config",
-    "build:types": "npx vue-demi-switch 3 vue3 && tsc --project tsconfig.types.json --outDir type-artefacts/v3 && tsc --project tsconfig.types.json --outDir type-artefacts/cur && npx vue-demi-switch 2",
     "build:docs": "vuepress build docs"
   },
   "peerDependencies": {

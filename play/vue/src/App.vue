@@ -6,31 +6,29 @@
     <FormProvider :form="form">
       <Form>
         <SchemaField>
-          <SchemaField.Input
+          <SchemaField.String
             title="姓名"
             name="userName"
-            type="string"
-            :component-props="{}"
-            :on="{
+            component="Input"
+            :component-props="{
+              placeholder: '请输入姓名',
               onChange: (e) => {
                 console.log(e)
               }
-              // onSearch: (e) => {
-              //   console.log(e)
-              // }
             }"
             decorator="FormItem"
             :decorator-props="{
               rules: [{ required: true, message: '请输入姓名' }]
             }"
-          >
-            <template #suffix> 😋 </template>
-          </SchemaField.Input>
+            :x-slots="{
+              suffix: '😋'
+            }"
+          />
 
-          <SchemaField.ATestComp
+          <SchemaField.Object
             title="测试"
             name="test"
-            type="object"
+            component="ATestComp"
             :component-props="{
               type: 'text'
             }"
@@ -38,29 +36,29 @@
             :decorator-props="{
               rules: [{ required: true, message: '请输入测试内容' }]
             }"
-          >
-            <template #testCompSlot> yy </template>
-            <!-- <SchemaField.Input title="测试字表单" name="testComp" type="string" /> -->
-          </SchemaField.ATestComp>
+            :slots="{
+              testCompSlot: (props) => {
+                return '------'
+              }
+            }"
+          />
 
           <!-- 评分 -->
-          <SchemaField.Rate
+          <SchemaField.Number
             title="评分"
             name="rate"
-            type="number"
+            component="Rate"
             :component-props="{}"
             decorator="FormItem"
             :decorator-props="{
               rules: [{ required: true, message: '请选择评分' }]
             }"
-          >
-            <template #suffix> 😋 </template>
-          </SchemaField.Rate>
+          />
 
-          <SchemaField.RadioGroup
+          <SchemaField.Markup
             title="单选框"
             name="radio"
-            type="string"
+            component="RadioGroup"
             :component-props="{
               options: [
                 {
@@ -79,9 +77,10 @@
             }"
           />
 
-          <SchemaField.CheckboxGroup
+          <SchemaField.Markup
             title="复选框"
             name="checkbox"
+            component="CheckboxGroup"
             :component-props="{
               options: [
                 {
@@ -100,10 +99,10 @@
             }"
           />
 
-          <SchemaField.Select
+          <SchemaField.Markup
             title="选择"
             name="select"
-            type="string"
+            component="Select"
             :component-props="{
               options: [
                 {
@@ -121,24 +120,39 @@
             :decorator-props="{
               rules: [{ required: true, message: '请选择' }]
             }"
-          >
-            <template #suffix> 😋 </template>
-          </SchemaField.Select>
+          />
 
-          <SchemaField.ElInput
+          <SchemaField.String
             title="Element Plus Input"
             name="email"
-            decorator="FormItem"
-            type="string"
+            component="ElInput"
             :component-props="{
               type: 'email'
             }"
+            decorator="FormItem"
             :decorator-props="{
               rules: [{ required: true, message: '请输入邮箱' }]
             }"
-          >
-            <template #suffix> 😋 </template>
-          </SchemaField.ElInput>
+            :slots="{
+              suffix: '😋'
+            }"
+          />
+
+          <StringSchemaField
+            title="Element Plus Input"
+            name="email"
+            component="ElInput"
+            :component-props="{
+              type: 'email'
+            }"
+            decorator="FormItem"
+            :decorator-props="{
+              rules: [{ required: true, message: '请输入邮箱' }]
+            }"
+            :slots="{
+              suffix: '😋'
+            }"
+          />
         </SchemaField>
 
         <!-- <Test /> -->
@@ -150,11 +164,12 @@
       </form-item> -->
 
     <!-- <Button type="primary" @click="submitForm">Submit</Button> -->
-    <el-button type="primary" @click="submitForm">提交</el-button>
+    <Button type="primary" @click="submitForm">提交</Button>
   </div>
 </template>
 
 <script lang="ts" setup>
+import { h } from 'vue'
 import { Button, Input } from '@cjx-low-code/antdv'
 import { FormProvider, connect, createSchemaField } from '@cjx-low-code/vue'
 import { createForm, onFieldChange } from '@cjx-low-code/core'
@@ -168,11 +183,10 @@ import {
   Select
 } from '@cjx-low-code/element-plus'
 import ATestComp from './testComp.vue'
-
 import type { ISchema } from '@cjx-low-code/vue'
-import '@cjx-low-code/element-plus/dist/e'
+import '../../../packages/element-plus/dist/element-plus.css'
 
-const { SchemaField } = createSchemaField({
+const { SchemaField, StringSchemaField } = createSchemaField({
   components: {
     Input,
     Select,
@@ -220,6 +234,11 @@ const schemaJson: ISchema<typeof SchemaField> = [
     component: 'ATestComp',
     componentProps: {
       type: 'text'
+    },
+    slots: {
+      testCompSlot: () => {
+        return '------'
+      }
     }
     // decoratorProps: {
     //   labelAlign: 'left'
@@ -245,9 +264,7 @@ const schemaJson: ISchema<typeof SchemaField> = [
     type: 'string',
     component: 'Input',
     componentProps: {
-      type: 'text'
-    },
-    on: {
+      type: 'text',
       onChange: (e) => {
         console.log(e)
       }

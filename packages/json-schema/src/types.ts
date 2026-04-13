@@ -102,6 +102,7 @@ export type ISchema<
   Component = any,
   DecoratorProps = any,
   ComponentProps = any,
+  ComponentSlots = any,
   Pattern = any,
   Display = any,
   Validator = any,
@@ -118,24 +119,17 @@ export type ISchema<
       writeOnly?: boolean
       type?: SchemaTypes
       enum?: SchemaEnum<Message>
-      const?: any
       multipleOf?: number
       maximum?: number
-      exclusiveMaximum?: number
       minimum?: number
-      exclusiveMinimum?: number
       maxLength?: number
       minLength?: number
       pattern?: string | RegExp
       maxItems?: number
       minItems?: number
-      uniqueItems?: boolean
-      maxProperties?: number
-      minProperties?: number
       required?: string[] | boolean | string
       format?: string
       $ref?: string
-      $namespace?: string
 
       items?: SchemaItems<
         Decorator,
@@ -164,7 +158,7 @@ export type ISchema<
       //组件响应器
       reactions?: SchemaReactions<ReactionField>
       //内容
-      slots?: any
+      slots?: ComponentSlots
 
       data?: any
 

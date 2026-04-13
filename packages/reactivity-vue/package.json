@@ -1,9 +1,6 @@
 {
   "name": "@cjx-low-code/reactivity-vue",
   "version": "1.0.0",
-  "dependencies": {
-    "@cjx-low-code/shared": "workspace:*"
-  },
   "license": "MIT",
   "main": "lib",
   "module": "esm",
@@ -24,13 +21,9 @@
   "peerDependencies": {
     "vue": "^3.5.4"
   },
-  "peerDependenciesMeta": {
-    "@vue/composition-api": {
-      "optional": true
-    }
-  },
   "dependencies": {
-    "@cjx-low-code/reactivity": "workspace:*"
+    "@cjx-low-code/reactivity": "workspace:*",
+    "@cjx-low-code/shared": "workspace:*"
   },
   "devDependencies": {
     "core-js": "^2.4.0",

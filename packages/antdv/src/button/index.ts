@@ -1,6 +1,7 @@
 import { Button as AntButton } from 'ant-design-vue'
-import type { Button as AntButtonType } from 'ant-design-vue'
 
-export const Button: typeof AntButtonType = AntButton
+type ButtonType = typeof AntButton
+
+export const Button: ButtonType = AntButton
 
 export default Button
