@@ -8,7 +8,7 @@
   "unpkg": "dist/cjx-low-code.element-plus.umd.production.js",
   "jsdelivr": "dist/cjx-low-code.element-plus.umd.production.js",
   "jsnext:main": "esm",
-  "types": "lib/index.d.ts",
+  "types": "esm/index.d.ts",
   "sideEffects": [
     "dist/*",
     "esm/*.js",

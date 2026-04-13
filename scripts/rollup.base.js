@@ -1,5 +1,5 @@
 import path from 'path'
-import typescript from '@rollup/plugin-typescript'
+import typescript from 'rollup-plugin-typescript2'
 import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import externalGlobals from 'rollup-plugin-external-globals'
@@ -31,11 +31,15 @@ const presets = () => {
   return [
     typescript({
       tsconfig: './tsconfig.build.json',
-      compilerOptions: {
-        declaration: false
-      }
+      tsconfigOverride: {
+        compilerOptions: {
+          declaration: false,
+          module: 'esnext'
+        }
+      },
+      include: ['**/*.ts', '**/*.tsx']
     }),
-    resolve(),
+    resolve({ extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'] }),
     commonjs(),
     externalGlobals(externals, {
       exclude: ['**/*.{less,sass,scss}']

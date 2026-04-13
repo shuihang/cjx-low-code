@@ -3,7 +3,8 @@
   "compilerOptions": {
     "outDir": "./lib",
     "paths": {
-      "@cjx-low-code/*": ["packages/*", "devtools/*"]
+      // packages/antdv/tsconfig.build.json 里的 paths 原来把 @cjx-low-code/* 映射到了 packages/*，导致 tsc 在编译 antdv 时，顺着依赖 @cjx-low-code/vue 解析到了 packages/vue 的源码目录（src/），于是把 vue 包的源码也一起编译输出到了 lib/ 和 esm/ 里。再加上 rootDir 自动推断为公共祖先目录 packages，产物就出现了 lib/antdv/src/...、lib/vue/src/... 这种多余嵌套。
+      "@cjx-low-code/*": ["packages/*/lib"]
     },
     "declaration": true
   }

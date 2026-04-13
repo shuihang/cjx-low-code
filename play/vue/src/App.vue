@@ -20,7 +20,7 @@
             :decorator-props="{
               rules: [{ required: true, message: '请输入姓名' }]
             }"
-            :x-slots="{
+            :slots="{
               suffix: '😋'
             }"
           />
