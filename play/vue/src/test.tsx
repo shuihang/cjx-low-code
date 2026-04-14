@@ -10,7 +10,7 @@ import {
 } from '@cjx-low-code/element-plus'
 import ATestComp from './testComp.vue'
 
-const { SchemaField, StringSchemaField } = createSchemaField({
+const { SchemaField, SchemaFieldEnum } = createSchemaField({
   components: {
     Input,
     Select,
@@ -29,10 +29,10 @@ const Test = () => {
       <SchemaField.String
         title="qq"
         name="dd"
-        component="ElInput"
-        componentProps={{ type: 'text' }}
+        component="Input.Search"
+        componentProps={{ type: 'text', enterButton: true }}
         decorator="FormItem"
-        x-slots={{ prefix: 'prefix' }}
+        slots={{ prefix: 'prefix' }}
       />
     </SchemaField>
   )

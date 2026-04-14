@@ -119,16 +119,16 @@ export type ISchema<
       writeOnly?: boolean
       type?: SchemaTypes
       enum?: SchemaEnum<Message>
-      multipleOf?: number
-      maximum?: number
-      minimum?: number
-      maxLength?: number
-      minLength?: number
+      // multipleOf?: number
+      // maximum?: number
+      // minimum?: number
+      // maxLength?: number
+      // minLength?: number
       pattern?: string | RegExp
-      maxItems?: number
-      minItems?: number
+      // maxItems?: number
+      // minItems?: number
       required?: string[] | boolean | string
-      format?: string
+      // format?: string
       $ref?: string
 
       items?: SchemaItems<

@@ -5,12 +5,13 @@ import { useSchemaMarkup } from '../hooks'
 import { SchemaMarkupSymbol, SchemaOptionsSymbol } from '../shared/context'
 import _h from '../shared/h'
 import RecursionField from './RecursionField'
-import type { DefineComponent, PropType, VNode } from 'vue'
+import type { PropType, VNode, DefineComponent as VueDefineComponent } from 'vue'
 import type {
   ComponentClass,
   ComponentKeys,
   FieldVueComponents,
   FlattenedComponents,
+  ISchemaDefineComponent,
   ISchemaMarkupFieldProps,
   SchemaFieldOptions,
   SchemaVueComponents,
@@ -92,7 +93,7 @@ type CreateSchemaFieldReturn<
   Components extends SchemaVueComponents,
   Type = keyof (Components & ShallowFlattenLevel<Components>)
 > = {
-  SchemaField: DefineComponent<{
+  SchemaField: VueDefineComponent<{
     schema?: ISchema[]
     components?: Components
     name?: string | number
@@ -112,15 +113,18 @@ type CreateSchemaFieldReturn<
         : never
     }
   }
-  MarkupSchemaField: TypedSchemaField<Type, Components>
-  StringSchemaField: TypedSchemaField<Type, Components>
-  NumberSchemaField: TypedSchemaField<Type, Components>
-  BooleanSchemaField: TypedSchemaField<Type, Components>
-  ObjectSchemaField: TypedSchemaField<Type, Components>
-  ArraySchemaField: TypedSchemaField<Type, Components>
-  VoidSchemaField: TypedSchemaField<Type, Components>
-  DateSchemaField: TypedSchemaField<Type, Components>
-  DateTimeSchemaField: TypedSchemaField<Type, Components>
+  SchemaFieldMarkup: TypedSchemaField<Type, Components>
+  SchemaFieldString: TypedSchemaField<Type, Components>
+  SchemaFieldNumber: TypedSchemaField<Type, Components>
+  SchemaFieldBoolean: TypedSchemaField<Type, Components>
+  SchemaFieldObject: TypedSchemaField<Type, Components>
+  SchemaFieldArray: TypedSchemaField<Type, Components>
+  SchemaFieldVoid: TypedSchemaField<Type, Components>
+  SchemaFieldDate: TypedSchemaField<Type, Components>
+  SchemaFieldDateTime: TypedSchemaField<Type, Components>
+  SchemaFieldEnum: ISchemaDefineComponent<
+    ISchema<unknown, unknown, unknown, unknown, unknown> & { $$Components: Components }
+  >
 }
 
 export const createSchemaField = <
@@ -191,13 +195,13 @@ export const createSchemaField = <
     }
   })
 
-  const MarkupField = {
+  const MarkupField = defineComponent({
     name: 'MarkupField',
     props: {
       type: String,
       ...markupProps
     },
-    setup(props: ISchemaMarkupFieldProps<any, any, any>, { slots }) {
+    setup(props: ISchemaMarkupFieldProps<Components, any, any>, { slots }) {
       const parentRef = useSchemaMarkup()
       if (!parentRef || !parentRef.value) return () => h('template', {}, {})
 
@@ -217,7 +221,7 @@ export const createSchemaField = <
         return h('div', { style: 'display: none;' }, slots)
       }
     }
-  }
+  })
 
   const createTypedSchemaField = <Type extends SchemaTypes>(type?: Type) => {
     return <
@@ -244,36 +248,40 @@ export const createSchemaField = <
     }
   }
 
-  const MarkupSchemaField = createTypedSchemaField()
-  const StringSchemaField = createTypedSchemaField('string')
-  const NumberSchemaField = createTypedSchemaField('number')
-  const BooleanSchemaField = createTypedSchemaField('boolean')
-  const ObjectSchemaField = createTypedSchemaField('object')
-  const ArraySchemaField = createTypedSchemaField('array')
-  const VoidSchemaField = createTypedSchemaField('void')
-  const DateSchemaField = createTypedSchemaField('date')
-  const DateTimeSchemaField = createTypedSchemaField('datetime')
+  const SchemaFieldMarkup = createTypedSchemaField()
+  const SchemaFieldString = createTypedSchemaField('string')
+  const SchemaFieldNumber = createTypedSchemaField('number')
+  const SchemaFieldBoolean = createTypedSchemaField('boolean')
+  const SchemaFieldObject = createTypedSchemaField('object')
+  const SchemaFieldArray = createTypedSchemaField('array')
+  const SchemaFieldVoid = createTypedSchemaField('void')
+  const SchemaFieldDate = createTypedSchemaField('date')
+  const SchemaFieldDateTime = createTypedSchemaField('datetime')
 
-  SchemaField.Markup = MarkupSchemaField
-  SchemaField.String = StringSchemaField
-  SchemaField.Number = NumberSchemaField
-  SchemaField.Boolean = BooleanSchemaField
-  SchemaField.Object = ObjectSchemaField
-  SchemaField.Array = ArraySchemaField
-  SchemaField.Void = VoidSchemaField
-  SchemaField.Date = DateSchemaField
-  SchemaField.DateTime = DateTimeSchemaField
+  const SchemaFieldEnum =
+    MarkupField as unknown as CreateSchemaFieldReturn<Components>['SchemaFieldEnum']
+
+  SchemaField.Markup = SchemaFieldMarkup
+  SchemaField.String = SchemaFieldString
+  SchemaField.Number = SchemaFieldNumber
+  SchemaField.Boolean = SchemaFieldBoolean
+  SchemaField.Object = SchemaFieldObject
+  SchemaField.Array = SchemaFieldArray
+  SchemaField.Void = SchemaFieldVoid
+  SchemaField.Date = SchemaFieldDate
+  SchemaField.DateTime = SchemaFieldDateTime
 
   return {
     SchemaField: SchemaField as unknown as CreateSchemaFieldReturn<Components>['SchemaField'],
-    MarkupSchemaField,
-    StringSchemaField,
-    NumberSchemaField,
-    BooleanSchemaField,
-    ObjectSchemaField,
-    ArraySchemaField,
-    VoidSchemaField,
-    DateSchemaField,
-    DateTimeSchemaField
+    SchemaFieldMarkup,
+    SchemaFieldString,
+    SchemaFieldNumber,
+    SchemaFieldBoolean,
+    SchemaFieldObject,
+    SchemaFieldArray,
+    SchemaFieldVoid,
+    SchemaFieldDate,
+    SchemaFieldDateTime,
+    SchemaFieldEnum
   }
 }

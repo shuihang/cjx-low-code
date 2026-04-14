@@ -10,7 +10,7 @@ import type { ISchema, ISchemaTransformerOptions, SchemaTypes } from './types'
 
 export type BaseField = Omit<
   ISchema,
-  'component' | 'decorator' | 'componentProps' | 'decoratorProps'
+  'component' | 'decorator' | 'componentProps' | 'decoratorProps' | 'slots'
 >
 
 export class Schema<

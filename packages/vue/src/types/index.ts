@@ -1,5 +1,17 @@
 import { defineComponent } from 'vue'
-import type { Component, ObjectPlugin, VNode, DefineComponent as VueDefineComponent } from 'vue'
+import type {
+  Component,
+  ComponentOptionsMixin,
+  CreateComponentPublicInstanceWithMixins,
+  DefineSetupFnComponent,
+  EmitsOptions,
+  EmitsToProps,
+  ObjectPlugin,
+  PublicProps,
+  SlotsType,
+  VNode,
+  DefineComponent as VueDefineComponent
+} from 'vue'
 import type {
   FieldDisplayTypes,
   FormPatternTypes,
@@ -11,8 +23,57 @@ import type { CustomSlotsType } from '../shared'
 
 export type VueComponent = Component
 
+export type ISchemaDefineSetupFnComponent<
+  P extends Record<string, any>,
+  Components extends SchemaVueComponents = P['$$Components'],
+  Props = Omit<P, 'type' | '$$Components'>,
+  E extends EmitsOptions = RecordNever,
+  S extends SlotsType = SlotsType,
+  PP = PublicProps
+> = new <
+  Component extends FieldVueComponents<Components>,
+  Decorator extends FieldVueComponents<Components>
+>(
+  props: Props & {
+    decorator?: Decorator
+    decoratorProps?:
+      | ExtractMarkupVueComponentProps<Components, Decorator>
+      | (string & Record<string, unknown>)
+    component?: Component
+    componentProps?: Component extends ComponentClass
+      ? GetComponentProps<Component>
+      : Record<string, any>
+  }
+) => CreateComponentPublicInstanceWithMixins<
+  Props & {
+    decorator?: Decorator
+    decoratorProps?:
+      | ExtractMarkupVueComponentProps<Components, Decorator>
+      | (string & Record<string, unknown>)
+    component?: Component
+    componentProps?: Component extends ComponentClass
+      ? GetComponentProps<Component>
+      : Record<string, any>
+  },
+  RecordNever,
+  RecordNever,
+  RecordNever,
+  RecordNever,
+  ComponentOptionsMixin,
+  ComponentOptionsMixin,
+  E, // Emits
+  PP, // PublicProps
+  RecordNever,
+  false,
+  RecordNever,
+  S // Slots
+>
+
+export type ISchemaDefineComponent<Props extends Record<string, any>> =
+  ISchemaDefineSetupFnComponent<Props>
+
 class Helper<Props> {
-  Return = defineComponent({} as { props: Record<keyof Props, any> })
+  Return = defineComponent({} as Record<keyof Props, any>)
 }
 
 export type DefineComponent<Props> = Helper<Props>['Return']
@@ -195,10 +256,12 @@ export type SchemaSlotType = string | number | VNode | VNode[]
 
 export type FlattenedComponents<T extends SchemaVueComponents> = T & ShallowFlattenLevel<T>
 export type ComponentKeys<K extends SchemaVueComponents> = keyof FlattenedComponents<K>
+
 export type ExtractFlattenedComponentsProps<
   K extends SchemaVueComponents,
   P extends ComponentKeys<K>
 > = GetComponentProps<GetComponentByPath<FlattenedComponents<K>, P & string>>
+
 export type ExtractFlattenedComponentsSlotsType<
   K extends SchemaVueComponents,
   P extends ComponentKeys<K>
@@ -224,24 +287,18 @@ export type VueComponentPath<T extends ComponentClass, K extends SchemaVueCompon
   }: {
     slots: ComponentSlots<T>
   }
-) => BaseSchemaFieldType<T> &
-  DecoratorType<K> & {
-    // decorator?: DecoratorType<K>
-    /**
-     * 插槽
-     */
-    ['x-slots']?: {
-      [key in keyof ComponentSlots<T>]?:
-        | ((...args: Parameters<ComponentSlots<T>[key]>) => ReturnType<ComponentSlots<T>[key]>)
-        | SchemaSlotType
-    }
-  }
+) => BaseSchemaFieldType<T> & DecoratorType<K>
 
-type BaseSchemaFieldType<C extends ComponentClass> = BaseField & {
+type BaseSchemaFieldType<T extends ComponentClass> = BaseField & {
   /**
    * 组件属性
    */
-  componentProps?: Partial<GetComponentProps<C>>
+  componentProps?: Partial<GetComponentProps<T>>
+  slots?: {
+    [key in keyof ComponentSlots<T>]?:
+      | ((...args: Parameters<ComponentSlots<T>[key]>) => ReturnType<ComponentSlots<T>[key]>)
+      | SchemaSlotType
+  }
 }
 
 export type SchemaVueComponents = Record<string, VueComponent>

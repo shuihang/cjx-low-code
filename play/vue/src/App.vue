@@ -153,6 +153,21 @@
               suffix: '😋'
             }"
           />
+
+          <SchemaFieldEnum :d />
+
+          <SchemaFieldEnum
+            name="11"
+            component="ElInput"
+            :component-props="{ type: 'email' }"
+            decorator="FormItem"
+            :decorator-props="{
+              rules: [{ required: true, message: '请输入邮箱' }]
+            }"
+            :slots="{
+              suffix: '😋'
+            }"
+          />
         </SchemaField>
 
         <!-- <Test /> -->
@@ -162,7 +177,7 @@
     <!-- <form-item name="f" class="--f" :rules="[{ required: true, message: '请输入11' }]">
         <Input placeholder="请输入11" />
       </form-item> -->
-
+    <MyComponent />
     <!-- <Button type="primary" @click="submitForm">Submit</Button> -->
     <Button type="primary" @click="submitForm">提交</Button>
   </div>
@@ -183,10 +198,11 @@ import {
   Select
 } from '@cjx-low-code/element-plus'
 import ATestComp from './testComp.vue'
+import { MyComponent } from './testGen'
 import type { ISchema } from '@cjx-low-code/vue'
 import '../../../packages/element-plus/dist/element-plus.css'
 
-const { SchemaField, StringSchemaField } = createSchemaField({
+const { SchemaField, SchemaFieldEnum } = createSchemaField({
   components: {
     Input,
     Select,
