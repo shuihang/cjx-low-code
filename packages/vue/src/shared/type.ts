@@ -1,6 +1,31 @@
 // @ts-ignore
 import type { JSX } from 'vue/jsx-runtime'
 import type { App, AppContext, Plugin, PropType, Ref, SlotsType, VNode } from 'vue'
+import type { VueComponent } from '../types'
+
+/**
+ * 提取对象中值为 VueComponent 类型的属性（支持索引签名）
+ * 结果：{ b: VueComponent }
+ */
+export type ExtractComponent<T extends object> = {
+  [K in keyof T as string extends K
+    ? never
+    : number extends K
+    ? never
+    : symbol extends K
+    ? never
+    : // 步骤2：排除 undefined，然后检查是否为
+    // 同时排除普通函数（如 beforeUpdate），只保留组件
+    NonNullable<T[K]> extends VueComponent
+    ? // 额外检查：排除纯粹的 Function 类型（方法）
+      // 通常包含特定的 brand 或结构，与普通 Function 不同
+      NonNullable<T[K]> extends (...args: any[]) => any
+      ? VueComponent extends NonNullable<T[K]>
+        ? K
+        : never // 如果是函数，必须是 Component 子类型
+      : K // 非函数类型（如对象组件），直接保留
+    : never]: T[K] // 步骤1：排除索引签名键（string/number/symbol）
+}
 
 export type DeepPartial<T> = T extends object
   ? {

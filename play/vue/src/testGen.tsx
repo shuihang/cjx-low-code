@@ -62,3 +62,7 @@ export function createTest<T extends TestOptions, Components = T['components']>(
   )
   return Test
 }
+
+export const Df = <T extends 'number' | 'string'>(props: { type: T }) => {
+  return <div>hello</div>
+}

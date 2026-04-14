@@ -7,16 +7,17 @@ import _h from '../shared/h'
 import RecursionField from './RecursionField'
 import type { PropType, VNode, DefineComponent as VueDefineComponent } from 'vue'
 import type {
-  ComponentClass,
   ComponentKeys,
-  FieldVueComponents,
-  FlattenedComponents,
+  ComponentPathToVueComponentPath,
+  ComponentPropsMapValue,
+  ComponentSlotsMapValue,
   ISchemaDefineComponent,
+  ISchemaDefineComponentProps,
   ISchemaMarkupFieldProps,
   SchemaFieldOptions,
   SchemaVueComponents,
   ShallowFlattenLevel,
-  VueComponentPath
+  VueSchemaField
 } from '../types'
 import type { ISchema, SchemaTypes } from '@cjx-low-code/json-schema'
 
@@ -36,14 +37,6 @@ const markupProps = {
   },
   enum: {},
   multipleOf: Number,
-  maximum: Number,
-  exclusiveMaximum: Number,
-  minimum: Number,
-  exclusiveMinimum: Number,
-  maxLength: Number,
-  minLength: Number,
-  maxItems: Number,
-  minItems: Number,
   required: {
     type: [Boolean, Array, String],
     default: undefined
@@ -80,50 +73,79 @@ const markupProps = {
   }
 }
 
-type TypedSchemaField<_Type, Components extends SchemaVueComponents> = <
-  Component extends FieldVueComponents<Components>,
-  Decorator extends FieldVueComponents<Components>
->(
-  props: ISchemaMarkupFieldProps<Components, Decorator, Component>,
-  ctx: { slots: any }
-) => any
-
 // 显式定义 createSchemaField 的返回类型，避免 TS2742 推断类型错误
 type CreateSchemaFieldReturn<
   Components extends SchemaVueComponents,
-  Type = keyof (Components & ShallowFlattenLevel<Components>)
+  Type = keyof (Components & ShallowFlattenLevel<Components>),
+  ComponentPropsMap = {
+    [P in ComponentKeys<Components>]: ComponentPropsMapValue<Components, P & string>
+  },
+  ComponentSlotsMap = {
+    [P in ComponentKeys<Components>]: ComponentSlotsMapValue<Components, P & string>
+  }
 > = {
   SchemaField: VueDefineComponent<{
     schema?: ISchema[]
     components?: Components
     name?: string | number
   }> & {
-    Markup: TypedSchemaField<Type, Components>
-    String: TypedSchemaField<Type, Components>
-    Number: TypedSchemaField<Type, Components>
-    Boolean: TypedSchemaField<Type, Components>
-    Object: TypedSchemaField<Type, Components>
-    Array: TypedSchemaField<Type, Components>
-    Void: TypedSchemaField<Type, Components>
-    Date: TypedSchemaField<Type, Components>
-    DateTime: TypedSchemaField<Type, Components>
+    Markup: VueSchemaField<Type, ComponentPropsMap, ComponentSlotsMap>
+    String: VueSchemaField<Type, ComponentPropsMap, ComponentSlotsMap>
+    Number: VueSchemaField<Type, ComponentPropsMap, ComponentSlotsMap>
+    Boolean: VueSchemaField<Type, ComponentPropsMap, ComponentSlotsMap>
+    Object: VueSchemaField<Type, ComponentPropsMap, ComponentSlotsMap>
+    Array: VueSchemaField<Type, ComponentPropsMap, ComponentSlotsMap>
+    Void: VueSchemaField<Type, ComponentPropsMap, ComponentSlotsMap>
+    Date: VueSchemaField<Type, ComponentPropsMap, ComponentSlotsMap>
+    DateTime: VueSchemaField<Type, ComponentPropsMap, ComponentSlotsMap>
     $$types: {
-      [P in ComponentKeys<Components>]: FlattenedComponents<Components>[P] extends ComponentClass
-        ? VueComponentPath<FlattenedComponents<Components>[P], FlattenedComponents<Components>>
-        : never
+      [P in ComponentKeys<Components>]: ComponentPathToVueComponentPath<Components, P & string>
     }
   }
-  SchemaFieldMarkup: TypedSchemaField<Type, Components>
-  SchemaFieldString: TypedSchemaField<Type, Components>
-  SchemaFieldNumber: TypedSchemaField<Type, Components>
-  SchemaFieldBoolean: TypedSchemaField<Type, Components>
-  SchemaFieldObject: TypedSchemaField<Type, Components>
-  SchemaFieldArray: TypedSchemaField<Type, Components>
-  SchemaFieldVoid: TypedSchemaField<Type, Components>
-  SchemaFieldDate: TypedSchemaField<Type, Components>
-  SchemaFieldDateTime: TypedSchemaField<Type, Components>
-  SchemaFieldEnum: ISchemaDefineComponent<
-    ISchema<unknown, unknown, unknown, unknown, unknown> & { $$Components: Components }
+  SchemaFieldMarkup: ISchemaDefineComponent<
+    ISchemaDefineComponentProps & Record<string, never>,
+    ComponentPropsMap,
+    ComponentSlotsMap
+  >
+  SchemaFieldString: ISchemaDefineComponent<
+    ISchemaDefineComponentProps & Record<string, never>,
+    ComponentPropsMap,
+    ComponentSlotsMap
+  >
+  SchemaFieldNumber: ISchemaDefineComponent<
+    ISchemaDefineComponentProps & Record<string, never>,
+    ComponentPropsMap,
+    ComponentSlotsMap
+  >
+  SchemaFieldBoolean: ISchemaDefineComponent<
+    ISchemaDefineComponentProps & Record<string, never>,
+    ComponentPropsMap,
+    ComponentSlotsMap
+  >
+  SchemaFieldObject: ISchemaDefineComponent<
+    ISchemaDefineComponentProps & Record<string, never>,
+    ComponentPropsMap,
+    ComponentSlotsMap
+  >
+  SchemaFieldArray: ISchemaDefineComponent<
+    ISchemaDefineComponentProps & Record<string, never>,
+    ComponentPropsMap,
+    ComponentSlotsMap
+  >
+  SchemaFieldVoid: ISchemaDefineComponent<
+    ISchemaDefineComponentProps & Record<string, never>,
+    ComponentPropsMap,
+    ComponentSlotsMap
+  >
+  SchemaFieldDate: ISchemaDefineComponent<
+    ISchemaDefineComponentProps & Record<string, never>,
+    ComponentPropsMap,
+    ComponentSlotsMap
+  >
+  SchemaFieldDateTime: ISchemaDefineComponent<
+    ISchemaDefineComponentProps & Record<string, never>,
+    ComponentPropsMap,
+    ComponentSlotsMap
   >
 }
 
@@ -201,7 +223,7 @@ export const createSchemaField = <
       type: String,
       ...markupProps
     },
-    setup(props: ISchemaMarkupFieldProps<Components, any, any>, { slots }) {
+    setup(props: ISchemaMarkupFieldProps<any, any>, { slots }) {
       const parentRef = useSchemaMarkup()
       if (!parentRef || !parentRef.value) return () => h('template', {}, {})
 
@@ -224,11 +246,8 @@ export const createSchemaField = <
   })
 
   const createTypedSchemaField = <Type extends SchemaTypes>(type?: Type) => {
-    return <
-      Component extends ComponentKeys<Components> | ComponentClass,
-      Decorator extends ComponentKeys<Components> | ComponentClass
-    >(
-      props: ISchemaMarkupFieldProps<Components, Decorator, Component>,
+    return <Component, Decorator>(
+      props: ISchemaMarkupFieldProps<Decorator, Component>,
       ctx: { slots: any }
     ) => {
       const attrs = type
@@ -258,9 +277,6 @@ export const createSchemaField = <
   const SchemaFieldDate = createTypedSchemaField('date')
   const SchemaFieldDateTime = createTypedSchemaField('datetime')
 
-  const SchemaFieldEnum =
-    MarkupField as unknown as CreateSchemaFieldReturn<Components>['SchemaFieldEnum']
-
   SchemaField.Markup = SchemaFieldMarkup
   SchemaField.String = SchemaFieldString
   SchemaField.Number = SchemaFieldNumber
@@ -272,7 +288,7 @@ export const createSchemaField = <
   SchemaField.DateTime = SchemaFieldDateTime
 
   return {
-    SchemaField: SchemaField as unknown as CreateSchemaFieldReturn<Components>['SchemaField'],
+    SchemaField,
     SchemaFieldMarkup,
     SchemaFieldString,
     SchemaFieldNumber,
@@ -281,7 +297,6 @@ export const createSchemaField = <
     SchemaFieldArray,
     SchemaFieldVoid,
     SchemaFieldDate,
-    SchemaFieldDateTime,
-    SchemaFieldEnum
-  }
+    SchemaFieldDateTime
+  } as unknown as CreateSchemaFieldReturn<Components>
 }

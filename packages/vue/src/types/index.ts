@@ -3,14 +3,10 @@ import type {
   Component,
   ComponentOptionsMixin,
   CreateComponentPublicInstanceWithMixins,
-  DefineSetupFnComponent,
   EmitsOptions,
-  EmitsToProps,
-  ObjectPlugin,
   PublicProps,
   SlotsType,
-  VNode,
-  DefineComponent as VueDefineComponent
+  VNode
 } from 'vue'
 import type {
   FieldDisplayTypes,
@@ -19,34 +15,34 @@ import type {
   IFieldFactoryProps
 } from '@cjx-low-code/core'
 import type { BaseField, ISchema as JsonSchema, Schema } from '@cjx-low-code/json-schema'
-import type { CustomSlotsType } from '../shared'
 
 export type VueComponent = Component
 
 export type ISchemaDefineSetupFnComponent<
-  P extends Record<string, any>,
-  Components extends SchemaVueComponents = P['$$Components'],
-  Props = Omit<P, 'type' | '$$Components'>,
+  ComponentPropsMap extends Record<string, any>,
+  ComponentSlotsMap extends Record<string, any>,
   E extends EmitsOptions = RecordNever,
   S extends SlotsType = SlotsType,
   PP = PublicProps
 > = new <
-  Component extends FieldVueComponents<Components>,
-  Decorator extends FieldVueComponents<Components>
+  Component extends keyof ComponentPropsMap & keyof ComponentSlotsMap,
+  Decorator extends keyof ComponentPropsMap
 >(
-  props: Props & {
-    decorator?: Decorator
-    decoratorProps?: ExtractMarkupVueComponentProps<Components, Decorator>
-    component?: Component
-    // componentProps?: ExtractMarkupVueComponentProps<Components, Component>
-  }
+  props: ISchemaMarkupFieldProps<
+    Decorator,
+    Component,
+    ComponentPropsMap[Decorator],
+    ComponentPropsMap[Component],
+    ComponentSlotsMap[Component]
+  >
 ) => CreateComponentPublicInstanceWithMixins<
-  Props & {
-    decorator?: Decorator
-    decoratorProps?: ExtractMarkupVueComponentProps<Components, Decorator>
-    component?: Component
-    // componentProps?: ExtractMarkupVueComponentProps<Components, Component>
-  },
+  ISchemaMarkupFieldProps<
+    Decorator,
+    Component,
+    ComponentPropsMap[Decorator],
+    ComponentPropsMap[Component],
+    ComponentSlotsMap[Component]
+  >,
   RecordNever,
   RecordNever,
   RecordNever,
@@ -61,8 +57,11 @@ export type ISchemaDefineSetupFnComponent<
   S // Slots
 >
 
-export type ISchemaDefineComponent<Props extends Record<string, any>> =
-  ISchemaDefineSetupFnComponent<Props>
+export type ISchemaDefineComponent<
+  _Type,
+  ComponentPropsMap extends Record<string, any>,
+  ComponentSlotsMap extends Record<string, any>
+> = ISchemaDefineSetupFnComponent<ComponentPropsMap, ComponentSlotsMap>
 
 class Helper<Props> {
   Return = defineComponent({} as Record<keyof Props, any>)
@@ -90,32 +89,7 @@ export type ReactPropsWithChildren<P> = Modify<
   P
 >
 
-// export type VueFC<P extends object, S extends Record<string, unknown> = any> = FunctionalComponent<
-//   P,
-//   any,
-//   S // Slots
-// >
-
 type RecordNever = Record<string, never>
-
-export type VueFC<
-  P extends object,
-  S extends Record<string, unknown> = RecordNever
-> = VueDefineComponent<
-  RecordNever, // Props
-  RecordNever, // RawBindings
-  RecordNever, // Data
-  RecordNever, // Computed
-  RecordNever, // Methods
-  RecordNever, // Mixin
-  RecordNever, // Extends
-  RecordNever, // Emits
-  string, // ExposedEmits
-  P, // PublicProps
-  object, // PropsDef
-  object, // Defaults
-  CustomSlotsType<S> // Slots
->
 
 export type ComponentMap = Record<string, ComponentClass | VueComponent>
 
@@ -156,58 +130,38 @@ export type GetComponentByPath<
     : never
   : never
 
-export type DecoratorType<T extends SchemaVueComponents> = {
-  [Key in ComponentKeys<T>]: {
+export type DecoratorType<T extends Record<string, any>> = {
+  [K in keyof T]: {
     /**
      * 容器组件名称
      */
-    decorator?: Key
+    decorator?: K
     /**
      * 容器组件属性
      */
-    decoratorProps?: GetComponentProps<GetComponentByPath<T, Key & string>>
+    decoratorProps?: 'componentProps' extends keyof T[K] ? T[K]['componentProps'] : never
   }
 }[keyof T]
 
-/**
- * 提取对象中值为 VueFC 类型的属性（支持索引签名）
- * 结果：{ b: VueFC }
- */
-export type ExtractComponent<T extends object> = {
-  [K in keyof T as string extends K
-    ? never
-    : number extends K
-    ? never
-    : symbol extends K
-    ? never
-    : // 步骤2：排除 undefined，然后检查是否为 VueFC
-    // 同时排除普通函数（如 beforeUpdate），只保留组件
-    NonNullable<T[K]> extends VueFC<any>
-    ? // 额外检查：排除纯粹的 Function 类型（方法）
-      // VueFC 通常包含特定的 brand 或结构，与普通 Function 不同
-      NonNullable<T[K]> extends (...args: any[]) => any
-      ? VueFC<any> extends NonNullable<T[K]>
-        ? K
-        : never // 如果是函数，必须是 Component 子类型
-      : K // 非函数类型（如对象组件），直接保留
-    : never]: T[K] // 步骤1：排除索引签名键（string/number/symbol）
-}
-
 export type ExtractVueFCSchema<T extends object> = {
-  [K in keyof T]: T[K] extends VueComponentPath<infer _P, infer _S>
-    ? {
+  [K in keyof T]: T[K] extends Record<string, unknown>
+    ? BaseField & {
         /**
          * 组件名称
          */
         component?: K
-      } & ReturnType<T[K]>
+      } & T[K]
     : never
 }[keyof T]
 
 export type ISchema<
   T extends SchemaVueComponents,
-  K extends ComponentMap = ExtractComponent<T['$$types']>
-> = ExtractVueFCSchema<K>[]
+  K extends Record<string, unknown> = T extends {
+    $$types: infer M extends Record<string, unknown>
+  }
+    ? M
+    : never
+> = (ExtractVueFCSchema<K> & DecoratorType<K>)[]
 
 // 提取子组件（对象中值为 ComponentClass 类型的属性）
 export type ExtractChildren<T> = T extends object
@@ -249,39 +203,7 @@ export type SchemaSlotType = string | number | VNode | VNode[]
 export type FlattenedComponents<T extends SchemaVueComponents> = T & ShallowFlattenLevel<T>
 export type ComponentKeys<K extends SchemaVueComponents> = keyof FlattenedComponents<K>
 
-export type ExtractFlattenedComponentsProps<
-  K extends SchemaVueComponents,
-  P extends ComponentKeys<K>
-> = GetComponentProps<GetComponentByPath<FlattenedComponents<K>, P & string>>
-
-export type ExtractFlattenedComponentsSlotsType<
-  K extends SchemaVueComponents,
-  P extends ComponentKeys<K>
-> = ComponentSlots<GetComponentByPath<FlattenedComponents<K>, P & string>>
-
-export type VueComponentPath<T extends ComponentClass, K extends SchemaVueComponents> = <
-  D extends ComponentKeys<K> | ComponentClass = never
->(
-  props: BaseSchemaFieldType<T> & {
-    /**
-     * 容器组件
-     */
-    decorator?: D | ComponentClass
-    /**
-     * 容器组件的属性
-     */
-    decoratorProps?: D extends ComponentClass
-      ? GetComponentProps<D>
-      : ExtractFlattenedComponentsProps<K, D & ComponentKeys<K>>
-  },
-  {
-    slots
-  }: {
-    slots: ComponentSlots<T>
-  }
-) => BaseSchemaFieldType<T> & DecoratorType<K>
-
-type BaseSchemaFieldType<T extends ComponentClass> = BaseField & {
+export type VueComponentTypeData<T extends ComponentClass> = {
   /**
    * 组件属性
    */
@@ -295,18 +217,6 @@ type BaseSchemaFieldType<T extends ComponentClass> = BaseField & {
 
 export type SchemaVueComponents = Record<string, VueComponent>
 
-export type KeyOfComponents<T> = keyof T
-
-export type ComponentPath<
-  T,
-  Key extends KeyOfComponents<T> = KeyOfComponents<T>
-> = Key extends string ? Key : never
-
-export type ComponentPropsByPathValue<
-  T extends SchemaVueComponents,
-  P extends ComponentPath<T>
-> = P extends keyof T ? VueComponentProps<T[P]> : never
-
 export type VueComponentOptionsWithProps = {
   props: unknown
 }
@@ -315,43 +225,19 @@ export type VueComponentProps<T extends VueComponent> = T extends VueComponentOp
   ? T['props']
   : T
 
-export type FieldVueComponents<Components extends SchemaVueComponents> =
-  | ComponentKeys<Components>
-  | ComponentClass
-
-export type ExtractMarkupVueComponentProps<
-  Components extends SchemaVueComponents,
-  Component extends FieldVueComponents<Components>
-> = Component extends ComponentClass
-  ? GetComponentProps<Component>
-  : Component extends ComponentKeys<Components>
-  ? ExtractFlattenedComponentsProps<Components, Component>
-  : Record<string, any>
-
-export type ExtractMarkupVueComponentSlots<
-  Components extends SchemaVueComponents,
-  Component extends FieldVueComponents<Components>
-> = Component extends ComponentClass
-  ? ComponentSlots<Component>
-  : ExtractFlattenedComponentsSlotsType<Components, Component & ComponentKeys<Components>>
-
 export type ISchemaMarkupFieldProps<
-  Components extends SchemaVueComponents,
-  Decorator extends FieldVueComponents<Components>,
-  Component extends FieldVueComponents<Components>
+  Decorator,
+  Component,
+  DecoratorProps = any,
+  ComponentProps = any,
+  ComponentSlots = any
 > = Omit<
   JsonSchema<
     Decorator,
     Component,
-    ExtractMarkupVueComponentProps<Components, Decorator>,
-    ExtractMarkupVueComponentProps<Components, Component>,
-    {
-      [Key in keyof ExtractMarkupVueComponentSlots<Components, Component>]?:
-        | ((
-            ...args: Parameters<ExtractMarkupVueComponentSlots<Components, Component>[Key]>
-          ) => ReturnType<ExtractMarkupVueComponentSlots<Components, Component>[Key]>)
-        | SchemaSlotType
-    },
+    DecoratorProps,
+    ComponentProps,
+    ComponentSlots,
     FormPatternTypes,
     FieldDisplayTypes,
     any, // FieldValidator,
@@ -360,6 +246,58 @@ export type ISchemaMarkupFieldProps<
   >,
   'type'
 >
+
+export type VueSchemaField<
+  _Type,
+  ComponentPropsMap extends Record<string, any>,
+  ComponentSlotsMap extends Record<string, any>
+> = <
+  Component extends keyof ComponentPropsMap & keyof ComponentSlotsMap,
+  Decorator extends keyof ComponentPropsMap
+>(
+  props: ISchemaMarkupFieldProps<
+    Decorator,
+    Component,
+    ComponentPropsMap[Decorator],
+    ComponentPropsMap[Component],
+    ComponentSlotsMap[Component]
+  >,
+  ctx: { slots: unknown }
+) => unknown
+
+// 缓存路径解析结果，避免同一 key 重复调用 GetComponentByPath
+export type ComponentPropsMapValue<
+  Components extends SchemaVueComponents,
+  P extends string
+> = GetComponentByPath<Components, P> extends infer C
+  ? C extends ComponentClass
+    ? GetComponentProps<C>
+    : never
+  : never
+
+export type ComponentSlotsMapValue<
+  Components extends SchemaVueComponents,
+  P extends string
+> = GetComponentByPath<Components, P> extends infer C
+  ? C extends ComponentClass
+    ? {
+        [key in keyof ComponentSlots<C>]?:
+          | ((...args: Parameters<ComponentSlots<C>[key]>) => ReturnType<ComponentSlots<C>[key]>)
+          | SchemaSlotType
+      }
+    : never
+  : never
+
+export type ComponentPathToVueComponentPath<
+  Components extends SchemaVueComponents,
+  P extends string
+> = GetComponentByPath<Components, P> extends infer C
+  ? C extends ComponentClass
+    ? VueComponentTypeData<C>
+    : never
+  : never
+
+export type ISchemaDefineComponentProps = JsonSchema<unknown, unknown, unknown, unknown, unknown>
 
 export type FormModelOptions = {
   model: Record<string, unknown>
