@@ -36,24 +36,16 @@ export type ISchemaDefineSetupFnComponent<
 >(
   props: Props & {
     decorator?: Decorator
-    decoratorProps?:
-      | ExtractMarkupVueComponentProps<Components, Decorator>
-      | (string & Record<string, unknown>)
+    decoratorProps?: ExtractMarkupVueComponentProps<Components, Decorator>
     component?: Component
-    componentProps?: Component extends ComponentClass
-      ? GetComponentProps<Component>
-      : Record<string, any>
+    // componentProps?: ExtractMarkupVueComponentProps<Components, Component>
   }
 ) => CreateComponentPublicInstanceWithMixins<
   Props & {
     decorator?: Decorator
-    decoratorProps?:
-      | ExtractMarkupVueComponentProps<Components, Decorator>
-      | (string & Record<string, unknown>)
+    decoratorProps?: ExtractMarkupVueComponentProps<Components, Decorator>
     component?: Component
-    componentProps?: Component extends ComponentClass
-      ? GetComponentProps<Component>
-      : Record<string, any>
+    // componentProps?: ExtractMarkupVueComponentProps<Components, Component>
   },
   RecordNever,
   RecordNever,
@@ -144,14 +136,18 @@ export type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) ex
   ? I
   : never
 
-// 根据组件路径获取组件类型（递归支持多层路径如 Input.Password.Search）
+// 根据组件路径获取组件类型（仅支持两层路径如 Input.Search）
 export type GetComponentByPath<
   T extends ComponentMap,
   Path extends string
-> = Path extends `${infer First}.${infer Rest}`
+> = Path extends `${infer First}.${infer Second}`
   ? First extends keyof T
     ? T[First] extends ComponentMap
-      ? GetComponentByPath<T[First], Rest>
+      ? Second extends keyof T[First]
+        ? T[First][Second] extends ComponentClass
+          ? T[First][Second]
+          : never
+        : never
       : never
     : never
   : Path extends keyof T
@@ -213,22 +209,18 @@ export type ISchema<
   K extends ComponentMap = ExtractComponent<T['$$types']>
 > = ExtractVueFCSchema<K>[]
 
-// 提取子组件（对象中值为 VueComponent 类型的属性）
+// 提取子组件（对象中值为 ComponentClass 类型的属性）
 export type ExtractChildren<T> = T extends object
   ? {
-      [K in keyof T as T[K] extends Component
-        ? T[K] extends (...args: any[]) => any
-          ? never
-          : T[K] extends ObjectPlugin['install']
-          ? never
-          : string extends K
+      [K in keyof T as T[K] extends ComponentClass
+        ? string extends K
           ? never
           : number extends K
           ? never
           : symbol extends K
           ? never
           : K
-        : never]: T[K] extends Component ? T[K] : never
+        : never]: T[K] extends ComponentClass ? T[K] : never
     }
   : Record<string, never>
 
@@ -332,7 +324,9 @@ export type ExtractMarkupVueComponentProps<
   Component extends FieldVueComponents<Components>
 > = Component extends ComponentClass
   ? GetComponentProps<Component>
-  : ExtractFlattenedComponentsProps<Components, Component & ComponentKeys<Components>>
+  : Component extends ComponentKeys<Components>
+  ? ExtractFlattenedComponentsProps<Components, Component>
+  : Record<string, any>
 
 export type ExtractMarkupVueComponentSlots<
   Components extends SchemaVueComponents,

@@ -154,7 +154,7 @@
             }"
           />
 
-          <SchemaFieldEnum :d />
+          <SchemaFieldEnum  />
 
           <SchemaFieldEnum
             name="11"
