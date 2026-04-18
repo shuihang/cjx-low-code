@@ -8,13 +8,13 @@
   "unpkg": "dist/cjx-low-code.vue.umd.production.js",
   "jsdelivr": "dist/cjx-low-code.vue.umd.production.js",
   "jsnext:main": "esm",
-  "types": "src/index.ts",
+  "types": "esm/index.d.ts",
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
     "start": "vuepress dev docs",
-    "build": "rimraf -rf lib esm dist  && npm run build:cjs && npm run build:esm && npm run build:umd",
+    "build": "rimraf -rf lib esm dist  && npm run build:cjs && npm run build:esm && npm run build:umd && node scripts/fix-schema-field-dts.js",
     "build:cjs": "tsc --project tsconfig.build.json",
     "build:esm": "tsc --project tsconfig.build.json --module es2015 --outDir esm",
     "build:umd": "rollup --config",
@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "@vue/shared": "^3.5.32",
+    "colors": "^1.4.0",
     "vue": "^3.5.4"
   },
   "engines": {

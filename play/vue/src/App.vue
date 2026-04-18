@@ -26,7 +26,6 @@
           />
 
           <SchemaField.Object
-            title="测试"
             name="test"
             component="ATestComp"
             :component-props="{
@@ -38,7 +37,7 @@
             }"
             :slots="{
               testCompSlot: (props) => {
-                return '------'
+                return
               }
             }"
           />
@@ -142,7 +141,7 @@
 
           <SchemaFieldMarkup
             name="11"
-            component="ElInput"
+            :component="ElInput"
             :component-props="{ type: 'email' }"
             decorator="FormItem"
             :decorator-props="{
@@ -161,7 +160,6 @@
     <!-- <form-item name="f" class="--f" :rules="[{ required: true, message: '请输入11' }]">
         <Input placeholder="请输入11" />
       </form-item> -->
-    <MyComponent />
 
     <!-- <Button type="primary" @click="submitForm">Submit</Button> -->
     <Button type="primary" @click="submitForm">提交</Button>
@@ -169,7 +167,6 @@
 </template>
 
 <script lang="ts" setup>
-import { h } from 'vue'
 import { Button, Input } from '@cjx-low-code/antdv'
 import { FormProvider, connect, createSchemaField } from '@cjx-low-code/vue'
 import { createForm, onFieldChange } from '@cjx-low-code/core'
@@ -183,17 +180,23 @@ import {
   Select
 } from '@cjx-low-code/element-plus'
 import ATestComp from './testComp.vue'
-import { Df, MyComponent } from './testGen'
-import type { ISchema } from '@cjx-low-code/vue'
 import '../../../packages/element-plus/dist/element-plus.css'
 
-const { SchemaField, SchemaFieldMarkup } = createSchemaField({
+const { SchemaField, SchemaFieldMarkup, defineSchema } = createSchemaField({
   components: {
     Input,
-    // AInput: Input,
-    // BInput: Input,
-    // CInput: Input,
-    // DInput: Input,
+    AInput: Input,
+    BInput: Input,
+    CInput: Input,
+    DInput: Input,
+    EInput: Input,
+    FInput: Input,
+    GInput: Input,
+    HInput: Input,
+    IInput: Input,
+    JInput: Input,
+    XInput: Input,
+    KInput: Input,
     Select,
     ElInput,
     Rate,
@@ -229,12 +232,12 @@ const form = createForm({
   }
 })
 
-const schemaJson: ISchema<typeof SchemaField> = [
+const schemaJson = defineSchema([
   {
     title: '姓名',
     name: 'name',
     type: 'string',
-    decorator: 'FormItem',
+    decorator: '-',
     decoratorProps: {},
     component: 'ATestComp',
     componentProps: {
@@ -245,42 +248,24 @@ const schemaJson: ISchema<typeof SchemaField> = [
         return '------'
       }
     }
-    // decoratorProps: {
-    //   labelAlign: 'left'
-    // }
-    // componentProps: {
-    //   enterButton: true
-    // }
-    // on: {
-    //   onChange: (e) => {
-    //     console.log(e)
-    //   }
-    //   // onSearch: (e) => {
-    //   //   console.log(e)
-    //   // }
-    // },
-    // slots: {
-    //   testCompSlot: '🤔️'
-    // },
   },
   {
-    title: '测试',
-    name: 'test',
+    title: '姓名',
+    name: 'name',
     type: 'string',
+    decoratorProps: {},
+    decorator: 'FormItem',
     component: 'Input',
     componentProps: {
-      type: 'text',
-      onChange: (e) => {
-        console.log(e)
-      }
+      type: 'text'
     },
-    // slots: {
-    //   testCompSlot: '555'
-    // },
-    decorator: 'FormItem',
-    decoratorProps: {}
+    slots: {
+      testCompSlot: () => {
+        return '------'
+      }
+    }
   }
-]
+])
 
 // const submitForm = async () => {
 //   console.log(formRef.value)

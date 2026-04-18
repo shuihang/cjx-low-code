@@ -10,11 +10,24 @@ import {
 } from '@cjx-low-code/element-plus'
 import ATestComp from './testComp.vue'
 
-const { SchemaField, SchemaFieldEnum } = createSchemaField({
+const { SchemaField } = createSchemaField({
   components: {
     Input,
     Select,
     ElInput,
+    AInput: Input,
+    BInput: Input,
+    CInput: Input,
+    DInput: Input,
+    EInput: Input,
+    FInput: Input,
+    GInput: Input,
+    HInput: Input,
+    IInput: Input,
+    JInput: Input,
+    KInput: Input,
+    LInput: Input,
+    MInput: Input,
     Rate,
     RadioGroup,
     CheckboxGroup,
