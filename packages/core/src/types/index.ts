@@ -29,29 +29,60 @@ export type NonFunctionPropertyNames<T> = {
   [K in keyof T]: T[K] extends (...args: any) => any ? never : K
 }[keyof T]
 
-export interface IFieldState<TextType = any, ValueType = any> {
-  value: ValueType
-  title: TextType
-  description: TextType
-  disabled: boolean
-  readOnly: boolean
-  display: FieldDisplayTypes
-  visible: boolean
-  hidden: boolean
-  valid: boolean
-  invalid: boolean
-  validating: boolean
-  errors: string[]
-  selfErrors: string[]
-  rules: IValidatorRule[]
-  required: boolean
-  initialized: boolean
-  mounted: boolean
-  unmounted: boolean
-}
+export type IFieldState = OmitState<Field>
+// {
+//   name: string
+//   value: ValueType
+//   title: TextType
+//   description: TextType
+//   disabled: boolean
+//   readOnly: boolean
+//   display: FieldDisplayTypes
+//   visible: boolean
+//   hidden: boolean
+//   valid: boolean
+//   invalid: boolean
+//   validating: boolean
+//   errors: string[]
+//   selfErrors: string[]
+//   rules: IValidatorRule[]
+//   required: boolean
+//   initialized: boolean
+//   mounted: boolean
+//   unmounted: boolean
+// }
 
-type OmitState<P> = Omit<
+type OmitState<P extends Field> = Omit<
   P,
+  | 'state'
+  | 'form'
+  | 'parent'
+  | 'reactions'
+  | 'validateController'
+  | 'setValue'
+  | 'getValue'
+  | 'validate'
+  | 'onMount'
+  | 'onUnmount'
+  | 'onInput'
+  | 'onFocus'
+  | 'onBlur'
+  | 'reset'
+  | 'subscribe'
+  | 'getPath'
+  | 'setTitle'
+  | 'setDescription'
+  | 'decoratorType'
+  | 'decoratorProps'
+  | 'componentType'
+  | 'componentProps'
+  | 'slots'
+  | 'component'
+  | 'decorator'
+  | 'setDisplay'
+  | 'disable'
+  | 'enable'
+  | 'setReadOnly'
   | 'selfDisplay'
   | 'selfPattern'
   | 'originValues'
@@ -70,10 +101,6 @@ type OmitState<P> = Omit<
   | 'displayName'
   | 'setState'
   | 'getState'
-  | 'getFormGraph'
-  | 'setFormGraph'
-  | 'setFormState'
-  | 'getFormState'
 >
 
 export interface IValidatorRule {

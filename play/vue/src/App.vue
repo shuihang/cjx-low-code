@@ -7,18 +7,18 @@
       <Form>
         <SchemaField>
           <SchemaField.String
-            title="姓名"
+            title="andtv-input 姓名"
             name="userName"
+            decorator="FormItem"
+            :decorator-props="{
+              rules: [{ required: true, message: '请输入姓名' }]
+            }"
             component="Input"
             :component-props="{
               placeholder: '请输入姓名',
               onChange: (e) => {
                 console.log(e)
               }
-            }"
-            decorator="FormItem"
-            :decorator-props="{
-              rules: [{ required: true, message: '请输入姓名' }]
             }"
             :slots="{
               suffix: '😋'
@@ -27,17 +27,17 @@
 
           <SchemaField.Object
             name="test"
-            component="ATestComp"
-            :component-props="{
-              type: 'text'
-            }"
             decorator="FormItem"
             :decorator-props="{
               rules: [{ required: true, message: '请输入测试内容' }]
             }"
+            component="ATestComp"
+            :component-props="{
+              type: 'text'
+            }"
             :slots="{
               testCompSlot: (props) => {
-                return
+                return h('div', { style: { color: 'pink' } }, '测试组件' + props.test)
               }
             }"
           />
@@ -46,17 +46,21 @@
           <SchemaField.Number
             title="评分"
             name="rate"
-            component="Rate"
-            :component-props="{}"
             decorator="FormItem"
             :decorator-props="{
               rules: [{ required: true, message: '请选择评分' }]
             }"
+            component="Rate"
+            :component-props="{}"
           />
 
           <SchemaField.Markup
             title="单选框"
             name="radio"
+            decorator="FormItem"
+            :decorator-props="{
+              rules: [{ required: true, message: '请选择单选框' }]
+            }"
             component="RadioGroup"
             :component-props="{
               options: [
@@ -70,15 +74,15 @@
                 }
               ]
             }"
-            decorator="FormItem"
-            :decorator-props="{
-              rules: [{ required: true, message: '请选择单选框' }]
-            }"
           />
 
           <SchemaField.Markup
             title="复选框"
             name="checkbox"
+            decorator="FormItem"
+            :decorator-props="{
+              rules: [{ required: true, message: '请选择复选框' }]
+            }"
             component="CheckboxGroup"
             :component-props="{
               options: [
@@ -92,15 +96,15 @@
                 }
               ]
             }"
-            decorator="FormItem"
-            :decorator-props="{
-              rules: [{ required: true, message: '请选择复选框' }]
-            }"
           />
 
           <SchemaField.Markup
             title="选择"
             name="select"
+            decorator="FormItem"
+            :decorator-props="{
+              rules: [{ required: true, message: '请选择' }]
+            }"
             component="Select"
             :component-props="{
               options: [
@@ -115,38 +119,33 @@
               ],
               clearable: true
             }"
-            decorator="FormItem"
-            :decorator-props="{
-              rules: [{ required: true, message: '请选择' }]
-            }"
           />
 
           <SchemaField.String
             title="Element Plus Input"
             name="email"
-            component="ElInput"
-            :component-props="{
-              type: 'email'
-            }"
             decorator="FormItem"
             :decorator-props="{
               rules: [{ required: true, message: '请输入邮箱' }]
+            }"
+            component="ElInput"
+            :component-props="{
+              type: 'email'
             }"
             :slots="{
               suffix: '😋'
             }"
           />
 
-          <SchemaFieldMarkup />
-
           <SchemaFieldMarkup
-            name="11"
-            :component="ElInput"
-            :component-props="{ type: 'email' }"
+            title="11"
+            name="a"
             decorator="FormItem"
             :decorator-props="{
               rules: [{ required: true, message: '请输入邮箱' }]
             }"
+            component="ElInput"
+            :component-props="{ type: 'email' }"
             :slots="{
               suffix: '😋'
             }"
@@ -167,6 +166,7 @@
 </template>
 
 <script lang="ts" setup>
+import { h } from 'vue'
 import { Button, Input } from '@cjx-low-code/antdv'
 import { FormProvider, connect, createSchemaField } from '@cjx-low-code/vue'
 import { createForm, onFieldChange } from '@cjx-low-code/core'

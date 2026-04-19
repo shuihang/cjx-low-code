@@ -43,6 +43,10 @@ export class Field<
   // 验证控制器（用于取消异步验证）
   validateController: AbortController | null = null
 
+  initialized = false
+  mounted = false
+  unmounted = false
+
   constructor(props: IFieldProps<Decorator, Component, TextType, ValueType>, form: Form) {
     super()
 
@@ -57,13 +61,14 @@ export class Field<
 
     this.setValue = this.setValue.bind(this)
     this.getValue = this.getValue.bind(this)
-    this.validate = this.validate.bind(this)
+    // this.validate = this.validate.bind(this)
     this.setDisplay = this.setDisplay.bind(this)
     this.reset = this.reset.bind(this)
   }
 
   protected initialize() {
     this.state = observable<IFieldState>({
+      name: this.props.name,
       value: this.props.value,
       title: this.props.title || '',
       description: this.props.description || '',
@@ -76,15 +81,15 @@ export class Field<
       invalid: false,
       validating: false,
       errors: [],
-      selfErrors: [],
-      rules: this.props.rules || [],
-      required: this.props.rules?.some((r) => r.required) ?? false,
+      // selfErrors: [],
+      // rules: this.props.rules || [],
+      // required: this.props.rules?.some((r) => r.required) ?? false,
       initialized: false,
       mounted: false,
       unmounted: false
     })
 
-    this.title = this.props.title
+    this.name = this.props.name
     this.description = this.props.description
     this.disabled = this.props.disabled ?? false
     this.readOnly = this.props.readOnly ?? false
@@ -105,9 +110,9 @@ export class Field<
     batch(() => {
       this.state.value = value
       // 值变化时清除错误（可选行为）
-      this.state.selfErrors = []
-      this.state.errors = []
-      this.updateValidState()
+      // this.state.selfErrors = []
+      // this.state.errors = []
+      // this.updateValidState()
     })
   }
 
@@ -163,109 +168,97 @@ export class Field<
   /**
    * 执行验证
    */
-  async validate(): Promise<string[]> {
-    // 取消之前的验证
-    this.validateController?.abort()
-    this.validateController = new AbortController()
-
-    this.state.validating = true
-    const errors: string[] = []
-
-    try {
-      const value = this.state.value
-      const rules = this.state.rules
-
-      for (const rule of rules) {
-        // 检查是否已取消
-        if (this.validateController.signal.aborted) {
-          break
-        }
-
-        // 必填验证
-        if (rule.required) {
-          if (value === undefined || value === null || value === '') {
-            errors.push(rule.message || `${this.state.title || this.name} 不能为空`)
-            continue
-          }
-        }
-
-        // 跳过空值的其他验证（非必填时）
-        if (value === undefined || value === null || value === '') {
-          continue
-        }
-
-        // 最小长度验证
-        if (rule.minLength !== undefined) {
-          const str = String(value)
-          if (str.length < rule.minLength) {
-            errors.push(rule.message || `长度不能少于 ${rule.minLength} 个字符`)
-            continue
-          }
-        }
-
-        // 最大长度验证
-        if (rule.maxLength !== undefined) {
-          const str = String(value)
-          if (str.length > rule.maxLength) {
-            errors.push(rule.message || `长度不能超过 ${rule.maxLength} 个字符`)
-            continue
-          }
-        }
-
-        // 最小值验证
-        if (rule.min !== undefined) {
-          const num = Number(value)
-          if (!isNaN(num) && num < rule.min) {
-            errors.push(rule.message || `不能小于 ${rule.min}`)
-            continue
-          }
-        }
-
-        // 最大值验证
-        if (rule.max !== undefined) {
-          const num = Number(value)
-          if (!isNaN(num) && num > rule.max) {
-            errors.push(rule.message || `不能大于 ${rule.max}`)
-            continue
-          }
-        }
-
-        // 正则验证
-        if (rule.pattern) {
-          if (!rule.pattern.test(String(value))) {
-            errors.push(rule.message || '格式不正确')
-            continue
-          }
-        }
-
-        // 自定义验证器
-        if (rule.validator) {
-          const result = await rule.validator(value)
-          if (result) {
-            errors.push(result)
-          }
-        }
-      }
-
-      batch(() => {
-        this.state.selfErrors = errors
-        this.state.errors = errors
-        this.updateValidState()
-      })
-
-      return errors
-    } finally {
-      this.state.validating = false
-    }
-  }
+  validate: () => Promise<string[]>
+  // async validate(): Promise<string[]> {
+  // 取消之前的验证
+  // this.validateController?.abort()
+  // this.validateController = new AbortController()
+  // this.state.validating = true
+  // const errors: string[] = []
+  // try {
+  //   const value = this.state.value
+  //   const rules = this.state.rules
+  //   for (const rule of rules) {
+  //     // 检查是否已取消
+  //     if (this.validateController.signal.aborted) {
+  //       break
+  //     }
+  //     // 必填验证
+  //     if (rule.required) {
+  //       if (value === undefined || value === null || value === '') {
+  //         errors.push(rule.message || `${this.state.title || this.name} 不能为空`)
+  //         continue
+  //       }
+  //     }
+  //     // 跳过空值的其他验证（非必填时）
+  //     if (value === undefined || value === null || value === '') {
+  //       continue
+  //     }
+  //     // 最小长度验证
+  //     if (rule.minLength !== undefined) {
+  //       const str = String(value)
+  //       if (str.length < rule.minLength) {
+  //         errors.push(rule.message || `长度不能少于 ${rule.minLength} 个字符`)
+  //         continue
+  //       }
+  //     }
+  //     // 最大长度验证
+  //     if (rule.maxLength !== undefined) {
+  //       const str = String(value)
+  //       if (str.length > rule.maxLength) {
+  //         errors.push(rule.message || `长度不能超过 ${rule.maxLength} 个字符`)
+  //         continue
+  //       }
+  //     }
+  //     // 最小值验证
+  //     if (rule.min !== undefined) {
+  //       const num = Number(value)
+  //       if (!isNaN(num) && num < rule.min) {
+  //         errors.push(rule.message || `不能小于 ${rule.min}`)
+  //         continue
+  //       }
+  //     }
+  //     // 最大值验证
+  //     if (rule.max !== undefined) {
+  //       const num = Number(value)
+  //       if (!isNaN(num) && num > rule.max) {
+  //         errors.push(rule.message || `不能大于 ${rule.max}`)
+  //         continue
+  //       }
+  //     }
+  //     // 正则验证
+  //     if (rule.pattern) {
+  //       if (!rule.pattern.test(String(value))) {
+  //         errors.push(rule.message || '格式不正确')
+  //         continue
+  //       }
+  //     }
+  //     // 自定义验证器
+  //     if (rule.validator) {
+  //       const result = await rule.validator(value)
+  //       if (result) {
+  //         errors.push(result)
+  //       }
+  //     }
+  //   }
+  //   batch(() => {
+  //     this.state.selfErrors = errors
+  //     this.state.errors = errors
+  //     this.updateValidState()
+  //   })
+  //   return errors
+  // } finally {
+  //   this.state.validating = false
+  // }
+  // }
 
   /**
    * 更新有效状态
    */
   private updateValidState(): void {
-    const hasError = this.state.errors.length > 0
-    this.state.valid = !hasError
-    this.state.invalid = hasError
+    // const hasError = this.state.errors.length > 0
+    // this.state.valid = !hasError
+    // this.state.invalid = hasError
   }
 
   /**
@@ -330,9 +323,9 @@ export class Field<
   reset(): void {
     batch(() => {
       this.state.value = this.props.value
-      this.state.errors = []
-      this.state.selfErrors = []
-      this.updateValidState()
+      // this.state.errors = []
+      // this.state.selfErrors = []
+      // this.updateValidState()
     })
   }
 

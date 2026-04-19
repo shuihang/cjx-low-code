@@ -1,16 +1,17 @@
 import { defineComponent, h } from 'vue'
+
 import { getFieldProps } from '../utils/getFieldProps'
 import ReactiveField from './ReactiveField'
 
-const Field = defineComponent({
-  name: 'Field',
+const ObjectField = defineComponent({
+  name: 'ObjectField',
   props: getFieldProps(),
   setup(props, context) {
     return () => {
       return h(
         ReactiveField,
         {
-          fieldType: 'Field',
+          fieldType: 'ObjectField',
           fieldProps: {
             ...props
           }
@@ -21,4 +22,4 @@ const Field = defineComponent({
   }
 })
 
-export default Field
+export default ObjectField

@@ -49,6 +49,7 @@ const markupProps = {
   decoratorProps: {},
   component: {},
   componentProps: {},
+  slots: {},
   reactions: {},
   // content: {},
   visible: {
@@ -162,11 +163,7 @@ export function _createSchemaField<
         () => {
           // console.log(parentRef.value)
           schemaRef.value = parentRef.value?.addSchema({
-            ...props,
-            componentProps: {
-              props: props.componentProps,
-              slots
-            }
+            ...props
           })
         },
         { immediate: true }
@@ -177,6 +174,7 @@ export function _createSchemaField<
         return h('div', { style: 'display: none;' }, slots)
       }
     }
+    // 通过泛型配合vue3的CreateComponentPublicInstanceWithMixins类型 来实现泛型组件 vue3目前的泛型组件太弱
   }) as new <
     Decorator extends keyof ComponentPropsMap | ComponentClass,
     Component extends keyof ComponentPropsMap | ComponentClass

@@ -1,9 +1,12 @@
 import { toArr } from '@cjx-low-code/shared'
-import type { FieldComponent, FieldDecorator } from '../types'
+import type { FieldComponent, FieldDecorator, FieldDisplayTypes } from '../types'
 
 export class BaseField<Decorator = any, Component = any, TextType = any> {
   title?: TextType
   disabled?: boolean
+  display?: FieldDisplayTypes
+  visible?: boolean
+  hidden?: boolean
   readOnly?: boolean
   description?: TextType
   decoratorType!: Decorator

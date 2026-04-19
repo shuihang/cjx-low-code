@@ -1,3 +1,12 @@
+import type { FormPath } from '@cjx-low-code/shared'
+import type {
+  FieldComponent,
+  FieldDecorator,
+  FieldDisplayTypes,
+  FieldReaction
+} from '@cjx-low-code/core'
+import type { PropType } from 'vue'
+
 export const getFieldProps = () => ({
   name: {
     type: String,
@@ -7,12 +16,20 @@ export const getFieldProps = () => ({
   description: {},
   value: {},
   initialValue: {},
-  basePath: {},
-  decorator: Array,
+  basePath: {
+    type: Object as PropType<FormPath>
+  },
+  decorator: {
+    type: Array as PropType<FieldDecorator<any>>
+  },
   decoratorProps: Object,
-  component: Array,
+  component: {
+    type: Array as PropType<FieldComponent<any>>
+  },
   componentProps: Object,
-  display: String,
+  display: {
+    type: String as PropType<FieldDisplayTypes>
+  },
   pattern: String,
   required: { type: Boolean, default: undefined },
   validateFirst: { type: Boolean, default: undefined },
@@ -24,7 +41,9 @@ export const getFieldProps = () => ({
   readPretty: { type: Boolean, default: undefined },
   dataSource: {},
   validator: {},
-  reactions: [Array, Function]
+  reactions: {
+    type: [Array, Function] as PropType<FieldReaction[] | FieldReaction>
+  }
 })
 
 export const getVoidFieldProps = () => ({

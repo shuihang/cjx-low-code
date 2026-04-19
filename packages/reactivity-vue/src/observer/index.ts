@@ -1,10 +1,14 @@
 import { useObserver } from '../hooks/useObserver'
-import type { IObserverOptions } from '../types'
+import type { IObserverOptions, ObserverComponent } from '../types'
+import type { Component } from 'vue'
 
 /**
  * 用于将 Vue 组件转换为响应式组件
  */
-export const observer = function (opts: any, options?: IObserverOptions): any {
+export const observer = function <T extends Component>(
+  opts: ObserverComponent<T>,
+  options?: IObserverOptions
+): T {
   const name = options?.name || opts.name || 'ObservableComponent'
 
   return {
