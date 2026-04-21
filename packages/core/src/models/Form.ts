@@ -1,7 +1,9 @@
 import { autorun, batch, observable } from '@cjx-low-code/reactivity'
+import { FormPath } from '@cjx-low-code/shared'
 import { createBatchStateSetter } from '../shared/internals'
 import { runEffects } from '../shared'
 import { Field } from './Field'
+import { ObjectField } from './ObjectField'
 import type { IFieldProps, IFieldStateSetter, JSXComponent } from '../types'
 
 export interface IFormProps<T extends object = any> {
@@ -111,8 +113,10 @@ export class Form<ValueType extends object = any> {
 
   createField = <Decorator extends JSXComponent, Component extends JSXComponent>(
     props: IFieldProps<Decorator, Component>
-  ): Field => {
+  ): Field<Decorator, Component> => {
+    const address = FormPath.parse(props.basePath)
     const field = new Field(
+      address,
       {
         ...props,
         // 从表单初始值中获取字段值
@@ -140,28 +144,8 @@ export class Form<ValueType extends object = any> {
         if (this.watchValuse) {
           this.watchValuse(this, field)
         }
-        // 清除该字段的错误（当值变化时）
-        // if (this.state.errors[props.name]?.length > 0) {
-        //   delete this.state.errors[props.name]
-        // }
-        // })
       })
     )
-
-    // 监听字段错误变化
-    // this.disposers.push(
-    //   autorun(() => {
-    //     const errors = field.state.errors
-    //     batch(() => {
-    //       if (errors.length > 0) {
-    //         this.state.errors[props.name] = errors
-    //       } else {
-    //         delete this.state.errors[props.name]
-    //       }
-    //       this.updateValidState()
-    //     })
-    //   })
-    // )
 
     // 触发字段初始化生命周期钩子
     this.lifecycles.forEach((lifecycle) => {
@@ -172,6 +156,52 @@ export class Form<ValueType extends object = any> {
 
     return field
   }
+
+  createObjectField = <Decorator extends JSXComponent, Component extends JSXComponent>(
+    props: IFieldProps<Decorator, Component>
+  ): ObjectField<Decorator, Component> => {
+    const address = FormPath.parse(props.basePath)
+    const field = new ObjectField(
+      address,
+      {
+        ...props,
+        // 从表单初始值中获取字段值
+        value: props.value ?? this.state.initialValues[props.name]
+      },
+      this
+    )
+    // 建立双向引用
+    field.form = this
+    this.fields.set(props.name, field)
+    this.fieldList.push(field)
+
+    // 同步表单状态到字段
+    field.state.disabled = field.state.disabled || this.state.disabled
+    field.state.readOnly = field.state.readOnly || this.state.readOnly
+
+    // 监听字段值变化，同步到表单 values
+    this.disposers.push(
+      autorun(() => {
+        const value = field.state.value
+        // batch(() => {
+        this.state.values[props.name] = value
+        // 触发 watchValuse 回调函数
+        if (this.watchValuse) {
+          this.watchValuse(this, field)
+        }
+      })
+    )
+
+    // 触发字段初始化生命周期钩子
+    this.lifecycles.forEach((lifecycle) => {
+      if (lifecycle.type === 'onFieldInit') {
+        lifecycle.callback(field, this)
+      }
+    })
+
+    return field
+  }
+
   // 回调函数
   watchValuse?: (form: Form<ValueType>, field: Field) => void
 

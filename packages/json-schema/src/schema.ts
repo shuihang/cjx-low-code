@@ -1,4 +1,4 @@
-import { instOf } from '@cjx-low-code/shared'
+import { instOf, isArray } from '@cjx-low-code/shared'
 import { transformFieldProps } from './transformer'
 import type {
   IFieldFactoryProps,
@@ -6,7 +6,7 @@ import type {
   IValidatorRule,
   JSXComponent
 } from '@cjx-low-code/core'
-import type { ISchema, ISchemaTransformerOptions, SchemaTypes } from './types'
+import type { ISchema, ISchemaTransformerOptions, SchemaItems, SchemaTypes } from './types'
 
 export type BaseField = Omit<
   ISchema,
@@ -25,24 +25,25 @@ export class Schema<
   ReactionField = any
 > implements ISchema
 {
+  parent?: Schema
+  root?: Schema
   type?: SchemaTypes
   name!: string
   component?: Component
   componentProps?: ComponentProps
+  children?: SchemaItems<any, any, any, any, any, any, any, any>
 
-  schemas?:
-    | ISchema<
-        Decorator,
-        Component,
-        DecoratorProps,
-        ComponentProps,
-        Pattern,
-        Display,
-        Validator,
-        Message,
-        ReactionField
-      >[]
-    | []
+  schema?: ISchema<
+    Decorator,
+    Component,
+    DecoratorProps,
+    ComponentProps,
+    Pattern,
+    Display,
+    Validator,
+    Message,
+    ReactionField
+  >
 
   constructor(
     json: ISchema<
@@ -55,8 +56,17 @@ export class Schema<
       Validator,
       Message,
       ReactionField
-    >[]
+    >,
+    parent?: Schema
   ) {
+    if (parent) {
+      this.parent = parent
+      this.root = parent.root
+    } else {
+      this.root = this
+    }
+    this.type = json.type
+    this.name = json.name
     return this.fromJSON(json)
   }
 
@@ -73,16 +83,17 @@ export class Schema<
       ReactionField
     >
   ) => {
-    this.schemas = this.schemas || []
-    this.schemas.push(schema)
-    return this.schemas[this.schemas.length - 1]
+    const index = this.children?.length || 0
+    this.children = this.children || []
+    this.children[index] = new Schema(schema, this)
+    return this.children[index]
   }
 
   removeSchema = (index: number) => {
-    if (!this.schemas) return this
-    const schema = this.schemas[index]
-    this.schemas.splice(index, 1)
-    return schema
+    // if (!this.schemas) return this
+    // const schema = this.schemas[index]
+    // this.schemas.splice(index, 1)
+    // return schema
   }
 
   setSchemas = (
@@ -99,9 +110,9 @@ export class Schema<
       ReactionField
     >
   ) => {
-    if (!this.schemas) return this
-    this.schemas[index] = schema
-    return this
+    // if (!this.schemas) return this
+    // this.schemas[index] = schema
+    // return this
   }
 
   static isSchemaInstance = (value: any): value is Schema => {
@@ -123,13 +134,14 @@ export class Schema<
       disabled: schema['disabled'],
       readOnly: schema['readOnly'],
       display: schema['display'],
-      rules,
+      // rules,
       type: schema.type,
       // 存储原始 schema 用于渲染
       component: schema['component'],
       componentProps: schema['componentProps'] || {},
       decorator: schema['decorator'],
-      decoratorProps: schema['decoratorProps'] || {}
+      decoratorProps: schema['decoratorProps'] || {},
+      slots: schema['slots'] || {}
       // reactions: schema['reactions'],
       // enum: schema.enum
     }
@@ -138,7 +150,16 @@ export class Schema<
   }
 
   toFieldProps = (options?: ISchemaTransformerOptions): IFieldFactoryProps<any, any> => {
+    //return Schema.parseSchemas(this.schemas || [])
     return transformFieldProps(this, options || {})
+  }
+
+  getSchema = (options: ISchemaTransformerOptions): ISchema => {
+    return this.schema
+  }
+
+  parseSchema(schemas: ISchema): IFieldProps {
+    return Schema.parse(schemas.name || '', schemas)
   }
 
   private static parseValidator(
@@ -161,23 +182,18 @@ export class Schema<
    * 解析对象类型的 Schema
    * 返回所有字段的配置列表
    */
-  static parseProperties(schemas: ISchema[], parentPath = ''): IFieldProps[] {
+  static parseSchemas(schemas: ISchema[], parentPath = ''): IFieldProps[] {
     const fields: IFieldProps[] = []
     for (const item of schemas) {
       const fieldProps = this.parse(item.name || '', item, parentPath)
-      if (item.type === 'array' && item.items) {
-        const childFields = this.parseProperties(item.items as ISchema[], fieldProps.name)
+      if ((['array', 'object'] as SchemaTypes[]).includes(item.type) && item.items) {
+        const childFields = this.parseSchemas(item.items as ISchema[], fieldProps.name)
         fields.push(...childFields)
       }
 
       fields.push(fieldProps)
     }
     return fields
-  }
-
-  static getSchemas = (schema: Schema): ISchema[] => {
-    if (!schema.schemas) return []
-    return schema.schemas
   }
 
   fromJSON = (
@@ -191,11 +207,12 @@ export class Schema<
       Validator,
       Message,
       ReactionField
-    >[]
+    >
   ) => {
     if (!json) return this
     if (Schema.isSchemaInstance(json)) return json
-    this.schemas = json
+    // this.schemas = [json]
+    this.schema = json
     return this
   }
 }

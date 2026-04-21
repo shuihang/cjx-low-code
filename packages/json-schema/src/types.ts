@@ -73,27 +73,16 @@ export type SchemaItems<
   Display,
   Validator,
   Message
-> =
-  | ISchema<
-      Decorator,
-      Component,
-      DecoratorProps,
-      ComponentProps,
-      Pattern,
-      Display,
-      Validator,
-      Message
-    >
-  | ISchema<
-      Decorator,
-      Component,
-      DecoratorProps,
-      ComponentProps,
-      Pattern,
-      Display,
-      Validator,
-      Message
-    >[]
+> = ISchema<
+  Decorator,
+  Component,
+  DecoratorProps,
+  ComponentProps,
+  Pattern,
+  Display,
+  Validator,
+  Message
+>[]
 
 export type SchemaReactions<Field = any> = SchemaReaction<Field> | SchemaReaction<Field>[]
 
@@ -130,6 +119,17 @@ export type ISchema<
       required?: string[] | boolean | string
       // format?: string
       $ref?: string
+
+      children?: SchemaItems<
+        Decorator,
+        Component,
+        DecoratorProps,
+        ComponentProps,
+        Pattern,
+        Display,
+        Validator,
+        Message
+      >
 
       items?: SchemaItems<
         Decorator,

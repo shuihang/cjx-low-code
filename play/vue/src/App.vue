@@ -5,7 +5,7 @@
     <!-- :schema="schemaJson" -->
     <FormProvider :form="form">
       <Form>
-        <SchemaField>
+        <SchemaField :schema="schemaJson">
           <SchemaField.String
             title="andtv-input 姓名"
             name="userName"
@@ -27,10 +27,6 @@
 
           <SchemaField.Object
             name="test"
-            decorator="FormItem"
-            :decorator-props="{
-              rules: [{ required: true, message: '请输入测试内容' }]
-            }"
             component="ATestComp"
             :component-props="{
               type: 'text'
@@ -40,10 +36,20 @@
                 return h('div', { style: { color: 'pink' } }, '测试组件' + props.test)
               }
             }"
-          />
+          >
+            <SchemaField.Markup
+              name="testContent"
+              title="gg"
+              decorator="FormItem"
+              :decorator-props="{
+                rules: [{ required: true, message: '请输入测试内容' }]
+              }"
+              component="AInput"
+            />
+          </SchemaField.Object>
 
           <!-- 评分 -->
-          <SchemaField.Number
+          <!-- <SchemaField.Number
             title="评分"
             name="rate"
             decorator="FormItem"
@@ -52,9 +58,9 @@
             }"
             component="Rate"
             :component-props="{}"
-          />
+          /> -->
 
-          <SchemaField.Markup
+          <!-- <SchemaField.Markup
             title="单选框"
             name="radio"
             decorator="FormItem"
@@ -74,9 +80,9 @@
                 }
               ]
             }"
-          />
+          /> -->
 
-          <SchemaField.Markup
+          <!-- <SchemaField.Markup
             title="复选框"
             name="checkbox"
             decorator="FormItem"
@@ -96,9 +102,9 @@
                 }
               ]
             }"
-          />
+          /> -->
 
-          <SchemaField.Markup
+          <!-- <SchemaField.Markup
             title="选择"
             name="select"
             decorator="FormItem"
@@ -119,9 +125,9 @@
               ],
               clearable: true
             }"
-          />
+          /> -->
 
-          <SchemaField.String
+          <!-- <SchemaField.String
             title="Element Plus Input"
             name="email"
             decorator="FormItem"
@@ -135,9 +141,11 @@
             :slots="{
               suffix: '😋'
             }"
-          />
+          /> -->
 
-          <SchemaFieldMarkup
+          <!-- <SchemaFieldMarkup /> -->
+
+          <!-- <SchemaFieldMarkup
             title="11"
             name="a"
             decorator="FormItem"
@@ -149,7 +157,7 @@
             :slots="{
               suffix: '😋'
             }"
-          />
+          /> -->
         </SchemaField>
 
         <!-- <Test /> -->
@@ -234,24 +242,34 @@ const form = createForm({
 
 const schemaJson = defineSchema([
   {
-    title: '姓名',
-    name: 'name',
+    title: '姓名1',
+    name: 'name1',
     type: 'string',
-    decorator: '-',
+    decorator: null,
     decoratorProps: {},
     component: 'ATestComp',
-    componentProps: {
-      type: 'text'
-    },
     slots: {
       testCompSlot: () => {
         return '------'
       }
-    }
+    },
+    children: [
+      {
+        title: 'ff',
+        name: 'ff',
+        type: 'string',
+        decoratorProps: {},
+        decorator: 'FormItem',
+        component: 'Input',
+        componentProps: {
+          type: 'text'
+        }
+      }
+    ]
   },
   {
-    title: '姓名',
-    name: 'name',
+    title: '姓名2',
+    name: 'name2',
     type: 'string',
     decoratorProps: {},
     decorator: 'FormItem',

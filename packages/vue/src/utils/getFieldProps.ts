@@ -20,16 +20,17 @@ export const getFieldProps = () => ({
     type: Object as PropType<FormPath>
   },
   decorator: {
-    type: Array as PropType<FieldDecorator<any>>
+    type: [String, Array] as PropType<FieldDecorator<any>>
   },
   decoratorProps: Object,
   component: {
-    type: Array as PropType<FieldComponent<any>>
+    type: [String, Array] as PropType<FieldComponent<any>>
   },
   componentProps: Object,
   display: {
     type: String as PropType<FieldDisplayTypes>
   },
+  slots: Object,
   pattern: String,
   required: { type: Boolean, default: undefined },
   validateFirst: { type: Boolean, default: undefined },

@@ -1,7 +1,8 @@
-import { FormPath, isNaN } from '@cjx-low-code/shared'
+import { FormPath, isNaN, toArr } from '@cjx-low-code/shared'
 import { batch, observable } from '@cjx-low-code/reactivity'
 import { createStateSetter, getValuesFromEvent, isHTMLInputEvent } from '../shared'
 import { BaseField } from './BaseField'
+import type { FormPathPattern } from '@cjx-low-code/shared'
 import type { Form } from './Form'
 import type { IFieldProps, IFieldState, IModelSetter, JSXComponent } from '../types'
 
@@ -47,7 +48,11 @@ export class Field<
   mounted = false
   unmounted = false
 
-  constructor(props: IFieldProps<Decorator, Component, TextType, ValueType>, form: Form) {
+  constructor(
+    address: FormPathPattern,
+    props: IFieldProps<Decorator, Component, TextType, ValueType>,
+    form: Form
+  ) {
     super()
 
     this.name = props.name
@@ -93,10 +98,8 @@ export class Field<
     this.description = this.props.description
     this.disabled = this.props.disabled ?? false
     this.readOnly = this.props.readOnly ?? false
-
     this.decorator = [this.props.decorator, this.props.decoratorProps || {}]
     this.component = [this.props.component, this.props.componentProps || {}]
-
     // 标记为已初始化
     this.state.initialized = true
   }

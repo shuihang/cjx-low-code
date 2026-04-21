@@ -1,10 +1,11 @@
 import { defineComponent, inject, provide, ref, shallowRef, watch } from 'vue'
-import { FormPath, each } from '@cjx-low-code/shared'
+import { FormPath, each, extend } from '@cjx-low-code/shared'
 import { observer } from '@cjx-low-code/reactivity-vue'
 import { useAttach, useField, useForm } from '../hooks'
 import { FieldSymbol, SchemaOptionsSymbol } from '../shared/context'
 import { h } from '../shared/h'
-import type { PropType, Ref } from 'vue'
+import { Fragment } from '../shared/fragment'
+import type { PropType, Ref, VNode } from 'vue'
 import type { GeneralField, IFieldProps } from '@cjx-low-code/core'
 
 /**
@@ -17,9 +18,72 @@ function isVoidField(field: unknown): boolean {
   return f.constructor?.name === 'VoidField' || (!f.setValue && !f.getValue)
 }
 
+const wrapFragment = (childNodes: VNode[] | VNode): VNode => {
+  if (!Array.isArray(childNodes)) {
+    return childNodes
+  }
+  if (childNodes.length > 1) {
+    return h(Fragment, {}, { default: () => childNodes })
+  }
+  return childNodes[0]
+}
+
+const resolveComponent = (render: () => unknown[], extra?: any) => {
+  if (extra === undefined || extra === null) {
+    return render
+  }
+  if (typeof extra === 'string') {
+    return () => [...render(), extra]
+  }
+
+  return () => [...render(), h(extra, {}, {})]
+}
+
+const mergeSlots = (
+  field: GeneralField,
+  slots: Record<string, any>,
+  content: any
+): Record<string, (...args: any) => any[]> => {
+  const slotNames = Object.keys(slots)
+  if (!slotNames.length) {
+    if (!content) {
+      return {}
+    }
+    if (typeof content === 'string') {
+      return {
+        default: () => [content]
+      }
+    }
+  }
+
+  const patchSlot =
+    (slotName: string) =>
+    (...originArgs) =>
+      slots[slotName]?.({ field, form: field.form, ...originArgs }) ?? []
+
+  const patchedSlots: Record<string, (...args: any) => unknown[]> = {}
+  slotNames.forEach((name) => {
+    patchedSlots[name] = patchSlot(name)
+  })
+
+  if (content && typeof content === 'object') {
+    Object.keys(content).forEach((key) => {
+      const child = content[key]
+      const slot = patchedSlots[key] ?? (() => [])
+      // console.log(1111, child, slot)
+      patchedSlots[key] = resolveComponent(slot, child)
+    })
+
+    return patchedSlots
+  }
+
+  return patchedSlots
+}
+
 const ReactiveField = observer(
   defineComponent({
     name: 'ReactiveField',
+    inheritAttrs: false,
     props: {
       fieldType: {
         type: String as PropType<'Field' | 'ArrayField' | 'ObjectField' | 'VoidField'>,
@@ -31,6 +95,7 @@ const ReactiveField = observer(
       }
     },
     setup(props, { slots }) {
+      // console.log(props.fieldProps)
       const formRef = useForm()
       // const parentRef = useField()
       const optionsRef = inject(SchemaOptionsSymbol, ref())
@@ -52,21 +117,23 @@ const ReactiveField = observer(
         }
       )
       useAttach(fieldRef)
+
       provide(FieldSymbol, fieldRef)
 
       return () => {
         const field = fieldRef.value
         const options = optionsRef.value
 
-        if (!field) {
-          return slots.default?.()
+        if (field.display == 'none') {
+          return h('template', {}, {})
         }
 
-        if (field.state.display === 'none') {
-          return null
-        }
+        const mergedSlots = mergeSlots(field, slots, field.slots)
 
         const renderDecorator = (childNodes: any[]) => {
+          if (!field.decoratorType) {
+            return wrapFragment(childNodes)
+          }
           const finalComponent =
             FormPath.getIn(options?.components, field.decoratorType as string) ??
             field.decoratorType
@@ -103,6 +170,7 @@ const ReactiveField = observer(
         }
 
         const renderComponent = () => {
+          if (!field.componentType) return wrapFragment(mergedSlots?.default?.())
           const component =
             FormPath.getIn(options?.components, field.componentType as string) ??
             field.componentType
@@ -152,7 +220,7 @@ const ReactiveField = observer(
             class: className,
             on: events
           }
-          return h(component, componentData, slots)
+          return h(component, componentData, mergedSlots)
         }
 
         return renderDecorator([renderComponent()])

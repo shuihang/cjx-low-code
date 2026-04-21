@@ -1,9 +1,9 @@
 import { isFunction, isValid } from '@cjx-low-code/shared'
-import { LifeCycle } from '../models'
+import { LifeCycle } from '../models/LifeCycle'
 import { isForm } from './checkers'
 import { GlobalState } from './constants'
-import type { AnyFunction } from '../types'
 import type { Form } from '../models'
+import type { AnyFunction } from '../types'
 
 export const createEffectHook = <F extends (payload: any, ...ctxs: any[]) => AnyFunction>(
   type: string,

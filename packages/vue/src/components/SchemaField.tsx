@@ -21,6 +21,14 @@ import type {
 import type { CreateComponentPublicInstanceWithMixins, PropType, VNode } from 'vue'
 import type { ISchema, SchemaTypes } from '@cjx-low-code/json-schema'
 
+const env = {
+  nonameId: 0
+}
+
+const getRandomName = () => {
+  return `NO_NAME_FIELD_$${env.nonameId++}`
+}
+
 const markupProps = {
   version: String,
   name: String,
@@ -103,7 +111,7 @@ export function _createSchemaField<
     },
     setup(props, { slots }) {
       const schemaRef = computed(() =>
-        Schema.isSchemaInstance(props.schema) ? props.schema : new Schema(props.schema)
+        Schema.isSchemaInstance(props.schema) ? props.schema : new Schema({})
       )
 
       provide(SchemaMarkupSymbol, schemaRef)
@@ -117,31 +125,24 @@ export function _createSchemaField<
         }))
       )
       return () => {
-        const children: VNode[] = []
-        if (slots.default) {
-          children.push(
-            _h(
-              'template',
-              {},
-              {
-                default: () => slots.default!()
-              }
-            )
-          )
+        env.nonameId = 0
+        const renderSlots = () => {
+          if (props.schema) {
+            schemaRef.value.children = props.schema
+            return null
+          }
+          return <template>{slots.default && slots.default!()}</template>
         }
-        children.push(
-          _h(
-            RecursionField,
-            {
-              attrs: {
-                ...props,
-                schema: schemaRef.value
-              }
-            },
-            {}
-          )
+
+        const renderChildren = () => {
+          return <RecursionField {...props} schema={schemaRef.value} />
+        }
+        return (
+          <Fragment>
+            {renderSlots()}
+            {renderChildren()}
+          </Fragment>
         )
-        return _h(Fragment, {}, { default: () => children })
       }
     }
   })
@@ -153,17 +154,25 @@ export function _createSchemaField<
       ...markupProps
     },
     setup(props, { slots }) {
+      const name = props.name || getRandomName()
       const parentRef = useSchemaMarkup()
-      if (!parentRef || !parentRef.value) return () => h('template', {}, {})
+
+      if (!parentRef || !parentRef.value) return () => <></>
 
       const schemaRef = shallowRef()
-
       watch(
         parentRef,
         () => {
+          // if (parentRef.value.type === 'object' || parentRef.value.type === 'void') {
+          //   schemaRef.value = parentRef.value.addProperty(name, resolveSchemaProps(props))
+          // } else if (parentRef.value.type === 'array') {
+          //   // const schema = appendArraySchema(resolveSchemaProps(props))
+          //   // schemaRef.value = Array.isArray(schema) ? schema[0] : schema
+          // }
           // console.log(parentRef.value)
           schemaRef.value = parentRef.value?.addSchema({
-            ...props
+            ...props,
+            name
           })
         },
         { immediate: true }

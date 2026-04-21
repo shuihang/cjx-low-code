@@ -8,7 +8,7 @@
   "unpkg": "dist/cjx-low-code.vue.umd.production.js",
   "jsdelivr": "dist/cjx-low-code.vue.umd.production.js",
   "jsnext:main": "esm",
-  "types": "esm/index.d.ts",
+  "types": "src/index.ts",
   "publishConfig": {
     "access": "public"
   },

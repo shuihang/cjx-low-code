@@ -13,7 +13,7 @@ export class BaseField<Decorator = any, Component = any, TextType = any> {
   decoratorProps!: Record<string, any>
   componentType!: Component
   componentProps!: Record<string, any>
-  slots: any
+  slots: Record<string, any>
 
   get component() {
     return [this.componentType, this.componentProps]
@@ -21,12 +21,12 @@ export class BaseField<Decorator = any, Component = any, TextType = any> {
 
   set component(value: FieldComponent<Component>) {
     const component = toArr(value)
-
     this.componentType = component[0]
     this.componentProps = component[1] || {}
   }
 
   get decorator() {
+    // console.log(this.decoratorType, this.decoratorProps)
     return [this.decoratorType, this.decoratorProps]
   }
 
