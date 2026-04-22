@@ -5,7 +5,7 @@
     <!-- :schema="schemaJson" -->
     <FormProvider :form="form">
       <Form>
-        <SchemaField :schema="schemaJson">
+        <SchemaField>
           <SchemaField.String
             title="andtv-input 姓名"
             name="userName"
@@ -27,6 +27,7 @@
 
           <SchemaField.Object
             name="test"
+            title="测试组件"
             component="ATestComp"
             :component-props="{
               type: 'text'
@@ -38,7 +39,7 @@
             }"
           >
             <SchemaField.Markup
-              name="testContent"
+              name="gg"
               title="gg"
               decorator="FormItem"
               :decorator-props="{
@@ -218,7 +219,11 @@ const { SchemaField, SchemaFieldMarkup, defineSchema } = createSchemaField({
 const form = createForm({
   initialValues: {
     userName: '张三',
-    email: '123@qq.com'
+    email: '123@qq.com',
+    test: {
+      gg: '测试内容'
+    },
+    gg: '测试内容'
   },
   effects: () => {
     onFieldChange('userName', (field, form) => {
@@ -244,7 +249,7 @@ const schemaJson = defineSchema([
   {
     title: '姓名1',
     name: 'name1',
-    type: 'string',
+    type: 'object',
     decorator: null,
     decoratorProps: {},
     component: 'ATestComp',
@@ -255,15 +260,45 @@ const schemaJson = defineSchema([
     },
     children: [
       {
-        title: 'ff',
-        name: 'ff',
+        title: 'F',
+        name: 'f',
         type: 'string',
-        decoratorProps: {},
+        decoratorProps: {
+          rules: [{ required: true, message: '请输入F' }]
+        },
         decorator: 'FormItem',
         component: 'Input',
         componentProps: {
           type: 'text'
         }
+      },
+      {
+        title: 'children-level-1',
+        name: 'childrenLevel1',
+        type: 'object',
+        decorator: null,
+        decoratorProps: {},
+        component: 'ATestComp',
+        slots: {
+          testCompSlot: () => {
+            return 'children-level-1'
+          }
+        },
+        children: [
+          {
+            title: 'children-level-2',
+            name: 'childrenLevel2',
+            type: 'string',
+            decoratorProps: {
+              rules: [{ required: true, message: '请输入children-level-2' }]
+            },
+            decorator: 'FormItem',
+            component: 'Input',
+            componentProps: {
+              type: 'text'
+            }
+          }
+        ]
       }
     ]
   },
@@ -271,7 +306,9 @@ const schemaJson = defineSchema([
     title: '姓名2',
     name: 'name2',
     type: 'string',
-    decoratorProps: {},
+    decoratorProps: {
+      rules: [{ required: true, message: '请输入姓名2' }]
+    },
     decorator: 'FormItem',
     component: 'Input',
     componentProps: {
@@ -291,6 +328,7 @@ const schemaJson = defineSchema([
 // }
 
 const submitForm = async () => {
+  console.log(form.state.values)
   await form.validate()
   console.log(form.state.values)
 }

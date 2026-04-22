@@ -97,79 +97,79 @@ export type ISchema<
   Validator = any,
   Message = any,
   ReactionField = any
-> =
-  | Stringify<{
-      version?: string
-      name?: string
-      title?: Message
-      description?: Message
-      default?: any
-      readOnly?: boolean
-      writeOnly?: boolean
-      type?: SchemaTypes
-      enum?: SchemaEnum<Message>
-      // multipleOf?: number
-      // maximum?: number
-      // minimum?: number
-      // maxLength?: number
-      // minLength?: number
-      pattern?: string | RegExp
-      // maxItems?: number
-      // minItems?: number
-      required?: string[] | boolean | string
-      // format?: string
-      $ref?: string
+> = Stringify<{
+  version?: string
+  name?: string
+  title?: Message
+  description?: Message
+  default?: any
+  readOnly?: boolean
+  writeOnly?: boolean
+  type?: SchemaTypes
+  enum?: SchemaEnum<Message>
+  // multipleOf?: number
+  // maximum?: number
+  // minimum?: number
+  // maxLength?: number
+  // minLength?: number
+  pattern?: string | RegExp
+  // maxItems?: number
+  // minItems?: number
+  required?: string[] | boolean | string
+  // format?: string
+  $ref?: string
 
-      children?: SchemaItems<
-        Decorator,
-        Component,
-        DecoratorProps,
-        ComponentProps,
-        Pattern,
-        Display,
-        Validator,
-        Message
-      >
+  children?: ISchema<
+    Decorator,
+    Component,
+    DecoratorProps,
+    ComponentProps,
+    Pattern,
+    Display,
+    Validator,
+    Message,
+    ReactionField
+  >[]
 
-      items?: SchemaItems<
-        Decorator,
-        Component,
-        DecoratorProps,
-        ComponentProps,
-        Pattern,
-        Display,
-        Validator,
-        Message
-      >
-    }> & {
-      value?: any
-      //展示状态
-      display?: Display
-      //校验器
-      validator?: Validator
-      //装饰器
-      decorator?: Decorator | (string & Record<string, unknown>) | ((...args: any[]) => any)
-      //装饰器属性
-      decoratorProps?: DecoratorProps
-      //组件
-      component?: Component | (string & Record<string, unknown>) | ((...args: any[]) => any)
-      //组件属性
-      componentProps?: ComponentProps
-      //组件响应器
-      reactions?: SchemaReactions<ReactionField>
-      //内容
-      slots?: ComponentSlots
+  items?: SchemaItems<
+    Decorator,
+    Component,
+    DecoratorProps,
+    ComponentProps,
+    Pattern,
+    Display,
+    Validator,
+    Message
+  >
+}> & {
+  value?: any
+  //展示状态
+  display?: Display
+  //校验器
+  validator?: Validator
+  //装饰器
+  decorator?: Decorator | (string & Record<string, unknown>) | ((...args: any[]) => any)
+  //装饰器属性
+  decoratorProps?: DecoratorProps
+  //组件
+  component?: Component | (string & Record<string, unknown>) | ((...args: any[]) => any)
+  //组件属性
+  componentProps?: ComponentProps
+  //组件响应器
+  reactions?: SchemaReactions<ReactionField>
+  //内容
+  slots?: ComponentSlots
 
-      data?: any
+  data?: any
 
-      visible?: boolean
+  visible?: boolean
 
-      hidden?: boolean
+  hidden?: boolean
 
-      disabled?: boolean
+  disabled?: boolean
 
-      editable?: boolean
-    }
+  editable?: boolean
+}
 
 export interface ISchemaFieldUpdateRequest {
   state?: Stringify<IGeneralFieldState>

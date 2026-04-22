@@ -14,9 +14,9 @@
   },
   "scripts": {
     "start": "vuepress dev docs",
-    "build": "rimraf -rf lib esm dist  && npm run build:cjs && npm run build:esm && npm run build:umd && node scripts/fix-schema-field-dts.js",
-    "build:cjs": "tsc --project tsconfig.build.json",
-    "build:esm": "tsc --project tsconfig.build.json --module es2015 --outDir esm",
+    "build": "rimraf -rf lib esm dist && rollup --config && node scripts/fix-schema-field-dts.js",
+    "build:cjs": "echo 'CJS is built by rollup'",
+    "build:esm": "echo 'ESM is built by rollup'",
     "build:umd": "rollup --config",
     "build:docs": "vuepress build docs"
   },

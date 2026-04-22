@@ -4,7 +4,7 @@ import { Schema } from '@cjx-low-code/json-schema'
 import { Fragment } from '../shared/fragment'
 import { useSchemaMarkup } from '../hooks'
 import { SchemaMarkupSymbol, SchemaOptionsSymbol } from '../shared/context'
-import _h from '../shared/h'
+import { h as _h } from '../shared/h'
 import RecursionField from './RecursionField'
 import type {
   ComponentClass,
@@ -18,7 +18,7 @@ import type {
   VueComponent,
   VueComponentPath
 } from '../types'
-import type { CreateComponentPublicInstanceWithMixins, PropType, VNode } from 'vue'
+import type { CreateComponentPublicInstanceWithMixins, PropType } from 'vue'
 import type { ISchema, SchemaTypes } from '@cjx-low-code/json-schema'
 
 const env = {
@@ -100,8 +100,7 @@ export function _createSchemaField<
     name: 'SchemaField',
     props: {
       schema: {
-        type: Array as PropType<ISchema[]>,
-        default: () => []
+        type: Array as PropType<ISchema[]>
       },
       components: {
         type: Object as PropType<any>,
@@ -111,9 +110,9 @@ export function _createSchemaField<
     },
     setup(props, { slots }) {
       const schemaRef = computed(() =>
-        Schema.isSchemaInstance(props.schema) ? props.schema : new Schema({})
+        Schema.isSchemaInstance(props.schema) ? props.schema : new Schema(props.schema || {})
       )
-
+      // console.log(schemaRef.value)
       provide(SchemaMarkupSymbol, schemaRef)
       provide(
         SchemaOptionsSymbol,
@@ -127,10 +126,7 @@ export function _createSchemaField<
       return () => {
         env.nonameId = 0
         const renderSlots = () => {
-          if (props.schema) {
-            schemaRef.value.children = props.schema
-            return null
-          }
+          if (props.schema) return null
           return <template>{slots.default && slots.default!()}</template>
         }
 
@@ -170,7 +166,7 @@ export function _createSchemaField<
           //   // schemaRef.value = Array.isArray(schema) ? schema[0] : schema
           // }
           // console.log(parentRef.value)
-          schemaRef.value = parentRef.value?.addSchema({
+          schemaRef.value = parentRef.value?.addSchemaChildren({
             ...props,
             name
           })

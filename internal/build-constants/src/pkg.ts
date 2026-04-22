@@ -1,5 +1,0 @@
-export const PKG_PREFIX = '@cjx-low-code'
-export const PKG_NAME = 'cjx-low-code'
-export const PKG_CAMELCASE_NAME = 'CjxLowCode'
-export const PKG_CAMELCASE_LOCAL_NAME = 'CjxLowCodeLocal'
-export const PKG_BRAND_NAME = 'CjxLowCode'

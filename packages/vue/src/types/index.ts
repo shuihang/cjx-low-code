@@ -56,8 +56,8 @@ export type VueComponentPropsByPathValue<
       : never
     : GetComponentProps<T[P]>
   : P extends keyof T
-  ? GetComponentProps<T[P]>
-  : never
+    ? GetComponentProps<T[P]>
+    : never
 
 // 根据组件路径获取组件类型（仅支持两层路径如 Input.Search）
 export type GetComponentByPath<
@@ -74,10 +74,10 @@ export type GetComponentByPath<
       : never
     : never
   : Path extends keyof T
-  ? T[Path] extends ComponentClass
-    ? T[Path]
+    ? T[Path] extends ComponentClass
+      ? T[Path]
+      : never
     : never
-  : never
 
 export type DecoratorType<T extends SchemaVueComponents> = {
   [K in VueComponentPath<T>]?: {
@@ -94,10 +94,11 @@ export type DecoratorType<T extends SchemaVueComponents> = {
 
 export type SchemaType<T extends Record<string, unknown>> = {
   [K in keyof T]: T[K] extends Record<string, unknown>
-    ? JsonSchema<unknown, unknown, unknown, unknown, unknown> & {
+    ? Omit<JsonSchema<unknown, unknown, unknown, unknown, unknown>, 'children'> & {
         component?: K
         componentProps?: T[K]['componentProps']
         slots?: T[K]['slots']
+        children?: SchemaType<T>[]
       } & T[K]['decorator']
     : never
 }[keyof T]
@@ -140,10 +141,10 @@ export type ExtractChildren<T> = T extends object
         ? string extends K
           ? never
           : number extends K
-          ? never
-          : symbol extends K
-          ? never
-          : K
+            ? never
+            : symbol extends K
+              ? never
+              : K
         : never]: T[K] extends ComponentClass ? T[K] : never
     }
   : Record<string, never>
@@ -201,40 +202,37 @@ export type ISchemaMarkupFieldProps<
     string,
     GeneralField
   >,
-  'type'
+  'type' | 'children'
 >
 
 // 缓存路径解析结果，避免同一 key 重复调用 GetComponentByPath
-export type ComponentPropsMapValue<
-  Components extends SchemaVueComponents,
-  P extends string
-> = GetComponentByPath<Components, P> extends infer C
-  ? C extends ComponentClass
-    ? GetComponentProps<C>
+export type ComponentPropsMapValue<Components extends SchemaVueComponents, P extends string> =
+  GetComponentByPath<Components, P> extends infer C
+    ? C extends ComponentClass
+      ? GetComponentProps<C>
+      : never
     : never
-  : never
 
-export type ComponentSlotsMapValue<
-  Components extends SchemaVueComponents,
-  P extends string
-> = GetComponentByPath<Components, P> extends infer C
-  ? C extends ComponentClass
-    ? {
-        [key in keyof ComponentSlots<C>]?:
-          | ((...args: Parameters<ComponentSlots<C>[key]>) => ReturnType<ComponentSlots<C>[key]>)
-          | SchemaSlotType
-      }
+export type ComponentSlotsMapValue<Components extends SchemaVueComponents, P extends string> =
+  GetComponentByPath<Components, P> extends infer C
+    ? C extends ComponentClass
+      ? {
+          [key in keyof ComponentSlots<C>]?:
+            | ((...args: Parameters<ComponentSlots<C>[key]>) => ReturnType<ComponentSlots<C>[key]>)
+            | SchemaSlotType
+        }
+      : never
     : never
-  : never
 
 export type ComponentPathToVueComponentPath<
   Components extends SchemaVueComponents,
   P extends string
-> = GetComponentByPath<Components, P> extends infer C
-  ? C extends ComponentClass
-    ? VueComponentTypeData<C, Components>
+> =
+  GetComponentByPath<Components, P> extends infer C
+    ? C extends ComponentClass
+      ? VueComponentTypeData<C, Components>
+      : never
     : never
-  : never
 
 export type FormModelOptions = {
   model: Record<string, unknown>

@@ -42,7 +42,7 @@ const presets = () => {
     resolve({ extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'] }),
     commonjs(),
     externalGlobals(externals, {
-      exclude: ['**/*.{less,sass,scss}']
+      exclude: ['**/*.{less,sass,scss}', '**/*.tsx']
     })
   ]
 }
@@ -94,6 +94,7 @@ export default (filename, targetName, ...plugins) => {
           id: filename
         },
         globals: {
+          vue: 'Vue',
           '@cjx-low-code/json-schema': 'CJXLowCode.JSONSchema'
         }
       },
@@ -111,6 +112,7 @@ export default (filename, targetName, ...plugins) => {
           id: filename
         },
         globals: {
+          vue: 'Vue',
           '@cjx-low-code/json-schema': 'CJXLowCode.JSONSchema'
         }
       },

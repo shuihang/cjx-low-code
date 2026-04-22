@@ -52,7 +52,10 @@ const arrayInstrumentations: Record<string, (...args: unknown[]) => unknown> = {
 })
 
 class BaseObservableHandler implements ProxyHandler<Target> {
-  constructor(protected readonly _isReadonly = false, protected readonly _isShallow = false) {}
+  constructor(
+    protected readonly _isReadonly = false,
+    protected readonly _isShallow = false
+  ) {}
 
   get(target: Target, key: string | symbol, receiver: object) {
     const proxyMap = this._isReadonly ? readonlyMap : observableMap

@@ -18,6 +18,4 @@ const compatibleCreateElement = (tag: Tag, data: VNodeData, components: RenderCh
   return hInVue3(tag, formatVue3VNodeData(data), components)
 }
 
-export default compatibleCreateElement
-
 export { compatibleCreateElement as h }

@@ -6,7 +6,7 @@ import type {
   IValidatorRule,
   JSXComponent
 } from '@cjx-low-code/core'
-import type { ISchema, ISchemaTransformerOptions, SchemaItems, SchemaTypes } from './types'
+import type { ISchema, ISchemaTransformerOptions, SchemaTypes } from './types'
 
 export type BaseField = Omit<
   ISchema,
@@ -23,15 +23,14 @@ export class Schema<
   Validator = any,
   Message = any,
   ReactionField = any
-> implements ISchema
-{
+> implements ISchema {
   parent?: Schema
   root?: Schema
   type?: SchemaTypes
   name!: string
   component?: Component
   componentProps?: ComponentProps
-  children?: SchemaItems<any, any, any, any, any, any, any, any>
+  children?: Schema<any, any, any, any, any, any, any, any>[]
 
   schema?: ISchema<
     Decorator,
@@ -46,7 +45,47 @@ export class Schema<
   >
 
   constructor(
-    json: ISchema<
+    json:
+      | ISchema<
+          Decorator,
+          Component,
+          DecoratorProps,
+          ComponentProps,
+          Pattern,
+          Display,
+          Validator,
+          Message,
+          ReactionField
+        >
+      | ISchema<
+          Decorator,
+          Component,
+          DecoratorProps,
+          ComponentProps,
+          Pattern,
+          Display,
+          Validator,
+          Message,
+          ReactionField
+        >[],
+    parent?: Schema
+  ) {
+    if (parent) {
+      this.parent = parent
+      this.root = parent.root
+    } else {
+      this.root = this
+    }
+
+    if (!isArray(json)) {
+      this.type = json.type
+      this.name = json.name
+    }
+    return this.fromJSON(json)
+  }
+
+  setChildren = (
+    children: ISchema<
       Decorator,
       Component,
       DecoratorProps,
@@ -56,21 +95,19 @@ export class Schema<
       Validator,
       Message,
       ReactionField
-    >,
+    >[],
     parent?: Schema
-  ) {
-    if (parent) {
-      this.parent = parent
-      this.root = parent.root
-    } else {
-      this.root = this
-    }
-    this.type = json.type
-    this.name = json.name
-    return this.fromJSON(json)
+  ) => {
+    this.children = this.children || []
+    children.forEach((item) => {
+      const child = parent?.addSchemaChildren(item)
+      if (item.children && isArray(item.children)) {
+        this.setChildren(item.children as any, child)
+      }
+    })
   }
 
-  addSchema = (
+  addSchemaChildren = (
     schema: ISchema<
       Decorator,
       Component,
@@ -86,17 +123,16 @@ export class Schema<
     const index = this.children?.length || 0
     this.children = this.children || []
     this.children[index] = new Schema(schema, this)
-    return this.children[index]
+    return this.children[index] as Schema
   }
 
-  removeSchema = (index: number) => {
-    // if (!this.schemas) return this
-    // const schema = this.schemas[index]
-    // this.schemas.splice(index, 1)
-    // return schema
+  removeSchemaChildren = (index: number) => {
+    if (!this.children) return this
+    this.children.splice(index, 1)
+    return this
   }
 
-  setSchemas = (
+  setSchemaChildren = (
     index: number,
     schema: ISchema<
       Decorator,
@@ -110,9 +146,9 @@ export class Schema<
       ReactionField
     >
   ) => {
-    // if (!this.schemas) return this
-    // this.schemas[index] = schema
-    // return this
+    if (!this.children) return this
+    this.children[index] = new Schema(schema, this)
+    return this.children[index]
   }
 
   static isSchemaInstance = (value: any): value is Schema => {
@@ -197,22 +233,43 @@ export class Schema<
   }
 
   fromJSON = (
-    json: ISchema<
-      Decorator,
-      Component,
-      DecoratorProps,
-      ComponentProps,
-      Pattern,
-      Display,
-      Validator,
-      Message,
-      ReactionField
-    >
+    json:
+      | ISchema<
+          Decorator,
+          Component,
+          DecoratorProps,
+          ComponentProps,
+          Pattern,
+          Display,
+          Validator,
+          Message,
+          ReactionField
+        >
+      | ISchema<
+          Decorator,
+          Component,
+          DecoratorProps,
+          ComponentProps,
+          Pattern,
+          Display,
+          Validator,
+          Message,
+          ReactionField
+        >[]
   ) => {
     if (!json) return this
     if (Schema.isSchemaInstance(json)) return json
-    // this.schemas = [json]
-    this.schema = json
+
+    if (isArray(json)) {
+      json.forEach((item) => {
+        const parent = this.addSchemaChildren(item)
+        if (item.children && isArray(item.children)) {
+          this.setChildren(item.children as any, parent)
+        }
+      })
+    } else {
+      this.schema = json
+    }
     return this
   }
 }

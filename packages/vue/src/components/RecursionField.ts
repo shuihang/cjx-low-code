@@ -9,7 +9,7 @@ import ObjectField from './ObjectField'
 // import ArrayField from './ArrayField'
 // import VoidField from './VoidField'
 import type { ISchema } from '@cjx-low-code/json-schema'
-import type { PropType, VNode } from 'vue'
+import type { PropType } from 'vue'
 import type { GeneralField } from '@cjx-low-code/core'
 
 const resolveEmptySlot = (slots: Record<any, (...args: any[]) => any[]>) => {
@@ -54,6 +54,7 @@ const RecursionField = defineComponent({
       const fieldProps = fieldPropsRef.value
 
       const generateSlotsByChildren = () => {
+        // console.log(fieldSchemaRef.value)
         const schemaList = fieldSchemaRef.value.children || []
 
         if (!schemaList.length) return {}

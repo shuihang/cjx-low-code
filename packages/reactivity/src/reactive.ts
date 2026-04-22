@@ -1,5 +1,7 @@
 import { currentReaction } from './reaction'
+import { ObservableFlags } from './constants'
 import type { Reaction } from './reaction'
+import type { Target } from './observable'
 
 // 存储所有响应式对象的 WeakMap
 // key: 原始对象 -> value: 该对象的属性依赖 Map
@@ -11,6 +13,11 @@ export const observableMap = new WeakMap<object, Map<PropertyKey, Set<Reaction>>
 function createObservableHandler<T extends object>(target: T): ProxyHandler<T> {
   return {
     get(target, key, receiver) {
+      if (key === ObservableFlags.IS_OBSERVABLE) {
+        // 当你访问 __v_isObservable 属性时，返回是否响应式
+        return true
+      }
+
       const value = Reflect.get(target, key, receiver)
       // console.log('get ------', key, currentReaction)
       // 如果有正在执行的 Reaction，建立依赖关系
@@ -79,14 +86,34 @@ function trigger(target: object, key: PropertyKey): void {
 // 标记 Observable 对象的 Symbol
 const OBSERVABLE_SYMBOL = Symbol('observable')
 
+const testFlag = false
+
 /**
  * 将普通对象转换为响应式对象
  */
-export function observable<T extends object>(obj: T): T {
+export function observable<T extends object>(target: T): T {
   // 已经是响应式对象，直接返回
-  if (isObservable(obj)) return obj
+  if (isObservable(target)) return target
 
-  const proxy = new Proxy(obj, createObservableHandler(obj))
+  // const existingProxy = observableMap.get(target)
+  // console.log('existingProxy', target, existingProxy)
+  // if (target.name === 'gg') {
+  //   if (testFlag) {
+  //     return target
+  //   }
+  //   testFlag = true
+  // }
+  // if (existingProxy) {
+  //   console.log('existingProxy', target, observableMap)
+  //   return existingProxy
+  // }
+
+  // if (target[ObservableFlags.IS_OBSERVABLE] && target[ObservableFlags.RAW]) {
+  //   // 判断是否是代理对象 observable(observable(target)) 防止嵌套代理
+  //   return target
+  // }
+
+  const proxy = new Proxy(target, createObservableHandler(target))
 
   // 标记为响应式对象
   Object.defineProperty(proxy, OBSERVABLE_SYMBOL, {
@@ -108,3 +135,7 @@ export function isObservable(obj: unknown): obj is object {
     (obj as { [OBSERVABLE_SYMBOL]?: boolean })[OBSERVABLE_SYMBOL] === true
   )
 }
+
+// export function isObservable(value: any) {
+//   return !!(value && (value as Target)[ObservableFlags.IS_OBSERVABLE])
+// }

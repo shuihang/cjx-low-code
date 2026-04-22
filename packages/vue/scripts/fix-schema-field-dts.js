@@ -6,7 +6,7 @@ const fs = require('fs')
 const path = require('path')
 const colors = require('colors')
 
-const srcFile = path.resolve(__dirname, '../src/components/SchemaField.ts')
+const srcFile = path.resolve(__dirname, '../src/components/SchemaField.tsx')
 const dtsFiles = [
   path.resolve(__dirname, '../esm/components/SchemaField.d.ts'),
   path.resolve(__dirname, '../lib/components/SchemaField.d.ts')

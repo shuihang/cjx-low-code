@@ -1,5 +1,5 @@
 import { defineComponent, inject, provide, ref, shallowRef, watch } from 'vue'
-import { FormPath, each, extend } from '@cjx-low-code/shared'
+import { FormPath, each, isFunction, isObject, isString } from '@cjx-low-code/shared'
 import { observer } from '@cjx-low-code/reactivity-vue'
 import { useAttach, useField, useForm } from '../hooks'
 import { FieldSymbol, SchemaOptionsSymbol } from '../shared/context'
@@ -32,11 +32,13 @@ const resolveComponent = (render: () => unknown[], extra?: any) => {
   if (extra === undefined || extra === null) {
     return render
   }
-  if (typeof extra === 'string') {
+  if (isString(extra)) {
     return () => [...render(), extra]
   }
 
-  return () => [...render(), h(extra, {}, {})]
+  if (isFunction(extra)) {
+    return extra
+  }
 }
 
 const mergeSlots = (
@@ -49,7 +51,7 @@ const mergeSlots = (
     if (!content) {
       return {}
     }
-    if (typeof content === 'string') {
+    if (isString(content)) {
       return {
         default: () => [content]
       }
@@ -66,14 +68,14 @@ const mergeSlots = (
     patchedSlots[name] = patchSlot(name)
   })
 
-  if (content && typeof content === 'object') {
+  if (content && isObject(content)) {
     Object.keys(content).forEach((key) => {
       const child = content[key]
       const slot = patchedSlots[key] ?? (() => [])
       // console.log(1111, child, slot)
       patchedSlots[key] = resolveComponent(slot, child)
     })
-
+    // console.log(patchedSlots)
     return patchedSlots
   }
 
@@ -220,6 +222,7 @@ const ReactiveField = observer(
             class: className,
             on: events
           }
+          console.log(1111, field.name, field.value)
           return h(component, componentData, mergedSlots)
         }
 
