@@ -57,8 +57,12 @@ export class Field<
 
     this.name = props.name
     this.form = form
-    this.address = FormPath.parse(props.name)
-    this.path = props.name
+    // 手动拼接完整路径（FormPath.parse 的 base 参数在当前实现中未生效）
+    const basePath = (address as any)?.entire || ''
+    const fullPath = basePath ? `${basePath}.${props.name}` : props.name
+    this.address = FormPath.parse(fullPath)
+    this.path = fullPath
+    console.log('Field initialized with path:', basePath, fullPath, `naem--: ${props.name}`)
     this.props = props
     this.slots = props.slots || {}
 

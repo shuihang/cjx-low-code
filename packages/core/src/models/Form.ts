@@ -115,12 +115,14 @@ export class Form<ValueType extends object = any> {
     props: IFieldProps<Decorator, Component>
   ): Field<Decorator, Component> => {
     const address = FormPath.parse(props.basePath)
+    const basePath = (address as any)?.entire || ''
+    const fullPath = basePath ? `${basePath}.${props.name}` : props.name
     const field = new Field(
       address,
       {
         ...props,
-        // 从表单初始值中获取字段值
-        value: props.value ?? this.state.initialValues[props.name]
+        // 从表单初始值中按完整路径获取字段值
+        value: props.value ?? FormPath.getIn(this.state.initialValues, fullPath)
       },
       this
     )
@@ -135,17 +137,17 @@ export class Form<ValueType extends object = any> {
     field.state.readOnly = field.state.readOnly || this.state.readOnly
 
     // 监听字段值变化，同步到表单 values
-    this.disposers.push(
-      autorun(() => {
-        const value = field.state.value
-        // batch(() => {
-        this.state.values[props.name] = value
-        // 触发 watchValuse 回调函数
-        if (this.watchValuse) {
-          this.watchValuse(this, field)
-        }
-      })
-    )
+    const disposer = autorun(() => {
+      const value = field.state.value
+      // 按完整路径设置值，如 'test.gg'
+      FormPath.setIn(this.state.values, field.path, value)
+      // 触发 watchValuse 回调函数
+      if (this.watchValuse) {
+        this.watchValuse(this, field)
+      }
+    })
+    this.disposers.push(disposer)
+    ;(field as any)._valueDisposer = disposer
 
     // 触发字段初始化生命周期钩子
     this.lifecycles.forEach((lifecycle) => {
@@ -161,12 +163,14 @@ export class Form<ValueType extends object = any> {
     props: IFieldProps<Decorator, Component>
   ): ObjectField<Decorator, Component> => {
     const address = FormPath.parse(props.basePath)
+    const basePath = (address as any)?.entire || ''
+    const fullPath = basePath ? `${basePath}.${props.name}` : props.name
     const field = new ObjectField(
       address,
       {
         ...props,
-        // 从表单初始值中获取字段值
-        value: props.value ?? this.state.initialValues[props.name]
+        // 从表单初始值中按完整路径获取字段值
+        value: (props.value ?? FormPath.getIn(this.state.initialValues, fullPath)) || {}
       },
       this
     )
@@ -180,17 +184,17 @@ export class Form<ValueType extends object = any> {
     field.state.readOnly = field.state.readOnly || this.state.readOnly
 
     // 监听字段值变化，同步到表单 values
-    this.disposers.push(
-      autorun(() => {
-        const value = field.state.value
-        // batch(() => {
-        this.state.values[props.name] = value
-        // 触发 watchValuse 回调函数
-        if (this.watchValuse) {
-          this.watchValuse(this, field)
-        }
-      })
-    )
+    const disposer = autorun(() => {
+      const value = field.state.value
+      // 按完整路径设置值，如 'test'
+      FormPath.setIn(this.state.values, field.path, value)
+      // 触发 watchValuse 回调函数
+      if (this.watchValuse) {
+        this.watchValuse(this, field)
+      }
+    })
+    this.disposers.push(disposer)
+    ;(field as any)._valueDisposer = disposer
 
     // 触发字段初始化生命周期钩子
     this.lifecycles.forEach((lifecycle) => {
@@ -210,14 +214,30 @@ export class Form<ValueType extends object = any> {
   removeField(name: string): void {
     const field = this.fields.get(name)
     if (field) {
+      // 清理字段值同步的 autorun
+      const disposer = (field as any)._valueDisposer
+      if (disposer) {
+        disposer()
+        const idx = this.disposers.indexOf(disposer)
+        if (idx > -1) this.disposers.splice(idx, 1)
+      }
+
       field.onUnmount()
       this.fields.delete(name)
       const index = this.fieldList.indexOf(field)
       if (index > -1) {
         this.fieldList.splice(index, 1)
       }
-      // 从 values 中移除
-      delete this.state.values[name]
+      // 从 values 中按完整路径移除
+      const segments = FormPath.parse(field.path).segments
+      let source = this.state.values
+      for (let i = 0; i < segments.length - 1; i++) {
+        if (!source || typeof source !== 'object') break
+        source = source[segments[i]]
+      }
+      if (source && typeof source === 'object') {
+        delete source[segments[segments.length - 1]]
+      }
       delete this.state.errors[name]
     }
   }

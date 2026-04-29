@@ -42,7 +42,7 @@ export type ComponentMap = Record<string, ComponentClass | VueComponent>
 
 export type ComponentClass = abstract new (...args: unknown[]) => any
 
-export type GetComponentProps<T extends ComponentClass> = InstanceType<T>['$props']
+export type ComponentProps<T extends ComponentClass> = InstanceType<T>['$props']
 
 export type ComponentSlots<T extends ComponentClass> = InstanceType<T>['$slots']
 
@@ -54,9 +54,9 @@ export type VueComponentPropsByPathValue<
     ? Rest extends VueComponentPath<T[Key]>
       ? VueComponentPropsByPathValue<T[Key], Rest>
       : never
-    : GetComponentProps<T[P]>
+    : ComponentProps<T[P]>
   : P extends keyof T
-    ? GetComponentProps<T[P]>
+    ? ComponentProps<T[P]>
     : never
 
 // 根据组件路径获取组件类型（仅支持两层路径如 Input.Search）
@@ -88,7 +88,7 @@ export type DecoratorType<T extends SchemaVueComponents> = {
     /**
      * 容器组件属性
      */
-    decoratorProps?: T[K] extends ComponentClass ? Partial<GetComponentProps<T[K]>> : RecordNever
+    decoratorProps?: T[K] extends ComponentClass ? Partial<ComponentProps<T[K]>> : RecordNever
   }
 }[VueComponentPath<T>]
 
@@ -107,11 +107,11 @@ export type VueComponentTypeData<
   Component extends ComponentClass,
   Components extends SchemaVueComponents
 > = {
-  componentProps?: Partial<GetComponentProps<Component>>
+  componentProps?: Partial<ComponentProps<Component>>
   decorator?:
     | DecoratorType<Components>
     | {
-        decorator?: '-' | null | undefined
+        decorator?: null | undefined
         decoratorProps?: {
           [K: string]: never
         }
@@ -147,7 +147,7 @@ export type ExtractChildren<T> = T extends object
               : K
         : never]: T[K] extends ComponentClass ? T[K] : never
     }
-  : Record<string, never>
+  : RecordNever
 
 export type SchemaSlotType = string | number | VNode | VNode[]
 
@@ -182,10 +182,10 @@ export type ISchemaMarkupFieldProps<
     Decorator,
     Component,
     Decorator extends ComponentClass
-      ? GetComponentProps<Decorator>
+      ? ComponentProps<Decorator>
       : (ComponentPropsMap & Record<string, any>)[Decorator & string],
     Component extends ComponentClass
-      ? GetComponentProps<Component>
+      ? ComponentProps<Component>
       : (ComponentPropsMap & Record<string, any>)[Component & string],
     Component extends ComponentClass
       ? {
@@ -209,7 +209,7 @@ export type ISchemaMarkupFieldProps<
 export type ComponentPropsMapValue<Components extends SchemaVueComponents, P extends string> =
   GetComponentByPath<Components, P> extends infer C
     ? C extends ComponentClass
-      ? GetComponentProps<C>
+      ? ComponentProps<C>
       : never
     : never
 

@@ -102,7 +102,7 @@ export function connectFormModel<T extends VueComponent>(
     ...target,
     setup(props: Record<string, any>, context) {
       const { model } = useFormAdapter({ ...options, model: props.model || {} })
-      return target?.setup?.({ ...props, model: model.value }, context)
+      return target?.setup?.({ ...props, model }, context)
     }
   })
 

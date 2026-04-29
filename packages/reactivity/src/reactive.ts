@@ -7,6 +7,12 @@ import type { Target } from './observable'
 // key: 原始对象 -> value: 该对象的属性依赖 Map
 export const observableMap = new WeakMap<object, Map<PropertyKey, Set<Reaction>>>()
 
+// 独立的 Proxy 缓存：原始对象 -> Proxy
+const proxyCache = new WeakMap<object, object>()
+
+// 独立的 Proxy 标记集合
+const observableProxySet = new WeakSet<object>()
+
 /**
  * 创建 Observable 对象的 Proxy Handler
  */
@@ -55,6 +61,7 @@ function createObservableHandler<T extends object>(target: T): ProxyHandler<T> {
 
       // 值发生变化时，触发依赖更新
       if (oldValue !== value) {
+        // console.log('trigger ------', key, value)
         trigger(target, key)
       }
 
@@ -83,11 +90,6 @@ function trigger(target: object, key: PropertyKey): void {
   }
 }
 
-// 标记 Observable 对象的 Symbol
-const OBSERVABLE_SYMBOL = Symbol('observable')
-
-const testFlag = false
-
 /**
  * 将普通对象转换为响应式对象
  */
@@ -95,32 +97,22 @@ export function observable<T extends object>(target: T): T {
   // 已经是响应式对象，直接返回
   if (isObservable(target)) return target
 
-  // const existingProxy = observableMap.get(target)
-  // console.log('existingProxy', target, existingProxy)
-  // if (target.name === 'gg') {
-  //   if (testFlag) {
-  //     return target
-  //   }
-  //   testFlag = true
-  // }
-  // if (existingProxy) {
-  //   console.log('existingProxy', target, observableMap)
-  //   return existingProxy
-  // }
+  // 从独立的缓存中查找
+  const existingProxy = proxyCache.get(target)
+  if (existingProxy) {
+    return existingProxy as T
+  }
 
-  // if (target[ObservableFlags.IS_OBSERVABLE] && target[ObservableFlags.RAW]) {
-  //   // 判断是否是代理对象 observable(observable(target)) 防止嵌套代理
-  //   return target
-  // }
+  if (target[ObservableFlags.IS_OBSERVABLE] && target[ObservableFlags.RAW]) {
+    // 判断是否是代理对象 observable(observable(target)) 防止嵌套代理
+    return target
+  }
 
   const proxy = new Proxy(target, createObservableHandler(target))
 
-  // 标记为响应式对象
-  Object.defineProperty(proxy, OBSERVABLE_SYMBOL, {
-    value: true,
-    enumerable: false,
-    configurable: false
-  })
+  // 缓存并标记为响应式对象
+  proxyCache.set(target, proxy)
+  observableProxySet.add(proxy)
 
   return proxy
 }
@@ -129,11 +121,7 @@ export function observable<T extends object>(target: T): T {
  * 判断对象是否为响应式对象
  */
 export function isObservable(obj: unknown): obj is object {
-  return (
-    typeof obj === 'object' &&
-    obj !== null &&
-    (obj as { [OBSERVABLE_SYMBOL]?: boolean })[OBSERVABLE_SYMBOL] === true
-  )
+  return typeof obj === 'object' && obj !== null && observableProxySet.has(obj)
 }
 
 // export function isObservable(value: any) {

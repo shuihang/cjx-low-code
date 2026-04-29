@@ -110,12 +110,14 @@ const ReactiveField = observer(
       const fieldRef = shallowRef(createField()) as Ref<GeneralField>
 
       watch(
-        () => props.fieldProps,
-        (newProps, oldProps) => {
-          if (fieldRef.value && oldProps.name) {
-            formRef?.value?.removeField(oldProps.name)
+        () => props.fieldProps?.name,
+        (newName, oldName) => {
+          if (newName !== oldName) {
+            if (fieldRef.value && oldName) {
+              formRef?.value?.removeField(oldName)
+            }
+            fieldRef.value = createField()
           }
-          fieldRef.value = createField()
         }
       )
       useAttach(fieldRef)
@@ -160,12 +162,12 @@ const ReactiveField = observer(
           const { style, class: className, ...restAttrs } = componentAttrs
 
           const componentData = {
-            attrs: { ...restAttrs },
+            attrs: { ...restAttrs, prop: field.path },
             style,
             class: { ...className },
             on: events
           }
-
+          // console.log('finalComponent', field.name, field)
           return h(finalComponent, componentData, {
             default: () => childNodes
           })
@@ -222,7 +224,7 @@ const ReactiveField = observer(
             class: className,
             on: events
           }
-          console.log(1111, field.name, field.value)
+          // console.log(1111, field.name, field.value)
           return h(component, componentData, mergedSlots)
         }
 

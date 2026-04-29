@@ -10,8 +10,10 @@ export const useFormAdapter = (options: FormModelOptions) => {
 
   if (formRef?.value) {
     formRef.value.watchValuse = (form, field) => {
-      model.value[field.name] = form.state.values[field.name]
-      formRef.value?.validateFields && formRef.value.validateFields!([field.name])
+      model.value = {
+        ...form.state.values
+      }
+      formRef.value?.validateFields && formRef.value.validateFields!([field.path])
     }
     nextTick(() => {
       if (instance?.exposed) {

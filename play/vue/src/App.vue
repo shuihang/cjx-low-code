@@ -50,7 +50,7 @@
           </SchemaField.Object>
 
           <!-- 评分 -->
-          <!-- <SchemaField.Number
+          <SchemaField.Number
             title="评分"
             name="rate"
             decorator="FormItem"
@@ -59,9 +59,9 @@
             }"
             component="Rate"
             :component-props="{}"
-          /> -->
+          />
 
-          <!-- <SchemaField.Markup
+          <SchemaField.Markup
             title="单选框"
             name="radio"
             decorator="FormItem"
@@ -81,9 +81,9 @@
                 }
               ]
             }"
-          /> -->
+          />
 
-          <!-- <SchemaField.Markup
+          <SchemaField.Markup
             title="复选框"
             name="checkbox"
             decorator="FormItem"
@@ -103,9 +103,9 @@
                 }
               ]
             }"
-          /> -->
+          />
 
-          <!-- <SchemaField.Markup
+          <SchemaField.Markup
             title="选择"
             name="select"
             decorator="FormItem"
@@ -126,9 +126,9 @@
               ],
               clearable: true
             }"
-          /> -->
+          />
 
-          <!-- <SchemaField.String
+          <SchemaField.String
             title="Element Plus Input"
             name="email"
             decorator="FormItem"
@@ -142,11 +142,11 @@
             :slots="{
               suffix: '😋'
             }"
-          /> -->
+          />
 
-          <!-- <SchemaFieldMarkup /> -->
+          <SchemaFieldMarkup />
 
-          <!-- <SchemaFieldMarkup
+          <SchemaFieldMarkup
             title="11"
             name="a"
             decorator="FormItem"
@@ -158,18 +158,11 @@
             :slots="{
               suffix: '😋'
             }"
-          /> -->
+          />
         </SchemaField>
-
-        <!-- <Test /> -->
       </Form>
     </FormProvider>
 
-    <!-- <form-item name="f" class="--f" :rules="[{ required: true, message: '请输入11' }]">
-        <Input placeholder="请输入11" />
-      </form-item> -->
-
-    <!-- <Button type="primary" @click="submitForm">Submit</Button> -->
     <Button type="primary" @click="submitForm">提交</Button>
   </div>
 </template>
@@ -199,13 +192,13 @@ const { SchemaField, SchemaFieldMarkup, defineSchema } = createSchemaField({
     CInput: Input,
     DInput: Input,
     EInput: Input,
-    FInput: Input,
-    GInput: Input,
-    HInput: Input,
-    IInput: Input,
-    JInput: Input,
-    XInput: Input,
-    KInput: Input,
+    // FInput: Input,
+    // GInput: Input,
+    // HInput: Input,
+    // IInput: Input,
+    // JInput: Input,
+    // XInput: Input,
+    // KInput: Input,
     Select,
     ElInput,
     Rate,
@@ -219,11 +212,10 @@ const { SchemaField, SchemaFieldMarkup, defineSchema } = createSchemaField({
 const form = createForm({
   initialValues: {
     userName: '张三',
-    email: '123@qq.com',
-    test: {
-      gg: '测试内容'
-    },
-    gg: '测试内容'
+    email: '123@qq.com'
+    // test: {
+    //   gg: '11'
+    // }
   },
   effects: () => {
     onFieldChange('userName', (field, form) => {
@@ -247,8 +239,8 @@ const form = createForm({
 
 const schemaJson = defineSchema([
   {
-    title: '姓名1',
-    name: 'name1',
+    title: 'obj',
+    name: 'obj',
     type: 'object',
     decorator: null,
     decoratorProps: {},
@@ -273,24 +265,24 @@ const schemaJson = defineSchema([
         }
       },
       {
-        title: 'children-level-1',
-        name: 'childrenLevel1',
+        title: 'objSon',
+        name: 'objSon',
         type: 'object',
         decorator: null,
         decoratorProps: {},
         component: 'ATestComp',
         slots: {
           testCompSlot: () => {
-            return 'children-level-1'
+            return 'objSon'
           }
         },
         children: [
           {
-            title: 'children-level-2',
-            name: 'childrenLevel2',
+            title: 'children-level',
+            name: 'childrenLevel',
             type: 'string',
             decoratorProps: {
-              rules: [{ required: true, message: '请输入children-level-2' }]
+              rules: [{ required: true, message: '请输入children-level' }]
             },
             decorator: 'FormItem',
             component: 'Input',
@@ -303,11 +295,11 @@ const schemaJson = defineSchema([
     ]
   },
   {
-    title: '姓名2',
-    name: 'name2',
+    title: '姓名',
+    name: 'name',
     type: 'string',
     decoratorProps: {
-      rules: [{ required: true, message: '请输入姓名2' }]
+      rules: [{ required: true, message: '请输入姓名' }]
     },
     decorator: 'FormItem',
     component: 'Input',

@@ -25,7 +25,7 @@ export enum ObservableFlags {
   /**
    * 是否为响应式标记。如果一个对象是响应式代理，那么这个代理对象上会有这个标记，并且值为 `true`。
    * #### 应用场景:
-   * 身份识别：这是 `isReactive()` 工具函数的核心实现原理。当你调用 `isReactive(obj)` 时，它内部就是检查 `obj[ReactiveFlags.IS_REACTIVE]` 是否为 `true`。
+   * 身份识别：这是 `isObservable()` 工具函数的核心实现原理。当你调用 `isObservable(obj)` 时，它内部就是检查 `obj[ObservableFlags.IS_OBSERVABLE]` 是否为 `true`。
    */
   IS_OBSERVABLE = '__v_isObservable',
   /**
