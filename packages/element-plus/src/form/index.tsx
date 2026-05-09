@@ -1,8 +1,27 @@
-import { defineComponent, getCurrentInstance, h, nextTick, reactive, ref } from 'vue'
-import { ElForm } from 'element-plus'
-import { connectFormModel, useForm } from '@cjx-low-code/vue'
+import { defineComponent, h } from 'vue'
+import { ElForm, ElRow, formEmits, formProps } from 'element-plus'
+import { connectFormModel, connectSetup } from '@cjx-low-code/vue'
+import { extend, omit } from '@cjx-low-code/shared'
 
-export const Form = connectFormModel(ElForm, {
+const FormComponent = defineComponent({
+  ...omit(ElForm, []),
+  props: extend({}, formProps),
+  emits: formEmits,
+  setup(props, context) {
+    const Component = connectSetup(ElForm)
+    return () =>
+      h(
+        Component,
+        {
+          props,
+          context
+        },
+        h(ElRow, {}, context.slots)
+      )
+  }
+})
+
+export const Form = connectFormModel(FormComponent, {
   validateFieldsKey: 'validateField'
 })
 

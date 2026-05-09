@@ -66,6 +66,7 @@
             name="radio"
             decorator="FormItem"
             :decorator-props="{
+              labelCol: 12,
               rules: [{ required: true, message: '请选择单选框' }]
             }"
             component="RadioGroup"
@@ -88,6 +89,7 @@
             name="checkbox"
             decorator="FormItem"
             :decorator-props="{
+              labelCol: 12,
               rules: [{ required: true, message: '请选择复选框' }]
             }"
             component="CheckboxGroup"
@@ -192,11 +194,11 @@ const { SchemaField, SchemaFieldMarkup, defineSchema } = createSchemaField({
     CInput: Input,
     DInput: Input,
     EInput: Input,
-    // FInput: Input,
-    // GInput: Input,
-    // HInput: Input,
-    // IInput: Input,
-    // JInput: Input,
+    FInput: Input,
+    GInput: Input,
+    HInput: Input,
+    IInput: Input,
+    JInput: Input,
     // XInput: Input,
     // KInput: Input,
     Select,

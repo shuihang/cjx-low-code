@@ -48,6 +48,7 @@
     "ts-import-plugin": "^2.0.0",
     "ts-node": "^10.9.2",
     "ttypescript": "^1.5.15",
+    "vitepress": "1.6.4",
     "vue": "^3.5.4",
     "vuepress-plugin-typescript": "^0.3.1"
   },

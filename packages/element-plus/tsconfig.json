@@ -3,6 +3,7 @@
   "compilerOptions": {
     "outDir": "./lib",
     "skipLibCheck": true,
+    "jsx": "preserve",
     "paths": {
       "@formily/*": ["../../packages/*"]
     },

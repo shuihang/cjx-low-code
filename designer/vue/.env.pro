@@ -1,0 +1,22 @@
+# 本地开发环境
+NODE_ENV=development
+
+VITE_DEV=true
+
+# 请求路径
+VITE_BASE_URL='http://192.168.0.66:48080'
+
+# 上传路径
+VITE_UPLOAD_URL='http://192.168.0.66:48080/admin-api/system/file/upload'
+# 预览路径
+VITE_PREVIEW_URL='http://192.168.0.66:48080/admin-api/system/file/getImage?id='
+
+# 接口前缀
+VITE_API_BASEPATH=/dev-api
+
+# 接口地址
+VITE_API_URL=/admin-api
+
+# 打包路径
+VITE_BASE_PATH=/
+

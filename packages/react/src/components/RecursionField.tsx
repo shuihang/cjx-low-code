@@ -22,7 +22,7 @@ const useBasePath = (props: IRecursionFieldProps) => {
 
 export const RecursionField: ReactFC<IRecursionFieldProps> = (props) => {
   const basePath = useBasePath(props)
-  const fieldSchema = useMemo(() => new Schema(props.schema.schemas), [props.schema.schemas])
+  const fieldSchema = useMemo(() => new Schema(props.schema), [props.schema])
   const fieldProps = useFieldProps(fieldSchema)
   console.log('fieldProps', fieldProps)
 
@@ -64,7 +64,7 @@ export const RecursionField: ReactFC<IRecursionFieldProps> = (props) => {
   // }
 
   const render = () => {
-    const schemas = Schema.getSchemas(fieldSchema)
+    const schemas = [] // Schema.getSchemas(fieldSchema)
 
     if (!schemas.length) return
 

@@ -230,7 +230,7 @@ export class Form<ValueType extends object = any> {
       }
       // 从 values 中按完整路径移除
       const segments = FormPath.parse(field.path).segments
-      let source = this.state.values
+      let source: Record<string, unknown> | unknown = this.state.values
       for (let i = 0; i < segments.length - 1; i++) {
         if (!source || typeof source !== 'object') break
         source = source[segments[i]]

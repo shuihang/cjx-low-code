@@ -6,6 +6,7 @@ import { useField, useSchemaOptions } from '../hooks'
 import { h } from '../shared/h'
 import Field from './Field'
 import ObjectField from './ObjectField'
+import RenderSlots from './RenderSlots'
 // import ArrayField from './ArrayField'
 // import VoidField from './VoidField'
 import type { ISchema } from '@cjx-low-code/json-schema'
@@ -13,7 +14,7 @@ import type { PropType } from 'vue'
 import type { GeneralField } from '@cjx-low-code/core'
 
 const resolveEmptySlot = (slots: Record<any, (...args: any[]) => any[]>) => {
-  return Object.keys(slots).length ? h('div', { style: 'display:contents;' }, slots) : undefined
+  return Object.keys(slots).length ? h(RenderSlots, {}, slots) : undefined
 }
 
 const RecursionField = defineComponent({

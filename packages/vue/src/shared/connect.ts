@@ -3,7 +3,7 @@ import { observer } from '@cjx-low-code/reactivity-vue'
 import { FormPath, each, isFunction, isString, isValid } from '@cjx-low-code/shared'
 import { useField, useFormAdapter } from '../hooks'
 import { h } from '../shared/h'
-import type { SetupContext } from 'vue'
+import type { PropType, SetupContext } from 'vue'
 import type { Field, GeneralField } from '@cjx-low-code/core'
 import type { FormModelOptions, VueComponent, VueComponentProps } from '../types'
 
@@ -107,4 +107,23 @@ export function connectFormModel<T extends VueComponent>(
   })
 
   return functionalComponent as unknown as T
+}
+
+export const connectSetup = <T extends VueComponent>(target: IConnectComponent<T>) => {
+  return defineComponent({
+    ...target,
+    props: {
+      props: {
+        type: Object as PropType<VueComponentProps<T>>,
+        default: () => ({})
+      },
+      context: {
+        type: Object as PropType<SetupContext>,
+        default: () => ({})
+      }
+    },
+    setup(props) {
+      return target?.setup?.(props.props, props.context)
+    }
+  })
 }

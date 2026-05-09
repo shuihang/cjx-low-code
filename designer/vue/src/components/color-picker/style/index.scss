@@ -1,0 +1,51 @@
+.x-color-picker {
+  display: flex;
+  padding: 5px 0;
+  .active-color {
+    cursor: pointer;
+    position: relative;
+    margin-right: 10px;
+    
+    input[type="color"].transparent::-webkit-color-swatch {
+      background: url(./transparent.png) !important;
+      background-repeat: repeat;
+      cursor: pointer;
+    }
+    
+  }
+  .select-color-right {
+    display: flex;
+    flex-wrap: wrap;
+    // width: 200px;
+    .select-color-item {
+      cursor: pointer;
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      margin-right: 6px;
+      margin-bottom: 5px;
+      border: 1px solid #ccc;
+    }
+    .select-color-item.transparent {
+      background: url(./transparent.png) !important;
+      background-repeat: repeat;
+    }
+  }
+
+  input {
+    padding: 0px;
+    margin: 0px;
+    width: 40px;
+    height: 35px;
+    cursor: pointer;
+  }
+  input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+    cursor: pointer;
+  }
+
+  input[type="color"]::-webkit-color-swatch {
+    border: none;
+    cursor: pointer;
+  }
+}

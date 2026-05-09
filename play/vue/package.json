@@ -9,11 +9,13 @@
   },
   "dependencies": {
     "@cjx-low-code/antdv": "workspace:*",
+    "@cjx-low-code/core": "workspace:*",
     "@cjx-low-code/element-plus": "workspace:*",
     "@cjx-low-code/eslint-config": "workspace:*",
     "@cjx-low-code/reactivity": "workspace:*",
     "@cjx-low-code/reactivity-vue": "workspace:*",
     "@cjx-low-code/vue": "workspace:*",
+    "element-plus": "2.13.2",
     "vue": "^3.5.4"
   },
   "devDependencies": {

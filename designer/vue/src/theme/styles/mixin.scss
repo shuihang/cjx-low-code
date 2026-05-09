@@ -1,0 +1,45 @@
+@use './theme.scss';
+
+@mixin color() {
+  [data-theme="#1677ff"] & {
+    color: #1677ff;
+  }
+
+  [data-theme="#00b96b"] & {
+    color: #00b96b;
+  }
+
+  [data-theme="#F5222D"] & {
+    color: #F5222D;
+  }
+}
+
+@mixin border_color() {
+  [data-theme="#1677ff"] & {
+    border-color: #1677ff;
+  }
+
+  [data-theme="#00b96b"] & {
+    border-color: #00b96b;
+  }
+
+  [data-theme="#F5222D"] & {
+    border-color: #F5222D;
+  }
+}
+
+@mixin bg_color() {
+  [data-theme="#1677ff"] & {
+    background-color: #1677ff;
+  }
+
+  [data-theme="#00b96b"] & {
+    background-color: #00b96b;
+  }
+
+  [data-theme="#F5222D"] & {
+    background-color: #F5222D;
+  }
+}
+
+

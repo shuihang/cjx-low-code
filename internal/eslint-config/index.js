@@ -135,6 +135,7 @@ module.exports = defineConfig({
   ],
   rules: {
     // js/ts
+    '@typescript-eslint/no-unused-vars': 'off',
     camelcase: ['error', { properties: 'never' }],
     'no-console': ['warn', { allow: ['error'] }],
     'no-debugger': 'warn',

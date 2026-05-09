@@ -1,4 +1,10 @@
+export * from './col'
+
+export * from './row'
+
 export * from './input'
+
+export * from './input-number'
 
 export * from './form-Item'
 

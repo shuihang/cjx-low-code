@@ -206,33 +206,36 @@ export type ISchemaMarkupFieldProps<
 >
 
 // 缓存路径解析结果，避免同一 key 重复调用 GetComponentByPath
-export type ComponentPropsMapValue<Components extends SchemaVueComponents, P extends string> =
-  GetComponentByPath<Components, P> extends infer C
-    ? C extends ComponentClass
-      ? ComponentProps<C>
-      : never
+export type ComponentPropsMapValue<
+  Components extends SchemaVueComponents,
+  P extends string
+> = GetComponentByPath<Components, P> extends infer C
+  ? C extends ComponentClass
+    ? ComponentProps<C>
     : never
+  : never
 
-export type ComponentSlotsMapValue<Components extends SchemaVueComponents, P extends string> =
-  GetComponentByPath<Components, P> extends infer C
-    ? C extends ComponentClass
-      ? {
-          [key in keyof ComponentSlots<C>]?:
-            | ((...args: Parameters<ComponentSlots<C>[key]>) => ReturnType<ComponentSlots<C>[key]>)
-            | SchemaSlotType
-        }
-      : never
+export type ComponentSlotsMapValue<
+  Components extends SchemaVueComponents,
+  P extends string
+> = GetComponentByPath<Components, P> extends infer C
+  ? C extends ComponentClass
+    ? {
+        [key in keyof ComponentSlots<C>]?:
+          | ((...args: Parameters<ComponentSlots<C>[key]>) => ReturnType<ComponentSlots<C>[key]>)
+          | SchemaSlotType
+      }
     : never
+  : never
 
 export type ComponentPathToVueComponentPath<
   Components extends SchemaVueComponents,
   P extends string
-> =
-  GetComponentByPath<Components, P> extends infer C
-    ? C extends ComponentClass
-      ? VueComponentTypeData<C, Components>
-      : never
+> = GetComponentByPath<Components, P> extends infer C
+  ? C extends ComponentClass
+    ? VueComponentTypeData<C, Components>
     : never
+  : never
 
 export type FormModelOptions = {
   model: Record<string, unknown>

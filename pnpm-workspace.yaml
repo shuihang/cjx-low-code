@@ -2,5 +2,5 @@ packages:
   - packages/*
   - docs
   - internal/*
-  - play/vue
-  - play/react
+  - play/*
+  - designer/*
