@@ -9,15 +9,11 @@ const FormComponent = defineComponent({
   emits: formEmits,
   setup(props, context) {
     const Component = connectSetup(ElForm)
-    return () =>
-      h(
-        Component,
-        {
-          props,
-          context
-        },
-        h(ElRow, {}, context.slots)
-      )
+    return () => (
+      <Component props={props} context={context}>
+        <ElRow>{context.slots.default()}</ElRow>
+      </Component>
+    )
   }
 })
 

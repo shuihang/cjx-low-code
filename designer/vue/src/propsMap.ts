@@ -1,54 +1,9 @@
 import { h } from 'vue'
 import { dicData } from './defaultProps'
 import type { ExtractPropTypes, InputHTMLAttributes, TextareaHTMLAttributes, VNode } from 'vue'
-import type {
-  CascaderInstance,
-  CascaderProps,
-  CheckboxProps,
-  Column,
-  DatePickerProps,
-  ElSelect,
-  ElTree,
-  InputNumberInstance,
-  InputProps,
-  RadioProps,
-  SwitchInstance,
-  TableColumnCtx
-} from 'element-plus'
-import type { FormColumnProps, FormItemType, FormTypeProps } from 'cjx-low-code'
+import type { FormItemType, FormTypeProps } from 'cjx-low-code'
 import type { ControlPropertiesProps } from './defaultProps'
-
-// type OmitStr = 'modelValue';
-// type SelectProps = Omit<ExtractPropTypes<InstanceType<typeof ElSelect>>, OmitStr>;
-// export interface FormTypeProps {
-//     /** input组件的配置项 具体参考element-plus官网 */
-//     input: Partial<Omit<InputProps, OmitStr>> & InputHTMLAttributes;
-//     /** textarea组件的配置项 具体参考element-plus官网 */
-//     textarea: Omit<InputProps, OmitStr | 'type'> & TextareaHTMLAttributes;
-//     /** inputNumber组件的配置项 具体参考element-plus官网 */
-//     inputNumber: Omit<InputNumberInstance, OmitStr>;
-//     /** select组件的配置项 具体参考element-plus官网 */
-//     select: SelectProps;
-//     /** checkbox组件的配置项 具体参考element-plus官网 */
-//     checkbox: Omit<CheckboxProps, OmitStr>;
-//     /** datePicker组件的配置项 具体参考element-plus官网 */
-//     datePicker: Omit<DatePickerProps, OmitStr>;
-//     /** radio组件的配置项 具体参考element-plus官网 */
-//     radio: Omit<RadioProps, OmitStr>;
-//     /** radio组件的配置项 button类型 */
-//     radioButton: Omit<RadioProps, OmitStr>;
-//     /** cascader组件的配置项 具体参考element-plus官网 */
-//     cascader: Omit<CascaderInstance, OmitStr | 'props'> & {
-//         props: CascaderProps;
-//     };
-//     /** switch组件的配置项 具体参考element-plus官网 */
-//     switch: Omit<SwitchInstance, OmitStr>;
-//     /** treeSelect组件的配置项 具体参考element-plus官网 */
-//     treeSelect:  Omit<ExtractPropTypes<InstanceType<typeof ElTree>>, OmitStr>;
-//     /** 上传组件配置项  */
-//     /** 可编辑表格 表格表单配置项 */
-//     // editTable?: Partial<Omit<EditTableProps, OmitStr>>;
-// }
+import type { FormComponentProps } from '@/defaultFormTemplates'
 
 // 字体
 const fontFamilyArr = [
@@ -161,7 +116,7 @@ type HaveDictDataAttributes = Extract<
 >
 
 export type PropsToFormsListMap = {
-  [K in keyof FormTypeProps]-?: {
+  [K in FormComponentProps['component']]-?: {
     attributeName: string
     _objName?: K
     mapPropsToForms: {
@@ -173,9 +128,9 @@ export type PropsToFormsListMap = {
 }
 
 const propsToFormsListMap: PropsToFormsListMap = {
-  input: {
+  Input: {
     attributeName: '单行输入框',
-    _objName: 'input',
+    _objName: 'Input',
     mapPropsToForms: {
       maxlength: {
         text: '最大长度',
@@ -184,9 +139,9 @@ const propsToFormsListMap: PropsToFormsListMap = {
       }
     }
   },
-  textarea: {
+  Textarea: {
     attributeName: '多行输入框',
-    _objName: 'textarea',
+    _objName: 'Textarea',
     mapPropsToForms: {
       rows: {
         text: '行数',
@@ -202,9 +157,9 @@ const propsToFormsListMap: PropsToFormsListMap = {
       }
     }
   },
-  inputNumber: {
+  InputNumber: {
     attributeName: '数字输入框',
-    _objName: 'inputNumber',
+    _objName: 'InputNumber',
     mapPropsToForms: {
       min: {
         text: '最小值',
@@ -378,8 +333,10 @@ const propsToFormsListMap: PropsToFormsListMap = {
   }
 }
 
-export default function getMapPropsToFormsList(type: FormItemType): PropsToFormsList {
-  const item = propsToFormsListMap[type]
+export default function getMapPropsToFormsList(
+  component: FormComponentProps['component']
+): PropsToFormsList {
+  const item = propsToFormsListMap[component]
   return [
     {
       attributeName: '基本设置',

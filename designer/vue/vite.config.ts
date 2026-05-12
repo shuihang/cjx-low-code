@@ -60,16 +60,26 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
   },
     resolve: {
       extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.scss', '.css'],
-      alias: [
-        // {
-        //   find: 'vue-i18n',
-        //   replacement: 'vue-i18n/dist/vue-i18n.cjs.js'
-        // },
-        {
-          find: /\@\//,
-          replacement: `${pathResolve('src')}/`
-        }
-      ]
+      alias: {
+        '@': resolve(__dirname, 'src'),
+        '@cjx-low-code/core': resolve(__dirname, '../../packages/core/src'),
+        '@cjx-low-code/json-schema': resolve(__dirname, '../../packages/json-schema/src'),
+        '@cjx-low-code/antdv': resolve(__dirname, '../../packages/antdv/src'),
+        '@cjx-low-code/element-plus': resolve(__dirname, '../../packages/element-plus/src'),
+        '@cjx-low-code/reactivity': resolve(__dirname, '../../packages/reactivity/src'),
+        '@cjx-low-code/reactivity-vue': resolve(__dirname, '../../packages/reactivity-vue/src'),
+        '@cjx-low-code/vue': resolve(__dirname, '../../packages/vue/src')
+      }
+      // alias: [
+      //   // {
+      //   //   find: 'vue-i18n',
+      //   //   replacement: 'vue-i18n/dist/vue-i18n.cjs.js'
+      //   // },
+      //   {
+      //     find: /\@\//,
+      //     replacement: `${pathResolve('src')}/`
+      //   },
+      // ]
     },
     build: {
       minify: 'terser',

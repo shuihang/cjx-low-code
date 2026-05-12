@@ -45,7 +45,7 @@
       </el-main>
 
       <el-aside width="310px" :style="{ ...siderStyle, padding: '20px' }">
-        <PropsTable :data="getCurrentElement" @change="handleChange" />
+        <PropsTable :data="getCurrentElement || []" @change="handleChange" />
       </el-aside>
     </el-container>
   </div>

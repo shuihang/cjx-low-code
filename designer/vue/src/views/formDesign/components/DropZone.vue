@@ -2,26 +2,7 @@
   <div class="sortable-container w-100%">
     <FormProvider :form="form">
       <Form>
-        <SchemaField>
-          <EditWrapper
-            v-for="(item, index) in components"
-            :id="item.prop"
-            :key="item.prop"
-            :option="item"
-            :index="index"
-            @move-item="moveItem"
-            @set-active="setActive"
-            @delete-item="deleteItem"
-          >
-            <SchemaFieldMarkup
-              :component="item.component"
-              decorator="FormItem"
-              :title="item.title"
-              :name="item.prop"
-            />
-            <!-- <FormItemComponents :option="item" /> -->
-          </EditWrapper>
-        </SchemaField>
+        <SchemaField :schema="components" />
       </Form>
     </FormProvider>
 

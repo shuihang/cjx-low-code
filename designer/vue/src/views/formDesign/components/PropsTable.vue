@@ -46,6 +46,7 @@
 import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { reduce } from 'lodash-unified'
+import type { FormComponentProps } from '@/defaultFormTemplates'
 import type { CSSProperties } from 'vue'
 import type { PropsToForm } from '@/propsMap'
 // import { PartialTextComponentProps } from '../../hooks/useComponentCommon'
@@ -121,7 +122,7 @@ type PropsToFormsList = Array<{
 }>
 
 interface Props {
-  data: FormColumnProps
+  data: FormComponentProps
 }
 
 const activeKey = ref<(string | number)[]>([''])
@@ -132,7 +133,7 @@ setTimeout(() => {
 
 const props = defineProps<Props>()
 
-let mapPropsToFormsList = getMapPropsToFormsList('input')
+let mapPropsToFormsList = getMapPropsToFormsList('Input')
 
 const emit = defineEmits(['change'])
 
@@ -228,7 +229,6 @@ function getFinalProps(): PropsToFormsList {
         _objName,
         mapPropsToForms
       }
-      // console.log(1111, result)
       return result
     },
     [] as PropsToFormsList
@@ -236,7 +236,7 @@ function getFinalProps(): PropsToFormsList {
 }
 
 watch(props, (value) => {
-  mapPropsToFormsList = getMapPropsToFormsList(value.data.type || 'input')
+  mapPropsToFormsList = getMapPropsToFormsList(value.data.component || 'Input')
   finalProps.value = getFinalProps()
 })
 
