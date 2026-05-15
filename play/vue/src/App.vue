@@ -69,7 +69,7 @@
               labelCol: 12,
               rules: [{ required: true, message: '请选择单选框' }]
             }"
-            component="RadioGroup"
+            component="Radio"
             :component-props="{
               options: [
                 {
@@ -92,7 +92,7 @@
               labelCol: 12,
               rules: [{ required: true, message: '请选择复选框' }]
             }"
-            component="CheckboxGroup"
+            component="Checkbox"
             :component-props="{
               options: [
                 {
@@ -175,11 +175,11 @@ import { Button, Input } from '@cjx-low-code/antdv'
 import { FormProvider, connect, createSchemaField } from '@cjx-low-code/vue'
 import { createForm, onFieldChange } from '@cjx-low-code/core'
 import {
-  CheckboxGroup,
+  Checkbox,
   Input as ElInput,
   Form,
   FormItem,
-  RadioGroup,
+  Radio,
   Rate,
   Select
 } from '@cjx-low-code/element-plus'
@@ -204,8 +204,8 @@ const { SchemaField, SchemaFieldMarkup, defineSchema } = createSchemaField({
     Select,
     ElInput,
     Rate,
-    RadioGroup,
-    CheckboxGroup,
+    Radio,
+    Checkbox,
     FormItem,
     ATestComp: connect(ATestComp)
   }
@@ -240,6 +240,42 @@ const form = createForm({
 })
 
 const schemaJson = defineSchema([
+  {
+    title: '医生服务态度',
+    decorator: 'FormItem',
+    type: 'string',
+    name: 'doctorServiceAttitude',
+    decoratorProps: {
+      required: true,
+      rules: [
+        {
+          required: true,
+          message: '请选择医生服务态度'
+        }
+      ]
+    },
+    component: 'Radio',
+    componentProps: {
+      options: [
+        {
+          label: '非常满意',
+          value: 'very_satisfied'
+        },
+        {
+          label: '满意',
+          value: 'satisfied'
+        },
+        {
+          label: '一般',
+          value: 'neutral'
+        },
+        {
+          label: '不满意',
+          value: 'dissatisfied'
+        }
+      ]
+    }
+  },
   {
     title: 'obj',
     name: 'obj',

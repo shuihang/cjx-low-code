@@ -7,7 +7,7 @@
         >登陆</el-button
       >
 
-      <el-row :gutter="16">
+      <el-row :gutter="20">
         <el-col
           v-for="(item, index) in buttonComponentData"
           :key="index"
@@ -20,7 +20,7 @@
         </el-col>
       </el-row>
 
-      <el-dropdown class="top-setting m-l-16px" split-button @command="handleButtonClick">
+      <!-- <el-dropdown class="top-setting m-l-16px" split-button @command="handleButtonClick">
         {{ userInfo?.userName }}
 
         <template #dropdown>
@@ -46,7 +46,7 @@
             </el-dropdown-item>
           </el-dropdown-menu>
         </template>
-      </el-dropdown>
+      </el-dropdown> -->
     </div>
   </el-header>
 

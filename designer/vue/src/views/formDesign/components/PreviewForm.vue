@@ -1,44 +1,21 @@
 <template>
-  <XForm v-model:form="form" :option="formOptions" />
+  <FormProvider :form="form">
+    <Form>
+      <SchemaField :schema="components" />
+    </Form>
+  </FormProvider>
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
-import {
-  Checkbox,
-  CheckboxGroup,
-  Form,
-  FormItem,
-  Input,
-  Radio,
-  RadioGroup,
-  Select,
-  Switch
-} from '@cjx-low-code/element-plus'
+import { Form } from '@cjx-low-code/element-plus'
 import { createForm } from '@cjx-low-code/core'
-import { createSchemaField } from '@cjx-low-code/vue'
-import type { FormOption } from 'cjx-low-code'
+import { FormProvider } from '@cjx-low-code/vue'
 import useEditorStore from '@/store/modules/editor'
+import { SchemaField } from '@/defaultFormTemplates'
 
-const { components } = storeToRefs(useEditorStore())
+const editorStore = useEditorStore()
+const components = computed(() => editorStore.components)
+console.log(components.value[0])
 
-const { SchemaField, defineSchema } = createSchemaField({
-  components: {
-    Input,
-    Select,
-    Radio,
-    RadioGroup,
-    Checkbox,
-    CheckboxGroup,
-    Switch,
-    FormItem
-  }
-})
-
-const form = ref({})
-const formOptions = computed<FormOption>(() => ({
-  menuBtn: false,
-  labelWidth: 110,
-  column: components.value
-}))
+const form = createForm({})
 </script>

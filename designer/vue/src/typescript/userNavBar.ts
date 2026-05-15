@@ -15,24 +15,24 @@ export const buttonComponent: ButtonComponent[] = [
   {
     buttonAuth: 'editor',
     buttonOpt: [
-      {
-        component: 'el-button',
-        text: '预览表单',
-        path: '/editor',
-        span: 10
-      },
+      // {
+      //   component: 'el-button',
+      //   text: '预览表单',
+      //   path: '/editor',
+      //   span: 10
+      // },
       {
         component: 'el-button',
         text: '保存',
         path: '/editor',
         span: 7
-      },
-      {
-        component: 'el-button',
-        text: '发布',
-        path: '/editor',
-        span: 7
       }
+      // {
+      //   component: 'el-button',
+      //   text: '发布',
+      //   path: '/editor',
+      //   span: 7
+      // }
     ]
   },
   {

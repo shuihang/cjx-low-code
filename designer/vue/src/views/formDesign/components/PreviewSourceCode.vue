@@ -1,29 +1,38 @@
 <template>
-  <div>
-    <pre>
-      <code ref="codeBlock" class="json">{{ components }}</code>
-    </pre>
+  <div class="preview-json">
+    <p class="preview-json__tip">当前画布组件列表的 JSON（已排除不可序列化字段）。</p>
+    <MonacoReadonlyViewer :model-value="jsonText" language="json" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
-import hljs from 'highlight.js'
-import json from 'highlight.js/lib/languages/json'
-import 'highlight.js/styles/vs2015.css' // 你可以选择其他样式主题
-
+import MonacoReadonlyViewer from '@/components/common/MonacoReadonlyViewer.vue'
 import useEditorStore from '@/store/modules/editor'
 
-const { components } = storeToRefs(useEditorStore())
+const editorStore = useEditorStore()
+const components = computed(() => editorStore.components)
 
-const codeBlock = ref(null)
-// 注册语言
-hljs.registerLanguage('json', json)
+function replacer(_key: string, value: unknown) {
+  if (_key === 'icon') return undefined
+  if (typeof value === 'function') return undefined
+  return value
+}
 
-onMounted(() => {
-  // 确保DOM已渲染
-  if (codeBlock.value) {
-    hljs.highlightElement(codeBlock.value)
+const jsonText = computed(() => {
+  try {
+    return JSON.stringify(components.value, replacer, 2)
+  } catch {
+    return '[]'
   }
 })
 </script>
+
+<style scoped>
+.preview-json__tip {
+  margin: 0 0 12px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--el-text-color-secondary);
+  text-align: left;
+}
+</style>

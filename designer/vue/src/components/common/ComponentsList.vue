@@ -6,15 +6,13 @@
         :key="index"
         class="create-component-list-item w-[calc(100%/2-20px)]"
         @click="addClick(item as any)"
-        @mouseenter.stop="
-          mouseEnter({ row: item as any, elementId: `component-list-item_${index}` })
-        "
       >
         <el-button
           :id="`component-list-item_${index}`"
           class="w-100%"
           draggable="true"
           :contenteditable="false"
+          @dragstart="(e) => onDragStart(e, item as FormComponentProps)"
         >
           <template #icon>
             <RenderVNode :v-node="item.icon()" />
@@ -35,12 +33,13 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, onUnmounted, reactive, ref, watch } from 'vue'
+import { nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import RenderVNode from './RenderVNode'
 import type { FormComponentProps } from '@/defaultFormTemplates'
 import getDefaultFormTemplates from '@/defaultFormTemplates'
 import useTheme from '@/store/modules/theme'
+import { calculateDesignerInsertPosition } from '@/utils/calculateDesignerInsertPosition'
 
 interface DragEventHandlers {
   dragstart: (e: DragEvent) => void
@@ -78,8 +77,8 @@ onMounted(async () => {
   canvasArea = document.querySelector('#canvas-area') as HTMLDivElement
 
   document.body.addEventListener('dragend', () => {
-    // 隐藏插入指示器
     insertIndicator.show = false
+    enterComponent = null
     editorContainer?.removeEventListener('dragover', handleDragOver)
     editorContainer?.removeEventListener('drop', handleDrop)
   })
@@ -90,95 +89,10 @@ onUnmounted(() => {
   editorContainer?.removeEventListener('drop', handleDrop)
 })
 
-// 计算插入位置
+// 计算插入位置（与画布 SchemaField + data-designer-node-id 对齐）
 const calculateInsertPosition = (clientX: number, clientY: number) => {
-  if (!canvasArea) return { insertIndex: -1, insertY: 0, insertX: 0, type: 'vertical' }
-
-  const canvasRect = canvasArea.getBoundingClientRect()
-  const existingItems = canvasArea.querySelectorAll('.layout-item')
-
-  // 如果画布中没有元素，插入到顶部
-  if (existingItems.length === 0) {
-    return { insertIndex: 0, insertY: canvasRect.top, insertX: canvasRect.left, type: 'vertical' }
-  }
-
-  // 计算相对于画布的位置
-  const relativeX = clientX - canvasRect.left
-  const relativeY = clientY - canvasRect.top
-
-  // 遍历现有元素，找到插入位置
-  for (const [i, existingItem] of existingItems.entries()) {
-    const itemRect = existingItem.getBoundingClientRect()
-    const itemRelativeTop = itemRect.top - canvasRect.top
-    const itemRelativeBottom = itemRect.bottom - canvasRect.top
-    const itemRelativeLeft = itemRect.left - canvasRect.left
-    const itemRelativeRight = itemRect.right - canvasRect.left
-
-    const itemMiddleY = (itemRelativeTop + itemRelativeBottom) / 2
-    const itemMiddleX = (itemRelativeLeft + itemRelativeRight) / 2
-
-    // 检查是否在元素内部或附近
-    const isInItemY = relativeY >= itemRelativeTop && relativeY <= itemRelativeBottom
-    const isInItemX = relativeX >= itemRelativeLeft && relativeX <= itemRelativeRight
-
-    if (isInItemY && isInItemX) {
-      // 在元素内部，根据位置决定插入方向
-      if (relativeX <= itemMiddleX) {
-        // 在元素左侧，水平插入
-        return {
-          insertIndex: i,
-          insertY: itemRect.top,
-          insertX: itemRect.left,
-          type: 'horizontal'
-        }
-      } else {
-        // 在元素右侧，水平插入到下一个位置
-        return {
-          insertIndex: i + 1,
-          insertY: itemRect.top,
-          insertX: itemRect.right,
-          type: 'horizontal'
-        }
-      }
-    } else if (isInItemY) {
-      // 在元素的垂直范围内，但不在水平范围内
-      if (relativeX <= itemRelativeLeft) {
-        // 在元素左侧，水平插入
-        return {
-          insertIndex: i,
-          insertY: itemRect.top,
-          insertX: itemRect.left,
-          type: 'horizontal'
-        }
-      } else if (relativeX >= itemRelativeRight) {
-        // 在元素右侧，水平插入到下一个位置
-        return {
-          insertIndex: i + 1,
-          insertY: itemRect.top,
-          insertX: itemRect.right,
-          type: 'horizontal'
-        }
-      }
-    } else if (relativeY <= itemMiddleY) {
-      // 在元素上方，垂直插入
-      return {
-        insertIndex: i,
-        insertY: itemRect.top,
-        insertX: itemRect.left,
-        type: 'vertical'
-      }
-    }
-  }
-
-  // 如果鼠标在所有元素下方，插入到最后
-  const lastItem = existingItems[existingItems.length - 1]
-  const lastItemRect = lastItem.getBoundingClientRect()
-  return {
-    insertIndex: existingItems.length,
-    insertY: lastItemRect.bottom,
-    insertX: lastItemRect.left,
-    type: 'vertical'
-  }
+  if (!canvasArea) return { insertIndex: -1, insertY: 0, insertX: 0, type: 'vertical' as const }
+  return calculateDesignerInsertPosition(canvasArea, clientX, clientY)
 }
 
 // 更新插入指示器
@@ -230,20 +144,16 @@ const handleDragOver: DragEventHandlers['dragover'] = (e) => {
 }
 
 const handleDrop: DragEventHandlers['drop'] = (e) => {
-  // 隐藏插入指示器
   insertIndicator.show = false
 
-  // 计算插入位置
+  if (!enterComponent) {
+    editorContainer?.removeEventListener('dragover', handleDragOver)
+    editorContainer?.removeEventListener('drop', handleDrop)
+    return
+  }
+
   const { insertIndex, type } = calculateInsertPosition(e.clientX, e.clientY)
 
-  console.log('拖放位置:', {
-    clientX: e.clientX,
-    clientY: e.clientY,
-    insertIndex,
-    insertType: type
-  })
-
-  // 发送添加元素事件，包含插入位置和类型信息
   emit('addItem', {
     ...enterComponent,
     insertIndex: insertIndex >= 0 ? insertIndex : undefined,
@@ -252,6 +162,7 @@ const handleDrop: DragEventHandlers['drop'] = (e) => {
 
   editorContainer?.removeEventListener('dragover', handleDragOver)
   editorContainer?.removeEventListener('drop', handleDrop)
+  enterComponent = null
 }
 
 const addClick = (row: FormComponentProps) => {
@@ -260,16 +171,16 @@ const addClick = (row: FormComponentProps) => {
   editorContainer?.removeEventListener('drop', handleDrop)
 }
 
-// 鼠标拖拽结束
-const mouseEnter = (data: { row: FormComponentProps; elementId: string }) => {
-  const { row, elementId } = data
-  const element = document?.getElementById(elementId) as HTMLDListElement
-  // console.log(111, element.clientHeight)
-  // console.log('enter-111111111', row.type)
+function onDragStart(e: DragEvent, row: FormComponentProps) {
   enterComponent = row
   editorContainer?.addEventListener('dragover', handleDragOver)
   editorContainer?.addEventListener('drop', handleDrop)
-  // mouseStartDrop(row)
+  try {
+    e.dataTransfer?.setData('text/plain', row.title)
+    e.dataTransfer!.effectAllowed = 'copy'
+  } catch {
+    /* ignore */
+  }
 }
 
 // defineExpose({

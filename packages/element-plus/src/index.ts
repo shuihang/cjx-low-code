@@ -25,3 +25,5 @@ export * from './time-picker'
 export * from './time-select'
 
 export * from './rate'
+
+export * from './slider'

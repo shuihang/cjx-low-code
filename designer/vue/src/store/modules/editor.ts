@@ -41,20 +41,65 @@ const useEditorStore = defineStore('editor', {
     setActive(currentId: string) {
       this.currentElement = currentId
     },
-    updateComponents(data: { key: string; value: string; id?: string }) {
+    updateComponents(data: { key: string; value: unknown; id?: string }) {
       const { key, value, id } = data
-      const updateComponents = this.components.find(
-        (item) => item.name === (id || this.currentElement)
-      )
+      const el = this.components.find((item) => item.name === (id || this.currentElement))
 
-      if (!updateComponents) return
-      updateComponents[key] = value
+      if (!el) return
+
+      const mergeNested = ['componentProps', 'decoratorProps', 'style'] as const
+      if (
+        (mergeNested as readonly string[]).includes(key) &&
+        value !== null &&
+        typeof value === 'object' &&
+        !Array.isArray(value)
+      ) {
+        const prev = (el as Record<string, unknown>)[key]
+        const base =
+          prev !== null && typeof prev === 'object' && !Array.isArray(prev)
+            ? (prev as Record<string, unknown>)
+            : {}
+        const patch = value as Record<string, unknown>
+        const merged: Record<string, unknown> = { ...base, ...patch }
+        /** 避免浅合并整段替换掉 `style`，导致只改一项时丢失其它样式键 */
+        if (
+          Object.prototype.hasOwnProperty.call(patch, 'style') &&
+          patch.style !== null &&
+          typeof patch.style === 'object' &&
+          !Array.isArray(patch.style)
+        ) {
+          const prevStyle = base.style
+          merged.style = {
+            ...(prevStyle !== null && typeof prevStyle === 'object' && !Array.isArray(prevStyle)
+              ? (prevStyle as Record<string, unknown>)
+              : {}),
+            ...(patch.style as Record<string, unknown>)
+          }
+        }
+        ;(el as Record<string, unknown>)[key] = merged
+        return
+      }
+
+      ;(el as Record<string, unknown>)[key] = value
     },
     clearComponents() {
       this.components = []
+      this.currentElement = ''
+    },
+    /** AI 返回的协议项（结构由服务端清洗，此处不做严格 Schema 泛型推断） */
+    replaceComponentsFromAi(rows: unknown[]) {
+      this.clearComponents()
+      for (const row of rows) {
+        if (!row || typeof row !== 'object') continue
+        const rest = { ...(row as Record<string, unknown>) }
+        delete rest.name
+        delete rest.icon
+        this.addComponents(rest as FormComponentProps)
+      }
     },
     deleteComponents() {
       this.components = this.components.filter((item) => item.name !== this.currentElement)
+      this.currentElement = ''
     },
     copyComponents() {
       const currentElement = this.getCurrentElement

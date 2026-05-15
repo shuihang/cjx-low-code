@@ -21,14 +21,16 @@ const FormItemComponent = defineComponent<FormItemProps & { labelCol?: number }>
     const Component = connectSetup(ElFormItem)
     return () => (
       <ElCol span={props.labelCol}>
-        {h(
-          Component,
-          {
-            props,
-            context
-          },
-          context.slots
-        )}
+        <Component
+          props={props}
+          context={context}
+          v-slots={{
+            ...context.slots,
+            label: () => (
+              <span style={context.attrs.style}>{context.slots.label?.() || props.label}</span>
+            )
+          }}
+        ></Component>
       </ElCol>
     )
   }

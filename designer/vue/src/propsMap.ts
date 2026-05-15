@@ -1,9 +1,14 @@
 import { h } from 'vue'
 import { dicData } from './defaultProps'
-import type { ExtractPropTypes, InputHTMLAttributes, TextareaHTMLAttributes, VNode } from 'vue'
-import type { FormItemType, FormTypeProps } from 'cjx-low-code'
+import type {
+  Component,
+  ExtractPropTypes,
+  InputHTMLAttributes,
+  TextareaHTMLAttributes,
+  VNode
+} from 'vue'
 import type { ControlPropertiesProps } from './defaultProps'
-import type { FormComponentProps } from '@/defaultFormTemplates'
+import type { ComponentsType, FormComponentProps } from '@/defaultFormTemplates'
 
 // 字体
 const fontFamilyArr = [
@@ -106,31 +111,39 @@ export type PropsToForms = {
 
 export type PropsToFormsList = Array<{
   attributeName: string
-  _objName?: string
-  mapPropsToForms: PropsToForms
+  _objName?: PropsMapNestedTarget | string
+  /** 嵌套在 _objName 下的子路径，如 `style` 表示读写 `componentProps.style` / `decoratorProps.style` */
+  _nestedUnder?: string
+  mapPropsToForms: Record<string, PropsToForm>
 }>
 
-type HaveDictDataAttributes = Extract<
-  FormItemType,
-  'select' | 'checkbox' | 'radio' | 'radioButton' | 'cascader'
->
+/** 嵌套在表单项上的对象路径，与 PropsTable 里从 raw[_objName] 取值一致 */
+export type PropsMapNestedTarget = 'componentProps' | 'decoratorProps' | 'style'
 
-export type PropsToFormsListMap = {
-  [K in FormComponentProps['component']]-?: {
-    attributeName: string
-    _objName?: K
-    mapPropsToForms: {
-      [p in keyof Required<FormTypeProps>[K]]?: PropsToForm
-    }
-  } & (K extends HaveDictDataAttributes
-    ? { mapPropsToForms: { dicData: PropsToForm } }
-    : Record<string, any>)
+export type PropsMapEntry = {
+  attributeName: string
+  _objName?: PropsMapNestedTarget
+  _nestedUnder?: string
+  mapPropsToForms: Record<string, PropsToForm>
 }
 
-const propsToFormsListMap: PropsToFormsListMap = {
+export type ComponentClass = abstract new (...args: unknown[]) => any
+
+export type ComponentProps<T extends ComponentClass> = InstanceType<T>['$props']
+
+const propsToFormsListMap: {
+  [key in keyof ComponentsType]: {
+    attributeName: string
+    _objName?: PropsMapNestedTarget
+    _nestedUnder?: string
+    mapPropsToForms: {
+      [k in keyof ComponentProps<ComponentsType[key]>]: PropsToForm
+    }
+  }
+} = {
   Input: {
     attributeName: '单行输入框',
-    _objName: 'Input',
+    _objName: 'componentProps',
     mapPropsToForms: {
       maxlength: {
         text: '最大长度',
@@ -139,9 +152,9 @@ const propsToFormsListMap: PropsToFormsListMap = {
       }
     }
   },
-  Textarea: {
+  'Input.Textarea': {
     attributeName: '多行输入框',
-    _objName: 'Textarea',
+    _objName: 'componentProps',
     mapPropsToForms: {
       rows: {
         text: '行数',
@@ -159,7 +172,7 @@ const propsToFormsListMap: PropsToFormsListMap = {
   },
   InputNumber: {
     attributeName: '数字输入框',
-    _objName: 'InputNumber',
+    _objName: 'componentProps',
     mapPropsToForms: {
       min: {
         text: '最小值',
@@ -189,11 +202,11 @@ const propsToFormsListMap: PropsToFormsListMap = {
       }
     }
   },
-  select: {
+  Select: {
     attributeName: '下拉选择框',
-    // _objName: 'select',
+    _objName: 'componentProps',
     mapPropsToForms: {
-      dicData: {
+      options: {
         text: '字典数据',
         component: 'el-select',
         subComponent: 'el-option',
@@ -204,11 +217,11 @@ const propsToFormsListMap: PropsToFormsListMap = {
       }
     }
   },
-  checkbox: {
+  Checkbox: {
     attributeName: '多选框',
-    // _objName: 'checkbox',
+    _objName: 'componentProps',
     mapPropsToForms: {
-      dicData: {
+      options: {
         text: '字典数据',
         component: 'el-select',
         subComponent: 'el-option',
@@ -219,11 +232,11 @@ const propsToFormsListMap: PropsToFormsListMap = {
       }
     }
   },
-  radio: {
+  Radio: {
     attributeName: '单选框',
-    // _objName: 'radio',
+    _objName: 'componentProps',
     mapPropsToForms: {
-      dicData: {
+      options: {
         text: '字典数据',
         component: 'el-select',
         subComponent: 'el-option',
@@ -234,9 +247,9 @@ const propsToFormsListMap: PropsToFormsListMap = {
       }
     }
   },
-  radioButton: {
+  RadioButton: {
     attributeName: '按钮单选框',
-    _objName: 'radioButton',
+    _objName: 'componentProps',
     mapPropsToForms: {
       dicData: {
         text: '字典数据',
@@ -249,20 +262,24 @@ const propsToFormsListMap: PropsToFormsListMap = {
       }
     }
   },
-  cascader: {
+  Cascader: {
     attributeName: '级联选择器',
-    _objName: 'cascader',
+    _objName: 'componentProps',
     mapPropsToForms: {
       dicData: {
         text: '字典数据',
         component: 'el-select',
-        subComponent: 'el-option'
+        subComponent: 'el-option',
+        options: [...dicData],
+        extraProps: {
+          vModel: 'dicData'
+        }
       }
     }
   },
-  datePicker: {
+  DatePicker: {
     attributeName: '日期选择器',
-    _objName: 'datePicker',
+    _objName: 'componentProps',
     mapPropsToForms: {
       type: {
         text: '类型',
@@ -274,15 +291,13 @@ const propsToFormsListMap: PropsToFormsListMap = {
           { value: 'month', label: '月' },
           { value: 'year', label: '年' }
         ],
-        extraProps: {
-          vModel: 'dicData'
-        }
+        extraProps: {}
       }
     }
   },
-  treeSelect: {
+  TreeSelect: {
     attributeName: '树选择器',
-    _objName: 'treeSelect',
+    _objName: 'componentProps',
     mapPropsToForms: {
       // dicData: {
       //   text: '字典数据',
@@ -291,9 +306,9 @@ const propsToFormsListMap: PropsToFormsListMap = {
       // }
     }
   },
-  switch: {
+  Switch: {
     attributeName: '开关',
-    _objName: 'switch',
+    _objName: 'componentProps',
     mapPropsToForms: {
       activeText: {
         text: '开启时文字',
@@ -321,14 +336,59 @@ const propsToFormsListMap: PropsToFormsListMap = {
       }
     }
   },
-  editTable: {
-    attributeName: '表格',
-    _objName: 'editTable',
+  ColorPicker: {
+    attributeName: '颜色选择器',
+    _objName: 'componentProps',
     mapPropsToForms: {}
   },
-  colorPicker: {
-    attributeName: '颜色选择器',
-    _objName: 'colorPicker',
+  Rate: {
+    attributeName: '评分',
+    _objName: 'componentProps',
+    mapPropsToForms: {
+      max: {
+        text: '最大值',
+        component: 'el-input-number',
+        extraProps: {}
+      },
+      allowHalf: {
+        text: '是否允许半选',
+        component: 'el-switch',
+        extraProps: {
+          activeText: '是',
+          inactiveText: '否'
+        }
+      }
+    }
+  },
+  Slider: {
+    attributeName: '滑块',
+    _objName: 'componentProps',
+    mapPropsToForms: {
+      min: {
+        text: '最小值',
+        component: 'el-input-number',
+        extraProps: {}
+      },
+      max: {
+        text: '最大值',
+        component: 'el-input-number',
+        extraProps: {}
+      },
+      step: {
+        text: '步长',
+        component: 'el-input-number',
+        extraProps: {}
+      }
+    }
+  },
+  TimePicker: {
+    attributeName: '时间选择器',
+    _objName: 'componentProps',
+    mapPropsToForms: {}
+  },
+  TimeSelect: {
+    attributeName: '时间选择',
+    _objName: 'componentProps',
     mapPropsToForms: {}
   }
 }
@@ -336,12 +396,13 @@ const propsToFormsListMap: PropsToFormsListMap = {
 export default function getMapPropsToFormsList(
   component: FormComponentProps['component']
 ): PropsToFormsList {
-  const item = propsToFormsListMap[component]
+  const s = component ? String(component).trim() || 'Input' : 'Input'
+  const item = propsToFormsListMap[s] ?? propsToFormsListMap.Input
   return [
     {
-      attributeName: '基本设置',
+      attributeName: '字段属性',
       mapPropsToForms: {
-        label: {
+        title: {
           text: '字段名',
           component: 'el-input',
           eventName: 'input',
@@ -367,29 +428,14 @@ export default function getMapPropsToFormsList(
             type: 'textarea'
           },
           afterTransform: (e: any) => e
-        },
-        span: {
-          component: 'el-radio-group',
-          text: '控件宽度',
-          direction: 'vertical',
-          subComponent: 'el-radio-button',
-          extraProps: { buttonStyle: 'solid' },
-          options: [
-            { label: '1/4', value: 6 },
-            { label: '1/3', value: 8 },
-            { label: '1/2', value: 12 },
-            { label: '2/3', value: 16 },
-            { label: '3/4', value: 18 },
-            { label: '1', value: 24 }
-          ],
-          afterTransform: (e: any) => e
         }
       }
     },
     item,
     {
-      attributeName: '样式设置',
-      _objName: 'labelStyle',
+      attributeName: `${item.attributeName}组件样式`,
+      _objName: 'componentProps',
+      _nestedUnder: 'style',
       mapPropsToForms: {
         fontFamily: {
           text: '标题字体',
@@ -417,6 +463,62 @@ export default function getMapPropsToFormsList(
         //     defaultColor: 'transparent',
         //   }
         // },
+      }
+    },
+    {
+      attributeName: '容器组件',
+      _objName: 'decoratorProps',
+      mapPropsToForms: {
+        labelCol: {
+          component: 'el-radio-group',
+          text: '控件宽度',
+          direction: 'vertical',
+          subComponent: 'el-radio-button',
+          extraProps: { buttonStyle: 'solid' },
+          options: [
+            { label: '1/4', value: 6 },
+            { label: '1/3', value: 8 },
+            { label: '1/2', value: 12 },
+            { label: '2/3', value: 16 },
+            { label: '3/4', value: 18 },
+            { label: '1', value: 24 }
+          ],
+          afterTransform: (e: any) => e
+        },
+        required: {
+          text: '是否必填',
+          component: 'el-switch',
+          extraProps: {
+            activeText: '是',
+            inactiveText: '否'
+          }
+        }
+      }
+    },
+    {
+      attributeName: '容器样式',
+      _objName: 'decoratorProps',
+      _nestedUnder: 'style',
+      mapPropsToForms: {
+        fontFamily: {
+          text: '标题字体',
+          component: 'el-select',
+          subComponent: 'el-option',
+          extraProps: {},
+          options: [{ label: '无', value: '' }, ...fontFamilyOption]
+        },
+        fontSize: {
+          text: '标题字号',
+          component: 'el-input-number',
+          extraProps: {},
+          initialTransform: (v: string) => Number.parseInt(v),
+          afterTransform: (e: number) => (e ? `${e}px` : '')
+        },
+        color: {
+          text: '标题颜色',
+          component: 'x-color-picker',
+          extraProps: {}
+        }
       }
     }
 

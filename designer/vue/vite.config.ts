@@ -36,15 +36,14 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       port: env.VITE_PORT,
       host: "0.0.0.0",
       open: env.VITE_OPEN === 'true',
-      // 本地跨域代理. 目前注释的原因：暂时没有用途，server 端已经支持跨域
-      // proxy: {
-      //   ['/admin-api']: {
-      //     target: env.VITE_BASE_URL,
-      //     ws: false,
-      //     changeOrigin: true,
-      //     rewrite: (path) => path.replace(new RegExp(`^/admin-api`), ''),
-      //   },
-      // },
+      /** 开发时把 /__form-ai 转到 form-ai-api，避免浏览器跨域；直连则设 VITE_FORM_AI_BASE */
+      proxy: {
+        '/__form-ai': {
+          target: env.VITE_FORM_AI_PROXY_TARGET || 'http://127.0.0.1:3088',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/__form-ai/, '')
+        }
+      }
     },
     // 项目使用的vite插件。 单独提取到build/vite/plugin中管理
     plugins: createVitePlugins(),

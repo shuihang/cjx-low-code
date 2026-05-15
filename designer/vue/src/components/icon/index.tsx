@@ -158,3 +158,67 @@ export const Switch: FunctionalComponent = () => {
     </i>
   )
 }
+
+/**
+ * 评分图标
+ */
+export const RateIcon: FunctionalComponent = () => {
+  return (
+    <i class="el-icon">
+      <svg viewBox="0 0 16 16" width="1em" height="1em">
+        <path
+          fill="currentColor"
+          d="M13.5 3h-11A1.5 1.5 0 0 0 1 4.5v7A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5v-7A1.5 1.5 0 0 0 13.5 3Zm-11 1h11a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-7a.5.5 0 0 1 .5-.5Z"
+        />
+      </svg>
+    </i>
+  )
+}
+
+/**
+ * 滑块图标
+ */
+export const SliderIcon: FunctionalComponent = () => {
+  return (
+    <i class="el-icon">
+      <svg viewBox="0 0 16 16" width="1em" height="1em">
+        <path
+          fill="currentColor"
+          d="M13.5 3h-11A1.5 1.5 0 0 0 1 4.5v7A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5v-7A1.5 1.5 0 0 0 13.5 3Zm-11 1h11a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-7a.5.5 0 0 1 .5-.5Z"
+        />
+      </svg>
+    </i>
+  )
+}
+
+/**
+ * 时间选择器图标
+ */
+export const TimePickerIcon: FunctionalComponent = () => {
+  return (
+    <i class="el-icon">
+      <svg viewBox="0 0 16 16" width="1em" height="1em">
+        <path
+          fill="currentColor"
+          d="M13.5 3h-11A1.5 1.5 0 0 0 1 4.5v7A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5v-7A1.5 1.5 0 0 0 13.5 3Zm-11 1h11a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-7a.5.5 0 0 1 .5-.5Z"
+        />
+      </svg>
+    </i>
+  )
+}
+
+/**
+ * 时间选择图标
+ */
+export const TimeSelectIcon: FunctionalComponent = () => {
+  return (
+    <i class="el-icon">
+      <svg viewBox="0 0 16 16" width="1em" height="1em">
+        <path
+          fill="currentColor"
+          d="M13.5 3h-11A1.5 1.5 0 0 0 1 4.5v7A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5v-7A1.5 1.5 0 0 0 13.5 3Zm-11 1h11a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-7a.5.5 0 0 1 .5-.5Z"
+        />
+      </svg>
+    </i>
+  )
+}

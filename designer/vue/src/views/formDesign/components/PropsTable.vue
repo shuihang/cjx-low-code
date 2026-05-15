@@ -17,7 +17,7 @@
 
               <component
                 :is="value.component"
-                v-model="getValueByPath(value, key, item._objName).value"
+                v-model="getValueByPath(value, key, item._objName, item._nestedUnder).value"
                 class="prop-component"
                 v-bind="value.extraProps"
                 v-on="value.events"
@@ -49,8 +49,6 @@ import { reduce } from 'lodash-unified'
 import type { FormComponentProps } from '@/defaultFormTemplates'
 import type { CSSProperties } from 'vue'
 import type { PropsToForm } from '@/propsMap'
-// import { PartialTextComponentProps } from '../../hooks/useComponentCommon'
-import type { ControlPropertiesProps } from '@/defaultProps'
 import type { FormColumnProps } from 'cjx-low-code'
 import getMapPropsToFormsList from '@/propsMap'
 import RenderVNode from '@/components/common/RenderVNode'
@@ -89,40 +87,78 @@ const getItemStyle = (direction: FormInterface['direction']): CSSProperties => {
   return style
 }
 
-function getValueByPath(value: FormInterface, key: string, _objName?: string) {
+function getLeafFromMirror(
+  value: FormInterface,
+  _objName: string,
+  nestedUnder: string | undefined,
+  key: string
+) {
+  const root = (value as unknown as Record<string, unknown>)[_objName] as
+    | Record<string, unknown>
+    | undefined
+  if (!root) return undefined
+  if (!nestedUnder) return root[key]
+  const nest = root[nestedUnder] as Record<string, unknown> | undefined
+  return nest?.[key]
+}
+
+function setLeafOnMirror(
+  value: FormInterface,
+  _objName: string,
+  nestedUnder: string | undefined,
+  key: string,
+  newValue: unknown
+) {
+  const v = value as unknown as Record<string, unknown>
+  if (!v[_objName] || typeof v[_objName] !== 'object') v[_objName] = {}
+  const root = v[_objName] as Record<string, unknown>
+  if (!nestedUnder) {
+    root[key] = newValue
+    return
+  }
+  if (!root[nestedUnder] || typeof root[nestedUnder] !== 'object') root[nestedUnder] = {}
+  const nest = root[nestedUnder] as Record<string, unknown>
+  nest[key] = newValue
+}
+
+function getValueByPath(
+  value: FormInterface,
+  key: string,
+  _objName?: string,
+  _nestedUnder?: string
+) {
   return computed({
     get() {
       if (!_objName) {
         return value.value
       }
 
-      return value[_objName][key]
+      return getLeafFromMirror(value, _objName, _nestedUnder, key)
     },
     // setter
     set(newValue) {
       if (!_objName) {
-        value.value = newValue
+        ;(value as { value: unknown }).value = newValue
         return
       }
 
-      console.log('getValueByPath', value[_objName])
-      value[_objName][key] = newValue
+      setLeafOnMirror(value, _objName, _nestedUnder, key, newValue)
     }
   })
 }
 
-type FormProps = {
-  [p in keyof ControlPropertiesProps]: FormInterface
-}
+type FormProps = Record<string, FormInterface>
 
 type PropsToFormsList = Array<{
   attributeName: string
   _objName?: string
+  _nestedUnder?: string
   mapPropsToForms: FormProps
 }>
 
 interface Props {
-  data: FormComponentProps
+  /** 未选中时不应传入数组等非表单项对象（历史写法 getCurrentElement || [] 会触发运行时错误） */
+  data?: FormComponentProps | null
 }
 
 const activeKey = ref<(string | number)[]>([''])
@@ -133,92 +169,106 @@ setTimeout(() => {
 
 const props = defineProps<Props>()
 
-let mapPropsToFormsList = getMapPropsToFormsList('Input')
-
 const emit = defineEmits(['change'])
 
-const finalProps = ref<PropsToFormsList>(getFinalProps())
+let mapPropsToFormsList = getMapPropsToFormsList('Input')
+const finalProps = ref<PropsToFormsList>([])
 
 function getFinalProps(): PropsToFormsList {
-  // console.log(1111, props.type)
+  const raw = props.data as unknown
+  if (!raw || Array.isArray(raw) || typeof raw !== 'object') {
+    return []
+  }
+
   return reduce(
     mapPropsToFormsList,
     (result, value, index) => {
-      const { _objName, mapPropsToForms: objMapPropsToForms } = value
+      if (!value) return result
+
+      const { _objName, _nestedUnder, mapPropsToForms: objMapPropsToForms } = value
 
       //console.log(1111, props.data, _objName)
+      /** 必须按「配置表 mapPropsToForms」的键遍历，不能按 raw 嵌套对象现有键遍历；否则 componentProps 为空时整块面板无表单项 */
       const mapPropsToForms = _objName
         ? reduce(
-            props.data[_objName],
-            (resultArr, res, key) => {
-              // console.log(2222, resultArr, key)
-              const item = objMapPropsToForms[key]
-
-              if (item) {
-                const {
-                  eventName = 'change',
-                  initialTransform,
-                  afterTransform,
-                  extraProps = {}
-                } = item
-                // console.log(1111, item)
-                const newItem: FormInterface = {
-                  ...item,
-                  [_objName]: {
-                    [key]: initialTransform ? initialTransform(res) : res
-                  },
-                  extraProps,
-                  eventName,
-                  events: {
-                    [eventName]: (e: any) => {
-                      emit('change', {
-                        key: _objName,
-                        value: { [key]: afterTransform ? afterTransform(e) : e }
-                      })
-                    }
+            objMapPropsToForms,
+            (resultArr, item, key) => {
+              if (!item) return resultArr
+              const rootObj = ((raw as Record<string, unknown>)[_objName] ?? {}) as Record<
+                string,
+                unknown
+              >
+              const nestedObj = _nestedUnder
+                ? ((rootObj[_nestedUnder] ?? {}) as Record<string, unknown>)
+                : rootObj
+              let res = nestedObj[key]
+              /** 历史数据写在顶层 `style`，迁移前仍可在属性面板展示 */
+              if (
+                res === undefined &&
+                _nestedUnder === 'style' &&
+                (raw as Record<string, unknown>)['style'] &&
+                typeof (raw as Record<string, unknown>)['style'] === 'object' &&
+                !Array.isArray((raw as Record<string, unknown>)['style'])
+              ) {
+                res = ((raw as Record<string, unknown>)['style'] as Record<string, unknown>)[key]
+              }
+              const {
+                eventName = 'change',
+                initialTransform,
+                afterTransform,
+                extraProps = {}
+              } = item
+              const leafVal = initialTransform ? initialTransform(res) : res
+              const newItem: FormInterface = {
+                ...item,
+                value: '',
+                [_objName]: _nestedUnder
+                  ? { [_nestedUnder]: { [key]: leafVal } }
+                  : { [key]: leafVal },
+                extraProps,
+                eventName,
+                events: {
+                  [eventName]: (e: any) => {
+                    const out = afterTransform ? afterTransform(e) : e
+                    emit('change', {
+                      key: _objName,
+                      value: _nestedUnder ? { [_nestedUnder]: { [key]: out } } : { [key]: out }
+                    })
                   }
                 }
-
-                resultArr[key] = newItem
               }
 
-              // console.log('mapPropsToForms', resultArr)
+              resultArr[key] = newItem
               return resultArr
             },
             {} as FormProps
           )
         : reduce(
-            props.data,
-            (resultArr, res, key) => {
-              // console.log(2222, resultArr, key)
-              const item = value.mapPropsToForms[key]
-
-              if (item) {
-                const {
-                  eventName = 'change',
-                  initialTransform,
-                  afterTransform,
-                  extraProps = {}
-                } = item
-                // console.log(1111, item)
-                const newItem: FormInterface = {
-                  ...item,
-                  value: initialTransform ? initialTransform(res) : res,
-                  extraProps: {
-                    ...extraProps
-                    // defaultColor: props.type[key] || extraProps.defaultColor
-                  },
-                  eventName,
-                  events: {
-                    [eventName]: (e: any) => {
-                      emit('change', { key, value: afterTransform ? afterTransform(e) : e })
-                    }
+            value.mapPropsToForms,
+            (resultArr, item, key) => {
+              if (!item) return resultArr
+              const res = (raw as Record<string, unknown>)[key]
+              const {
+                eventName = 'change',
+                initialTransform,
+                afterTransform,
+                extraProps = {}
+              } = item
+              const newItem: FormInterface = {
+                ...item,
+                value: initialTransform ? initialTransform(res) : res,
+                extraProps: {
+                  ...extraProps
+                },
+                eventName,
+                events: {
+                  [eventName]: (e: any) => {
+                    emit('change', { key, value: afterTransform ? afterTransform(e) : e })
                   }
                 }
-
-                resultArr[key] = newItem
               }
-              // console.log(0, resultArr)
+
+              resultArr[key] = newItem
               return resultArr
             },
             {} as FormProps
@@ -227,6 +277,7 @@ function getFinalProps(): PropsToFormsList {
       result[index] = {
         attributeName: value.attributeName,
         _objName,
+        _nestedUnder: value._nestedUnder,
         mapPropsToForms
       }
       return result
@@ -235,10 +286,18 @@ function getFinalProps(): PropsToFormsList {
   )
 }
 
-watch(props, (value) => {
-  mapPropsToFormsList = getMapPropsToFormsList(value.data.component || 'Input')
-  finalProps.value = getFinalProps()
-})
+watch(
+  () => props.data,
+  (data) => {
+    if (!data || Array.isArray(data) || typeof data !== 'object') {
+      finalProps.value = []
+      return
+    }
+    mapPropsToFormsList = getMapPropsToFormsList(data.component || 'Input')
+    finalProps.value = getFinalProps()
+  },
+  { deep: true, immediate: true }
+)
 
 // watch(() => themeColor.value, (newVal) => {
 //   // console.log(1111, newVal)
