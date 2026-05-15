@@ -1,5 +1,5 @@
 import { defineComponent, h } from 'vue'
-import { ElCheckbox, ElCheckboxGroup } from 'element-plus'
+import { ElCheckbox, ElCheckboxGroup, checkboxGroupProps } from 'element-plus'
 import { connect, mapProps } from '@cjx-low-code/vue'
 
 type OptionRow = { label?: string; value?: string | number | boolean; disabled?: boolean }
@@ -8,6 +8,7 @@ type OptionRow = { label?: string; value?: string | number | boolean; disabled?:
 const CheckboxGroupWithOptions = defineComponent({
   name: 'Checkbox',
   inheritAttrs: false,
+  props: checkboxGroupProps,
   setup(_, { attrs, slots }) {
     return () => {
       const raw = { ...attrs } as Record<string, unknown>

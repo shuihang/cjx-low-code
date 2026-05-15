@@ -1,5 +1,5 @@
 import { defineComponent, h } from 'vue'
-import { ElRadio, ElRadioGroup } from 'element-plus'
+import { ElRadio, ElRadioGroup, radioGroupProps } from 'element-plus'
 import { connect, mapProps } from '@cjx-low-code/vue'
 
 type OptionRow = { label?: string; value?: string | number | boolean; disabled?: boolean }
@@ -8,6 +8,7 @@ type OptionRow = { label?: string; value?: string | number | boolean; disabled?:
 const RadioGroupWithOptions = defineComponent({
   name: 'Radio',
   inheritAttrs: false,
+  props: radioGroupProps,
   setup(_, { attrs, slots }) {
     return () => {
       const raw = { ...attrs } as Record<string, unknown>
