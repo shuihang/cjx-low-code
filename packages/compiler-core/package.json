@@ -1,6 +1,6 @@
 {
   "name": "@cjx-low-code/compiler-core",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Low Code Compiler Core",
   "license": "MIT",
   "main": "index.ts",
