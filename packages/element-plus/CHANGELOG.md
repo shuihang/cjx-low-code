@@ -1,5 +1,11 @@
 # @cjx-low-code/element-plus
 
+## 2.0.0
+
+### Major Changes
+
+- f53f2d2: 为radio和checkbox组件添加正确的props类型声明
+
 ## 1.0.1
 
 ### Patch Changes
